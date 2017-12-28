@@ -9,7 +9,7 @@
 import UIKit
 import MultipeerConnectivity
 
-class WaitViewController: UIViewController {
+class WaitViewController: UIViewController, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate {
 	
 	// MARK: - Outlets
 	
@@ -27,11 +27,16 @@ class WaitViewController: UIViewController {
 		static let connectionErrorBody = NSLocalizedString("The connection could not be established. Please try again.", comment: "The message to show on the alert that is shown when the user fails to connect to a peer")
 	}
 	
+	// MARK: - Properties
+	
+	internal var advertiser: MCNearbyServiceAdvertiser? {
+		didSet { self.advertiser?.delegate = self }
+	}
+	
 	// MARK: - ViewController Lifecycle
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		self.configureSessionStateListeners()
 		self.startAdvertising()
 	}
 	
@@ -40,33 +45,13 @@ class WaitViewController: UIViewController {
 		self.stopAdvertising()
 	}
 	
-	private var advertiserAmbassador: MeshManager.AdvertiserAmbassador?
-	
 	private func startAdvertising() {
-		let ambassador = MeshManager.AdvertiserAmbassador.init(didRecieveInvitationEvent: { [weak self] in self?.advertiser($0, didReceiveInvitationFromPeer: $1, withContext: $2, invitationHandler: $3) }, didNotStartEvent: { [weak self] in self?.advertiser($0, didNotStartAdvertisingPeer: $1) })
-		self.advertiserAmbassador = ambassador
-		MeshManager.shared.startAdvertising(with: ambassador)
-	}
-	
-	private func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-		print("Did not start andvertising")
-	}
-	
-	private func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-		let displayName: String
-		if let context = context, let serializedData = try? JSONSerialization.jsonObject(with: context, options: []), let json = serializedData as? [String:Any], let discoveryInfo = MeshManager.DiscoveryInfo(from: json) {
-			displayName = discoveryInfo.name
-		} else {
-			displayName = peerID.displayName
-		}
-		self.showInvite(from: displayName, callback: { accepted in
-			invitationHandler(accepted, MeshManager.shared.session)
-		})
+		MCManager.shared.session.delegate = self
+		self.advertiser?.startAdvertisingPeer()
 	}
 	
 	private func stopAdvertising() {
-		self.advertiserAmbassador = nil
-		MeshManager.shared.stopAdvertising()
+		self.advertiser?.stopAdvertisingPeer()
 	}
 	
 	private func showInvite(from senderName: String, callback: @escaping (_ accepted: Bool) -> Void) {
@@ -78,13 +63,37 @@ class WaitViewController: UIViewController {
 		self.present(alertView, animated: true)
 	}
 	
-	private func configureSessionStateListeners() {
-		MeshManager.shared.sessionStateChangeHandler = { [weak self] newState in self?.sessionStateDidChange(to: newState) }
+	private func showConnectionFailureMessage() {
+		let alertView = UIAlertController(title: Strings.connectionErrorTitle, message: Strings.connectionErrorBody, preferredStyle: .alert)
+		alertView.addAction(UIAlertAction(title: VisibleStrings.Generic.okay, style: .default, handler: { [weak self] (_) in self?.navigationController?.popViewController(animated: true) }))
+		self.present(alertView, animated: true)
 	}
 	
-	private func sessionStateDidChange(to newState: MCSessionState) {
+	private func showGame() {
+		print("yay")
+	}
+	
+	// MARK: - MCSessionDelegate
+	
+	internal func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+		
+	}
+	
+	internal func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
+		
+	}
+	
+	internal func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
+		
+	}
+	
+	internal func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+		
+	}
+	
+	internal func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
 		DispatchQueue.main.async {
-			switch newState {
+			switch state {
 			case .connecting:
 				self.statusLabel.text = Strings.connecting
 			case .notConnected:
@@ -95,25 +104,22 @@ class WaitViewController: UIViewController {
 		}
 	}
 	
-	private func showConnectionFailureMessage() {
-		let alertView = UIAlertController(title: Strings.connectionErrorTitle, message: Strings.connectionErrorBody, preferredStyle: .alert)
-		alertView.addAction(UIAlertAction(title: VisibleStrings.Generic.okay, style: .default, handler: { [weak self] (_) in self?.navigationController?.popViewController(animated: true) }))
-		self.present(alertView, animated: true)
+	// MARK: - MCNearbyServiceAdvertiserDelegate
+	
+	internal func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
+		print("Did not start andvertising")
 	}
 	
-	private func showGame() {
-		print("yay")
+	internal func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
+		let displayName: String
+		//		if let context = context, let serializedData = try? JSONSerialization.jsonObject(with: context, options: []), let json = serializedData as? [String:Any], let discoveryInfo = MCManager.DiscoveryInfo(from: json) {
+		//			displayName = discoveryInfo.name
+		//		} else {
+		displayName = peerID.displayName
+		//		}
+		self.showInvite(from: displayName, callback: { accepted in
+			invitationHandler(accepted, MCManager.shared.session)
+		})
 	}
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

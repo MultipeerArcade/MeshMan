@@ -12,11 +12,11 @@
 		41536AFE1FF06DC800DBC164 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41536AFD1FF06DC800DBC164 /* Assets.xcassets */; };
 		41536B011FF06DC800DBC164 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41536AFF1FF06DC800DBC164 /* LaunchScreen.storyboard */; };
 		41536B091FF06DF300DBC164 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B081FF06DF300DBC164 /* WelcomeViewController.swift */; };
-		41536B111FF071B900DBC164 /* MeshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B101FF071B900DBC164 /* MeshManager.swift */; };
 		41536B171FF435B800DBC164 /* Wait.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41536B161FF435B800DBC164 /* Wait.storyboard */; };
 		41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B181FF4363800DBC164 /* WaitViewController.swift */; };
 		41536B1B1FF437CD00DBC164 /* Storyboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B1A1FF437CD00DBC164 /* Storyboards.swift */; };
 		41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B221FF5369E00DBC164 /* VisibleStrings.swift */; };
+		41536B251FF538C500DBC164 /* MCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B241FF538C500DBC164 /* MCManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,11 +27,11 @@
 		41536B001FF06DC800DBC164 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		41536B021FF06DC800DBC164 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		41536B081FF06DF300DBC164 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
-		41536B101FF071B900DBC164 /* MeshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshManager.swift; sourceTree = "<group>"; };
 		41536B161FF435B800DBC164 /* Wait.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Wait.storyboard; sourceTree = "<group>"; };
 		41536B181FF4363800DBC164 /* WaitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitViewController.swift; sourceTree = "<group>"; };
 		41536B1A1FF437CD00DBC164 /* Storyboards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboards.swift; sourceTree = "<group>"; };
 		41536B221FF5369E00DBC164 /* VisibleStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleStrings.swift; sourceTree = "<group>"; };
+		41536B241FF538C500DBC164 /* MCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +65,7 @@
 		41536AF51FF06DC800DBC164 /* MeshMan */ = {
 			isa = PBXGroup;
 			children = (
-				41536B101FF071B900DBC164 /* MeshManager.swift */,
+				41536B241FF538C500DBC164 /* MCManager.swift */,
 				41536AF61FF06DC800DBC164 /* AppDelegate.swift */,
 				41536AFA1FF06DC800DBC164 /* Main.storyboard */,
 				41536B161FF435B800DBC164 /* Wait.storyboard */,
@@ -154,7 +154,7 @@
 			files = (
 				41536B1B1FF437CD00DBC164 /* Storyboards.swift in Sources */,
 				41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */,
-				41536B111FF071B900DBC164 /* MeshManager.swift in Sources */,
+				41536B251FF538C500DBC164 /* MCManager.swift in Sources */,
 				41536AF71FF06DC800DBC164 /* AppDelegate.swift in Sources */,
 				41536B091FF06DF300DBC164 /* WelcomeViewController.swift in Sources */,
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,

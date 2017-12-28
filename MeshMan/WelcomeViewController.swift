@@ -33,11 +33,6 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 
         // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 	
 	// MARK: - Create/Join
 	
@@ -55,16 +50,12 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	private func validateNameAndStartSession(for sessionType: SessionType) {
 		guard let name = self.displayName else { self.showInvlaidNameError(); return }
-		MeshManager.setUp(withName: name)
+		MCManager.setUpIfNeeded(with: name)
 		switch sessionType {
 		case .create:
 			self.showBrowser()
 		case .join:
-			guard let waitController = Storyboards.wait.instantiateInitialViewController() as? WaitViewController else {
-				print("Could not get a wait controller from the storyboard, make sure everything is set up right in the storyboard")
-				return
-			}
-			self.navigationController?.pushViewController(waitController, animated: true)
+			self.showWait()
 		}
 	}
 	
@@ -81,11 +72,25 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		self.present(alertView, animated: true)
 	}
 	
+	private func showWait() {
+		guard let waitController = Storyboards.wait.instantiateInitialViewController() as? WaitViewController else {
+			print("Could not get a wait controller from the storyboard, make sure everything is set up right in the storyboard")
+			return
+		}
+		waitController.advertiser = MCManager.shared.makeAdvertiser()
+		self.navigationController?.pushViewController(waitController, animated: true)
+	}
+	
 	private func showBrowser() {
-		let browser = MCBrowserViewController.init(browser: MeshManager.shared.browser, session: MeshManager.shared.session)
-		browser.minimumNumberOfPeers = Constants.minimumNumberOfPeers
-		browser.delegate = self
-		self.navigationController?.pushViewController(browser, animated: true)
+		let browser = MCManager.shared.makeBrowser()
+		let browserVC = MCBrowserViewController.init(browser: browser, session: MCManager.shared.session)
+		browserVC.minimumNumberOfPeers = Constants.minimumNumberOfPeers
+		browserVC.delegate = self
+		self.present(browserVC, animated: true)
+	}
+	
+	private func showGame() {
+		
 	}
 	
 	// MARK: MCBrowserViewControllerDelegate
@@ -95,11 +100,11 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	internal func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
-		
+		self.dismiss(animated: true) { self.showGame() }
 	}
 	
 	internal func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {
-		self.navigationController?.popViewController(animated: true)
+		self.dismiss(animated: true)
 	}
 	
 }
