@@ -25,7 +25,6 @@ class WaitViewController: UIViewController {
 		static let connecting = NSLocalizedString("Connecting...", comment: "Message to show on the wait screen when the user has accepted an invite and is connecting to another peer")
 		static let connectionErrorTitle = NSLocalizedString("Connection Error", comment: "The title of the alert that shows when the user fails to connect to a peer")
 		static let connectionErrorBody = NSLocalizedString("The connection could not be established. Please try again.", comment: "The message to show on the alert that is shown when the user fails to connect to a peer")
-		static let okay = NSLocalizedString("Okay", comment: "The button title for when the user is acting in the affirmative")
 	}
 	
 	// MARK: - ViewController Lifecycle
@@ -98,7 +97,7 @@ class WaitViewController: UIViewController {
 	
 	private func showConnectionFailureMessage() {
 		let alertView = UIAlertController(title: Strings.connectionErrorTitle, message: Strings.connectionErrorBody, preferredStyle: .alert)
-		alertView.addAction(UIAlertAction(title: Strings.okay, style: .default, handler: { [weak self] (_) in self?.navigationController?.popViewController(animated: true) }))
+		alertView.addAction(UIAlertAction(title: VisibleStrings.Generic.okay, style: .default, handler: { [weak self] (_) in self?.navigationController?.popViewController(animated: true) }))
 		self.present(alertView, animated: true)
 	}
 	

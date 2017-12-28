@@ -76,6 +76,8 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	private func showInvlaidNameError() {
 		let alertView = UIAlertController.init(title: Strings.invalidDisplayNameErrorTitle, message: Strings.invalidDisplayNameErrorMessage, preferredStyle: .alert)
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default, handler: nil)
+		alertView.addAction(okay)
 		self.present(alertView, animated: true)
 	}
 	
