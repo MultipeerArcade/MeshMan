@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="yXj-j6-pPz">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Waiting for Invitation-->
+        <scene sceneID="OYN-lV-Vc4">
+            <objects>
+                <viewController title="Waiting for Invitation" id="yXj-j6-pPz" customClass="WaitViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="wo0-IW-ynP">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="vtc-3v-gWe">
+                                <rect key="frame" x="177" y="323" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Waiting for a leader to invite you to a game..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o7W-ng-E3M">
+                                <rect key="frame" x="17.5" y="286" width="339.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="vtc-3v-gWe" firstAttribute="centerY" secondItem="wo0-IW-ynP" secondAttribute="centerY" id="2Tn-2v-jPe"/>
+                            <constraint firstItem="vtc-3v-gWe" firstAttribute="top" secondItem="o7W-ng-E3M" secondAttribute="bottom" constant="16" id="ATP-RA-0Fk"/>
+                            <constraint firstItem="o7W-ng-E3M" firstAttribute="centerX" secondItem="wo0-IW-ynP" secondAttribute="centerX" id="dwL-Dt-AuM"/>
+                            <constraint firstItem="vtc-3v-gWe" firstAttribute="centerX" secondItem="wo0-IW-ynP" secondAttribute="centerX" id="le8-hW-37s"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="eg3-JL-lkG"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="statusLabel" destination="o7W-ng-E3M" id="saC-jF-jaY"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Le-4C-CVL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="89" y="154"/>
+        </scene>
+    </scenes>
+</document>
