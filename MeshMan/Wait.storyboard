@@ -21,8 +21,8 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="vtc-3v-gWe">
                                 <rect key="frame" x="177" y="323" width="20" height="20"/>
                             </activityIndicatorView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Waiting for a leader to invite you to a game..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o7W-ng-E3M">
-                                <rect key="frame" x="17.5" y="286" width="339.5" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Waiting for a leader to invite you to a game..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o7W-ng-E3M">
+                                <rect key="frame" x="18" y="286" width="339.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -32,6 +32,8 @@
                         <constraints>
                             <constraint firstItem="vtc-3v-gWe" firstAttribute="centerY" secondItem="wo0-IW-ynP" secondAttribute="centerY" id="2Tn-2v-jPe"/>
                             <constraint firstItem="vtc-3v-gWe" firstAttribute="top" secondItem="o7W-ng-E3M" secondAttribute="bottom" constant="16" id="ATP-RA-0Fk"/>
+                            <constraint firstItem="o7W-ng-E3M" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eg3-JL-lkG" secondAttribute="leading" constant="16" id="I1e-Y4-dTN"/>
+                            <constraint firstItem="eg3-JL-lkG" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="o7W-ng-E3M" secondAttribute="trailing" constant="16" id="Vt3-YA-aK8"/>
                             <constraint firstItem="o7W-ng-E3M" firstAttribute="centerX" secondItem="wo0-IW-ynP" secondAttribute="centerX" id="dwL-Dt-AuM"/>
                             <constraint firstItem="vtc-3v-gWe" firstAttribute="centerX" secondItem="wo0-IW-ynP" secondAttribute="centerX" id="le8-hW-37s"/>
                         </constraints>
