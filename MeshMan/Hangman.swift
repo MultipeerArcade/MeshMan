@@ -13,7 +13,7 @@ import Foundation
 internal class Hangman {
 	
 	internal enum Rules {
-		static let numberOfGuesses = 10
+		static let numberOfGuesses = 9
 	}
 	
 	private let word: String

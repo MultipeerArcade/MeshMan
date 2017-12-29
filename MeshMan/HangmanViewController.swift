@@ -181,7 +181,8 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 		self.incorrectGuesses.append(incorrectCharacter)
 		let lastIndex = IndexPath(row: self.incorrectGuesses.count - 1, section: 0)
 		self.incorrectLetterCollection.insertItems(at: [lastIndex])
-		self.incorrectLetterCollection.scrollToItem(at: lastIndex, at: .right, animated: true)
+		self.incorrectLetterCollection.scrollToItem(at: lastIndex, at: .left, animated: true)
+		self.gallowsController.next()
 	}
 	
 	struct NewGuessMessage: Codable {

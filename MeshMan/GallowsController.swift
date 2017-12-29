@@ -14,12 +14,19 @@ class GallowsController: UIViewController {
 	
 	@IBOutlet private weak var imageView: UIImageView!
 	
+	// MARK: -
+	
+	private var imageNumber = 0
+	
 	internal func reset() {
 		self.imageView.image = nil
+		self.imageNumber = 0
 	}
 	
 	internal func next() {
-		
+		self.imageNumber += 1
+		let image = UIImage(named: "HangMan\(imageNumber)")
+		self.imageView.image = image
 	}
 
 }
