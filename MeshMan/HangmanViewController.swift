@@ -88,14 +88,14 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 		let result = self.hangman.guess(letter: char)
 		switch result {
 		case .alreadyGuessed(let guess):
-			if self.iAmLeader {
+			if !self.iAmLeader {
 				self.showAlreadyGuessedMessage(guess: guess)
 			}
 		case .correct(let updatedWord):
 			self.updateWordProgress(with: updatedWord)
 			if !fromPeer { self.broadcast(guess: char) }
 		case .invalid(let guess):
-			if self.iAmLeader {
+			if !self.iAmLeader {
 				self.showInvalidLetterMessage(guess: guess)
 			}
 		case .lose(let word):
