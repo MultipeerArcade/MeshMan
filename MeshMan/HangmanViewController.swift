@@ -14,8 +14,7 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 	// MARK: -
 	
 	private enum Strings {
-		static let inputTooLongErrorTitle = NSLocalizedString("Guess too long", comment: "Title of the error that shows when the user guess something that is too long")
-		static let inputTooLongErrorMessage = NSLocalizedString("%@ has too many letters!", comment: "Format string to form the message that shows when the user makes a hangman guess that is too long. %@ is the guess they made")
+		static let inputNotOneCharErrorMessage = NSLocalizedString("Your guess can only be one character.", comment: "Format string to form the message that shows when the user makes a hangman guess that is too long or too short")
 		static let alreadyGuessedErrorTitle = NSLocalizedString("Already guessed", comment: "The title of the error that shows when the user makes a hangman guess that they have previously made")
 		static let alreadyGuessedErrorMessage = NSLocalizedString("You have already guessed: %@. Guess something else.", comment: "The message that shows when the user makes a hangman guess that they have already made.")
 		static let invalidLetterErrorTitle = NSLocalizedString("Invalid Guess", comment: "Error message title to show when the user guesses an invalid character")
@@ -30,6 +29,8 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 	
 	// MARK: - Outlets
 	
+	@IBOutlet private weak var container: UIView!
+	@IBOutlet private weak var scrollView: UIScrollView!
 	@IBOutlet private weak var wordProgressLabel: UILabel!
 	@IBOutlet private weak var incorrectLetterCollection: UICollectionView!
 	@IBOutlet private weak var guessField: UITextField!
@@ -45,7 +46,13 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 		self.guessField.delegate = self
 		self.incorrectLetterCollection.dataSource = self
 		MCManager.shared.session.delegate = self
+		self.subscribeToKeyboardEvents()
     }
+	
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		self.scrollView.contentSize = self.container.frame.size
+	}
 	
     // MARK: - Navigation
 
@@ -58,6 +65,31 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 			break
 		}
     }
+	
+	// MARK: - Keyboard
+	
+	private func subscribeToKeyboardEvents() {
+		NotificationCenter.default.addObserver(forName: Notification.Name.UIKeyboardDidShow, object: nil, queue: OperationQueue.main) { [weak self] in self?.keyboardDidShow($0) }
+		NotificationCenter.default.addObserver(forName: Notification.Name.UIKeyboardWillHide, object: nil, queue: OperationQueue.main) { [weak self] in self?.keyboardWillHide($0) }
+	}
+	
+	private func keyboardDidShow(_ notification: Notification) {
+		guard let userInfo = notification.userInfo else { return }
+		guard let size = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+		let existingInsets = self.scrollView.contentInset
+		self.scrollView.contentInset = UIEdgeInsetsMake(existingInsets.top, existingInsets.left, size.height, existingInsets.right)
+		
+		var frame = self.view.frame
+		frame.size.height -= size.height
+		if !frame.contains(self.guessField.frame.origin) {
+			self.scrollView.scrollRectToVisible(frame, animated: true)
+		}
+	}
+	
+	private func keyboardWillHide(_ notification: Notification) {
+		let existingInsets = self.scrollView.contentInset
+		self.scrollView.contentInset = UIEdgeInsetsMake(existingInsets.top, existingInsets.left, 0, existingInsets.right)
+	}
 	
 	// MARK: - Hangman
 	
@@ -83,8 +115,9 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 	// MARK: - Input Processing
 	
 	private func processText(input: String, fromPeer: Bool = false) {
-		guard input.count == 1 else { self.showInputTooLongMessage(input: input); return }
-		let char = input[input.startIndex]
+		let trimmedInput = input.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+		guard trimmedInput.count == 1 else { self.showInputNotOneCharMessage(); return }
+		let char = trimmedInput[trimmedInput.startIndex]
 		let result = self.hangman.guess(letter: char)
 		switch result {
 		case .alreadyGuessed(let guess):
@@ -124,8 +157,8 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 		try? MCManager.shared.session.send(encodedData, toPeers: MCManager.shared.session.connectedPeers, with: .reliable)
 	}
 	
-	private func showInputTooLongMessage(input: String) {
-		let alertView = UIAlertController(title: Strings.inputTooLongErrorTitle, message: String(format: Strings.inputTooLongErrorMessage, input), preferredStyle: .alert)
+	private func showInputNotOneCharMessage() {
+		let alertView = UIAlertController(title: Strings.invalidLetterErrorTitle, message: Strings.inputNotOneCharErrorMessage, preferredStyle: .alert)
 		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default, handler: nil)
 		alertView.addAction(okay)
 		self.present(alertView, animated: true, completion: nil)
@@ -236,9 +269,20 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 	
 	// MARK: - UITextFieldDelegate
 	
+	
+	
+	internal func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+		if let count = textField.text?.count, count > 1 {
+			return false
+		} else {
+			return true
+		}
+	}
+	
 	internal func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		guard let text = self.guessField.text else { return true }
 		self.processText(input: text)
+		self.guessField.text = nil
 		return true
 	}
 

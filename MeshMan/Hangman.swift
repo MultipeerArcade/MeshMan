@@ -25,7 +25,7 @@ internal class Hangman {
 	internal private(set) var incorrectLetters = [Character]()
 	
 	init(word: String) {
-		self.word = word.uppercased()
+		self.word = Hangman.sanitize(word: word)
 		self.obfuscatedWord = Hangman.obfuscate(word: self.word).displayString
 	}
 	
@@ -59,6 +59,10 @@ internal class Hangman {
 	}
 	
 	// MARK: - Util
+	
+	internal static func sanitize(word: String) -> String {
+		return word.uppercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+	}
 	
 	internal static func obfuscate(word: String, excluding excludedCharacters: [Character] = []) -> (displayString: String, comparisonString: String) {
 		var displayString = ""
