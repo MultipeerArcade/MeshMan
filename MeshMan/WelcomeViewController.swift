@@ -21,6 +21,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	private enum Constants {
 		static let minimumNumberOfPeers = 2
+		static let displayNameKey = "displayName"
 	}
 	
 	// MARK: - Outlets
@@ -31,8 +32,9 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+		if let savedName = UserDefaults.standard.string(forKey: Constants.displayNameKey) {
+			self.displayNameField.text = savedName
+		}
     }
 	
 	// MARK: - Create/Join
@@ -51,6 +53,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	private func validateNameAndStartSession(for sessionType: SessionType) {
 		guard let name = self.displayName else { self.showInvlaidNameError(); return }
+		UserDefaults.standard.set(name, forKey: Constants.displayNameKey)
 		MCManager.setUpIfNeeded(with: name)
 		switch sessionType {
 		case .create:
