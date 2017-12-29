@@ -25,6 +25,7 @@ class WaitViewController: UIViewController, MCSessionDelegate, MCNearbyServiceAd
 		static let connecting = NSLocalizedString("Connecting...", comment: "Message to show on the wait screen when the user has accepted an invite and is connecting to another peer")
 		static let connectionErrorTitle = NSLocalizedString("Connection Error", comment: "The title of the alert that shows when the user fails to connect to a peer")
 		static let connectionErrorBody = NSLocalizedString("The connection could not be established. Please try again.", comment: "The message to show on the alert that is shown when the user fails to connect to a peer")
+		static let waiting = NSLocalizedString("Waiting for the game to start...", comment: "Text to show when the user is waiting for the leader to start the game")
 	}
 	
 	// MARK: - Properties
@@ -34,6 +35,11 @@ class WaitViewController: UIViewController, MCSessionDelegate, MCNearbyServiceAd
 	}
 	
 	// MARK: - ViewController Lifecycle
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		MCManager.shared.session.delegate = self
+	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -69,14 +75,15 @@ class WaitViewController: UIViewController, MCSessionDelegate, MCNearbyServiceAd
 		self.present(alertView, animated: true)
 	}
 	
-	private func showGame() {
-		print("yay")
-	}
-	
 	// MARK: - MCSessionDelegate
 	
 	internal func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-		
+		guard let message = try? JSONDecoder().decode(WelcomeViewController.GameStartMessage.self, from: data) else { return }
+		DispatchQueue.main.async {
+			guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { return }
+			hangmanVC.setUpHangman(with: message.word, leader: peerID)
+			self.navigationController?.setViewControllers([hangmanVC], animated: true)
+		}
 	}
 	
 	internal func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
@@ -99,7 +106,7 @@ class WaitViewController: UIViewController, MCSessionDelegate, MCNearbyServiceAd
 			case .notConnected:
 				self.showConnectionFailureMessage()
 			case .connected:
-				self.showGame()
+				self.statusLabel.text = Strings.waiting
 			}
 		}
 	}

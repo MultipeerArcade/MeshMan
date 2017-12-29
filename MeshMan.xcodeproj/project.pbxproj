@@ -17,7 +17,24 @@
 		41536B1B1FF437CD00DBC164 /* Storyboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B1A1FF437CD00DBC164 /* Storyboards.swift */; };
 		41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B221FF5369E00DBC164 /* VisibleStrings.swift */; };
 		41536B251FF538C500DBC164 /* MCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B241FF538C500DBC164 /* MCManager.swift */; };
+		41536B271FF5428600DBC164 /* Hangman.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41536B261FF5428600DBC164 /* Hangman.storyboard */; };
+		41536B291FF5429A00DBC164 /* HangmanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B281FF5429A00DBC164 /* HangmanViewController.swift */; };
+		41536B2B1FF54A0400DBC164 /* GallowsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B2A1FF54A0400DBC164 /* GallowsController.swift */; };
+		41536B2D1FF54D8200DBC164 /* Gallows.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41536B2C1FF54D8200DBC164 /* Gallows.storyboard */; };
+		41536B411FF5537100DBC164 /* HangmanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B301FF552DA00DBC164 /* HangmanTests.swift */; };
+		41536B431FF5544D00DBC164 /* Hangman.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B421FF5544D00DBC164 /* Hangman.swift */; };
+		41536B451FF5B81600DBC164 /* LetterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B441FF5B81600DBC164 /* LetterCell.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		41536B3C1FF5532A00DBC164 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 41536AEB1FF06DC800DBC164 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 41536AF21FF06DC800DBC164;
+			remoteInfo = MeshMan;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		41536AF31FF06DC800DBC164 /* MeshMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeshMan.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -32,10 +49,26 @@
 		41536B1A1FF437CD00DBC164 /* Storyboards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storyboards.swift; sourceTree = "<group>"; };
 		41536B221FF5369E00DBC164 /* VisibleStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleStrings.swift; sourceTree = "<group>"; };
 		41536B241FF538C500DBC164 /* MCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCManager.swift; sourceTree = "<group>"; };
+		41536B261FF5428600DBC164 /* Hangman.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Hangman.storyboard; sourceTree = "<group>"; };
+		41536B281FF5429A00DBC164 /* HangmanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanViewController.swift; sourceTree = "<group>"; };
+		41536B2A1FF54A0400DBC164 /* GallowsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GallowsController.swift; sourceTree = "<group>"; };
+		41536B2C1FF54D8200DBC164 /* Gallows.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Gallows.storyboard; sourceTree = "<group>"; };
+		41536B301FF552DA00DBC164 /* HangmanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanTests.swift; sourceTree = "<group>"; };
+		41536B371FF5532A00DBC164 /* MeshManTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MeshManTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		41536B3B1FF5532A00DBC164 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		41536B421FF5544D00DBC164 /* Hangman.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hangman.swift; sourceTree = "<group>"; };
+		41536B441FF5B81600DBC164 /* LetterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		41536AF01FF06DC800DBC164 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41536B341FF5532A00DBC164 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -48,8 +81,8 @@
 		41536AEA1FF06DC800DBC164 = {
 			isa = PBXGroup;
 			children = (
-				41536B221FF5369E00DBC164 /* VisibleStrings.swift */,
 				41536AF51FF06DC800DBC164 /* MeshMan */,
+				41536B381FF5532A00DBC164 /* MeshManTests */,
 				41536AF41FF06DC800DBC164 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -58,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				41536AF31FF06DC800DBC164 /* MeshMan.app */,
+				41536B371FF5532A00DBC164 /* MeshManTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -66,6 +100,13 @@
 			isa = PBXGroup;
 			children = (
 				41536B241FF538C500DBC164 /* MCManager.swift */,
+				41536B221FF5369E00DBC164 /* VisibleStrings.swift */,
+				41536B261FF5428600DBC164 /* Hangman.storyboard */,
+				41536B441FF5B81600DBC164 /* LetterCell.swift */,
+				41536B2C1FF54D8200DBC164 /* Gallows.storyboard */,
+				41536B2A1FF54A0400DBC164 /* GallowsController.swift */,
+				41536B281FF5429A00DBC164 /* HangmanViewController.swift */,
+				41536B421FF5544D00DBC164 /* Hangman.swift */,
 				41536AF61FF06DC800DBC164 /* AppDelegate.swift */,
 				41536AFA1FF06DC800DBC164 /* Main.storyboard */,
 				41536B161FF435B800DBC164 /* Wait.storyboard */,
@@ -77,6 +118,15 @@
 				41536B021FF06DC800DBC164 /* Info.plist */,
 			);
 			path = MeshMan;
+			sourceTree = "<group>";
+		};
+		41536B381FF5532A00DBC164 /* MeshManTests */ = {
+			isa = PBXGroup;
+			children = (
+				41536B301FF552DA00DBC164 /* HangmanTests.swift */,
+				41536B3B1FF5532A00DBC164 /* Info.plist */,
+			);
+			path = MeshManTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -99,6 +149,24 @@
 			productReference = 41536AF31FF06DC800DBC164 /* MeshMan.app */;
 			productType = "com.apple.product-type.application";
 		};
+		41536B361FF5532A00DBC164 /* MeshManTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 41536B3E1FF5532A00DBC164 /* Build configuration list for PBXNativeTarget "MeshManTests" */;
+			buildPhases = (
+				41536B331FF5532A00DBC164 /* Sources */,
+				41536B341FF5532A00DBC164 /* Frameworks */,
+				41536B351FF5532A00DBC164 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				41536B3D1FF5532A00DBC164 /* PBXTargetDependency */,
+			);
+			name = MeshManTests;
+			productName = MeshManTests;
+			productReference = 41536B371FF5532A00DBC164 /* MeshManTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -112,6 +180,11 @@
 					41536AF21FF06DC800DBC164 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+					};
+					41536B361FF5532A00DBC164 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 41536AF21FF06DC800DBC164;
 					};
 				};
 			};
@@ -129,6 +202,7 @@
 			projectRoot = "";
 			targets = (
 				41536AF21FF06DC800DBC164 /* MeshMan */,
+				41536B361FF5532A00DBC164 /* MeshManTests */,
 			);
 		};
 /* End PBXProject section */
@@ -140,8 +214,17 @@
 			files = (
 				41536B011FF06DC800DBC164 /* LaunchScreen.storyboard in Resources */,
 				41536AFE1FF06DC800DBC164 /* Assets.xcassets in Resources */,
+				41536B271FF5428600DBC164 /* Hangman.storyboard in Resources */,
 				41536AFC1FF06DC800DBC164 /* Main.storyboard in Resources */,
+				41536B2D1FF54D8200DBC164 /* Gallows.storyboard in Resources */,
 				41536B171FF435B800DBC164 /* Wait.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41536B351FF5532A00DBC164 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,16 +235,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41536B451FF5B81600DBC164 /* LetterCell.swift in Sources */,
 				41536B1B1FF437CD00DBC164 /* Storyboards.swift in Sources */,
 				41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */,
+				41536B291FF5429A00DBC164 /* HangmanViewController.swift in Sources */,
 				41536B251FF538C500DBC164 /* MCManager.swift in Sources */,
 				41536AF71FF06DC800DBC164 /* AppDelegate.swift in Sources */,
 				41536B091FF06DF300DBC164 /* WelcomeViewController.swift in Sources */,
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
+				41536B431FF5544D00DBC164 /* Hangman.swift in Sources */,
+				41536B2B1FF54A0400DBC164 /* GallowsController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41536B331FF5532A00DBC164 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41536B411FF5537100DBC164 /* HangmanTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		41536B3D1FF5532A00DBC164 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 41536AF21FF06DC800DBC164 /* MeshMan */;
+			targetProxy = 41536B3C1FF5532A00DBC164 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		41536AFA1FF06DC800DBC164 /* Main.storyboard */ = {
@@ -320,6 +423,38 @@
 			};
 			name = Release;
 		};
+		41536B3F1FF5532A00DBC164 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KF7ZV38M3B;
+				INFOPLIST_FILE = MeshManTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pecka.russell.MeshManTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MeshMan.app/MeshMan";
+			};
+			name = Debug;
+		};
+		41536B401FF5532A00DBC164 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KF7ZV38M3B;
+				INFOPLIST_FILE = MeshManTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pecka.russell.MeshManTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MeshMan.app/MeshMan";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -337,6 +472,15 @@
 			buildConfigurations = (
 				41536B061FF06DC800DBC164 /* Debug */,
 				41536B071FF06DC800DBC164 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		41536B3E1FF5532A00DBC164 /* Build configuration list for PBXNativeTarget "MeshManTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41536B3F1FF5532A00DBC164 /* Debug */,
+				41536B401FF5532A00DBC164 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

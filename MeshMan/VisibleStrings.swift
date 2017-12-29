@@ -12,6 +12,7 @@ internal enum VisibleStrings {
 	
 	internal enum Generic {
 		static let okay = NSLocalizedString("Okay", comment: "The button title for when the user is acting in the affirmative")
+		static let cancel = NSLocalizedString("Cancel", comment: "The button title for when the user is acting in the negative")
 	}
 	
 }

@@ -14,4 +14,6 @@ internal class Storyboards {
 	
 	internal static let wait = UIStoryboard(name: "Wait", bundle: nil)
 	
+	internal static let hangman = UIStoryboard(name: "Hangman", bundle: nil)
+	
 }

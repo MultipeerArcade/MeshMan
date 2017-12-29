@@ -16,6 +16,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	private enum Strings {
 		static let invalidDisplayNameErrorTitle = NSLocalizedString("Invalid Display Name", comment: "The title of the error that is shown when the user enters an invalid display name")
 		static let invalidDisplayNameErrorMessage = NSLocalizedString("The display name field cannot be left blank.", comment: "The message to show when a user leaves the display name field blank")
+		static let chooseAWord = NSLocalizedString("Choose a word", comment: "Title of the prompt that asks the user to pick a word to play")
 	}
 	
 	private enum Constants {
@@ -89,7 +90,44 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		self.present(browserVC, animated: true)
 	}
 	
-	private func showGame() {
+	private func prepareGame() {
+		let alertView = UIAlertController(title: Strings.chooseAWord, message: nil, preferredStyle: .alert)
+		alertView.addTextField(configurationHandler: nil)
+		let cancel = UIAlertAction(title: VisibleStrings.Generic.cancel, style: .default, handler: nil)
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { [weak self] (_) in
+			guard let text = alertView.textFields?.first?.text else { return }
+			self?.showGame(with: text)
+		}
+		alertView.addAction(cancel)
+		alertView.addAction(okay)
+		self.present(alertView, animated: true, completion: nil)
+	}
+	
+	private func showGame(with word: String) {
+		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { return }
+		self.broadcastGameStart(with: word)
+		hangmanVC.setUpHangman(with: word, leader: MCManager.shared.peerID)
+		self.navigationController?.setViewControllers([hangmanVC], animated: true)
+	}
+	
+	private func broadcastGameStart(with word: String) {
+		guard let message = self.gameStartMessage(with: word) else { return }
+		try? MCManager.shared.session.send(message, toPeers: MCManager.shared.session.connectedPeers, with: .reliable)
+	}
+	
+	private func gameStartMessage(with word: String) -> Data? {
+		let message = GameStartMessage(word: word)
+		let encodedData = try? JSONEncoder().encode(message)
+		return encodedData
+	}
+	
+	class GameStartMessage: Codable {
+		
+		internal let word: String
+		
+		init(word: String) {
+			self.word = word
+		}
 		
 	}
 	
@@ -100,7 +138,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	internal func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
-		self.dismiss(animated: true) { self.showGame() }
+		self.dismiss(animated: true) { self.prepareGame() }
 	}
 	
 	internal func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {

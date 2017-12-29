@@ -17,7 +17,7 @@ internal class MCManager {
 	
 	internal private(set) var session: MCSession
 	
-	private var peerID: MCPeerID
+	internal var peerID: MCPeerID
 	
 	private var discoveryInfo: DiscoveryInfo
 	
@@ -41,6 +41,10 @@ internal class MCManager {
 	
 	internal func makeAdvertiser() -> MCNearbyServiceAdvertiser {
 		return MCNearbyServiceAdvertiser(peer: self.peerID, discoveryInfo: nil /* self.discoveryInfo.dictionaryRepresentation */, serviceType: MCManager.serviceType)
+	}
+	
+	internal func isThisMe(_ peer: MCPeerID) -> Bool {
+		return peer == self.peerID
 	}
 	
 	// MARK: - Discovery Info
