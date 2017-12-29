@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -17,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qin-5R-DSZ">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qin-5R-DSZ">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                         </subviews>
@@ -28,6 +29,7 @@
                             <constraint firstItem="qin-5R-DSZ" firstAttribute="top" secondItem="fvm-mF-JTs" secondAttribute="top" id="Ux6-em-iIv"/>
                             <constraint firstAttribute="bottom" secondItem="qin-5R-DSZ" secondAttribute="bottom" id="zcS-AR-AYr"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="0HU-ci-nVf"/>
                     </view>
                     <connections>
                         <outlet property="imageView" destination="qin-5R-DSZ" id="0oR-rT-YRz"/>
