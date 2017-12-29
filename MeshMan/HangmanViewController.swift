@@ -25,6 +25,7 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 		static let winAlertTitle = NSLocalizedString("You Win", comment: "Title of the alert that tells the user that they won")
 		static let winAlertMessage = NSLocalizedString("You guessed the word! It was %@.", comment: "The body of the message that shows when the user wins the game.")
 		static let leaderWinAlertMessage = NSLocalizedString("Your opponents failed to guess your word.", comment: "The message to show when the user's opponents fail to guess the word")
+		static let numberOfLetters = NSLocalizedString("%d Letters", comment: "Format string for the label that shows underneath the word progress label in hangman")
 	}
 	
 	// MARK: - Outlets
@@ -34,6 +35,7 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 	@IBOutlet private weak var wordProgressLabel: UILabel!
 	@IBOutlet private weak var incorrectLetterCollection: UICollectionView!
 	@IBOutlet private weak var guessField: UITextField!
+	@IBOutlet private weak var numberOfLettersLabel: UILabel!
 	
 	// MARK: - Controllers
 	
@@ -103,6 +105,7 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 		self.loadViewIfNeeded()
 		self.hangman = Hangman(word: word)
 		self.wordProgressLabel.text = self.hangman.obfuscatedWord
+		self.numberOfLettersLabel.text = String(format: Strings.numberOfLetters, self.hangman.numberOfBlanks)
 		if MCManager.shared.isThisMe(leader) {
 			self.iAmLeader = true
 			self.guessField.isHidden = true

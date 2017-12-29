@@ -24,9 +24,13 @@ internal class Hangman {
 	
 	internal private(set) var incorrectLetters = [Character]()
 	
+	internal let numberOfBlanks: Int
+	
 	init(word: String) {
 		self.word = Hangman.sanitize(word: word)
-		self.obfuscatedWord = Hangman.obfuscate(word: self.word).displayString
+		let (displayString, _, numberOfBlanks) = Hangman.obfuscate(word: self.word)
+		self.obfuscatedWord = displayString
+		self.numberOfBlanks = numberOfBlanks
 	}
 	
 	internal enum GuessResult {
@@ -40,7 +44,7 @@ internal class Hangman {
 			return .alreadyGuessed("\(char)")
 		} else if word.contains(char) {
 			self.guessedLetters.append(char)
-			let (displayString, comparisonString) = Hangman.obfuscate(word: self.word, excluding: guessedLetters)
+			let (displayString, comparisonString, _) = Hangman.obfuscate(word: self.word, excluding: guessedLetters)
 			self.obfuscatedWord = displayString
 			if self.word == comparisonString {
 				return .win(comparisonString)
@@ -64,9 +68,10 @@ internal class Hangman {
 		return word.uppercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 	}
 	
-	internal static func obfuscate(word: String, excluding excludedCharacters: [Character] = []) -> (displayString: String, comparisonString: String) {
+	internal static func obfuscate(word: String, excluding excludedCharacters: [Character] = []) -> (displayString: String, comparisonString: String, numberOfBlanks: Int) {
 		var displayString = ""
 		var comparisonString = ""
+		var numberOfBlanks = 0
 		let lastIndex = word.count - 1
 		for (index, char) in word.enumerated() {
 			var toAppend = index == 0 ? "" : " "
@@ -76,6 +81,7 @@ internal class Hangman {
 			} else if self.characterIsValid(char) {
 				comparisonString.append("_")
 				toAppend.append("_")
+				numberOfBlanks += 1
 			} else {
 				comparisonString.append(char)
 				toAppend.append(char)
@@ -85,7 +91,7 @@ internal class Hangman {
 			}
 			displayString.append(toAppend)
 		}
-		return (displayString, comparisonString)
+		return (displayString, comparisonString, numberOfBlanks)
 	}
 	
 	internal static func characterIsValid(_ character: Character) -> Bool {
