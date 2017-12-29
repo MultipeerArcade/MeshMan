@@ -9,7 +9,7 @@
 import UIKit
 import MultipeerConnectivity
 
-class HangmanViewController: UIViewController, UICollectionViewDataSource, UITextFieldDelegate {
+class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionViewDataSource, UITextFieldDelegate {
 	
 	// MARK: -
 	
@@ -22,8 +22,10 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		static let invalidLetterErrorMessage = NSLocalizedString("%@ is not a valid guess. Please guess something else.", comment: "Message that shows when the user makes an incorrect hangman guess")
 		static let loseAlertTitle = NSLocalizedString("You Lose", comment: "Title of the alert that tells the user they lost")
 		static let loseAlertMessage = NSLocalizedString("You did not guess the word within the maximum number of guesses. The word was %@.", comment: "Message to show when the user loses a game of hangman")
+		static let leaderLoseAlertMessage = NSLocalizedString("Your opponents successfully guessed the word.", comment: "The message to show when the user's opponents guess the word")
 		static let winAlertTitle = NSLocalizedString("You Win", comment: "Title of the alert that tells the user that they won")
 		static let winAlertMessage = NSLocalizedString("You guessed the word! It was %@.", comment: "The body of the message that shows when the user wins the game.")
+		static let leaderWinAlertMessage = NSLocalizedString("Your opponents failed to guess your word.", comment: "The message to show when the user's opponents fail to guess the word")
 	}
 	
 	// MARK: - Outlets
@@ -42,6 +44,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
         super.viewDidLoad()
 		self.guessField.delegate = self
 		self.incorrectLetterCollection.dataSource = self
+		MCManager.shared.session.delegate = self
     }
 	
     // MARK: - Navigation
@@ -67,35 +70,58 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	internal func setUpHangman(with word: String, leader: MCPeerID) {
 		self.loadViewIfNeeded()
 		self.hangman = Hangman(word: word)
+		self.wordProgressLabel.text = self.hangman.obfuscatedWord
 		if MCManager.shared.isThisMe(leader) {
 			self.iAmLeader = true
-			self.guessField.isEnabled = false
+			self.guessField.isHidden = true
 		} else {
 			self.iAmLeader = false
-			self.guessField.isEnabled = true
+			self.guessField.isHidden = false
 		}
 	}
 	
 	// MARK: - Input Processing
 	
-	private func processText(input: String) {
-		guard input.count > 1 else { self.showInputTooLongMessage(input: input); return }
+	private func processText(input: String, fromPeer: Bool = false) {
+		guard input.count == 1 else { self.showInputTooLongMessage(input: input); return }
 		let char = input[input.startIndex]
 		let result = self.hangman.guess(letter: char)
 		switch result {
 		case .alreadyGuessed(let guess):
-			self.showAlreadyGuessedMessage(guess: guess)
+			if self.iAmLeader {
+				self.showAlreadyGuessedMessage(guess: guess)
+			}
 		case .correct(let updatedWord):
 			self.updateWordProgress(with: updatedWord)
+			if !fromPeer { self.broadcast(guess: char) }
 		case .invalid(let guess):
-			self.showInvalidLetterMessage(guess: guess)
+			if self.iAmLeader {
+				self.showInvalidLetterMessage(guess: guess)
+			}
 		case .lose(let word):
-			self.showLoseMessage(with: word)
+			if self.iAmLeader {
+				self.showLeaderWinMessage()
+			} else {
+				self.showLoseMessage(with: word)
+			}
+			if !fromPeer { self.broadcast(guess: char) }
 		case .win(let word):
-			self.showWinMessage(with: word)
+			if self.iAmLeader {
+				self.showLeaderLoseMessage()
+			} else {
+				self.showWinMessage(with: word)
+			}
+			if !fromPeer { self.broadcast(guess: char) }
 		case .wrong(let incorrectGuess):
 			self.updateFor(incorrectCharacter: incorrectGuess)
+			if !fromPeer { self.broadcast(guess: char) }
 		}
+	}
+	
+	private func broadcast(guess: Character) {
+		let message = NewGuessMessage(guess: String(guess))
+		guard let encodedData = try? JSONEncoder().encode(message) else { return }
+		try? MCManager.shared.session.send(encodedData, toPeers: MCManager.shared.session.connectedPeers, with: .reliable)
 	}
 	
 	private func showInputTooLongMessage(input: String) {
@@ -125,16 +151,30 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	private func showLoseMessage(with revealedWord: String) {
 		let alertView = UIAlertController(title: Strings.loseAlertTitle, message: String(format: Strings.loseAlertMessage, revealedWord), preferredStyle: .alert)
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default, handler: nil)
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
 		alertView.addAction(okay)
-		self.present(alertView, animated: true) { fatalError() }
+		self.present(alertView, animated: true)
+	}
+	
+	private func showLeaderLoseMessage() {
+		let alertView = UIAlertController(title: Strings.loseAlertTitle, message: Strings.leaderLoseAlertMessage, preferredStyle: .alert)
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
+		alertView.addAction(okay)
+		self.present(alertView, animated: true)
 	}
 	
 	private func showWinMessage(with revealedWord: String) {
 		let alertView = UIAlertController(title: Strings.winAlertTitle, message: String(format: Strings.winAlertMessage, revealedWord), preferredStyle: .alert)
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default, handler: nil)
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
 		alertView.addAction(okay)
-		self.present(alertView, animated: true) { fatalError() }
+		self.present(alertView, animated: true)
+	}
+	
+	private func showLeaderWinMessage() {
+		let alertView = UIAlertController(title: Strings.winAlertTitle, message: Strings.leaderWinAlertMessage, preferredStyle: .alert)
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
+		alertView.addAction(okay)
+		self.present(alertView, animated: true)
 	}
 	
 	private func updateFor(incorrectCharacter: Character) {
@@ -142,6 +182,41 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		let lastIndex = IndexPath(row: self.incorrectGuesses.count - 1, section: 0)
 		self.incorrectLetterCollection.insertItems(at: [lastIndex])
 		self.incorrectLetterCollection.scrollToItem(at: lastIndex, at: .right, animated: true)
+	}
+	
+	struct NewGuessMessage: Codable {
+		
+		let guess: String
+		
+		init(guess: String) {
+			self.guess = guess
+		}
+		
+	}
+	
+	// MARK: - MCSessionDelegate
+	
+	internal func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+		guard let message = try? JSONDecoder().decode(NewGuessMessage.self, from: data) else { return }
+		DispatchQueue.main.async {
+			self.processText(input: message.guess, fromPeer: true)
+		}
+	}
+	
+	internal func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
+		
+	}
+	
+	internal func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
+		
+	}
+	
+	internal func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+		
+	}
+	
+	internal func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+		
 	}
 	
 	// MARK: - UICollectionViewDataSource

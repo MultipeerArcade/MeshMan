@@ -26,7 +26,7 @@ internal class Hangman {
 	
 	init(word: String) {
 		self.word = word.uppercased()
-		self.obfuscatedWord = Hangman.obfuscate(word: self.word)
+		self.obfuscatedWord = Hangman.obfuscate(word: self.word).displayString
 	}
 	
 	internal enum GuessResult {
@@ -39,11 +39,13 @@ internal class Hangman {
 		if guessedLetters.contains(char) {
 			return .alreadyGuessed("\(char)")
 		} else if word.contains(char) {
-			let newObfuscatedWord = self.updateObfuscation(with: char)
-			if self.word == newObfuscatedWord {
-				return .win(newObfuscatedWord)
+			self.guessedLetters.append(char)
+			let (displayString, comparisonString) = Hangman.obfuscate(word: self.word, excluding: guessedLetters)
+			self.obfuscatedWord = displayString
+			if self.word == comparisonString {
+				return .win(comparisonString)
 			} else {
-				return .correct(newObfuscatedWord)
+				return .correct(displayString)
 			}
 		} else if self.incorrectLetters.count >= Rules.numberOfGuesses {
 			self.guessedLetters.append(char)
@@ -56,26 +58,30 @@ internal class Hangman {
 		}
 	}
 	
-	internal func updateObfuscation(with letter: Character) -> String {
-		self.guessedLetters.append(letter)
-		self.obfuscatedWord = Hangman.obfuscate(word: self.word, excluding: guessedLetters)
-		return self.obfuscatedWord
-	}
-	
 	// MARK: - Util
 	
-	internal static func obfuscate(word: String, excluding excludedCharacters: [Character] = []) -> String {
-		var newString = ""
-		for char in word {
+	internal static func obfuscate(word: String, excluding excludedCharacters: [Character] = []) -> (displayString: String, comparisonString: String) {
+		var displayString = ""
+		var comparisonString = ""
+		let lastIndex = word.count - 1
+		for (index, char) in word.enumerated() {
+			var toAppend = index == 0 ? "" : " "
 			if excludedCharacters.contains(char) {
-				newString.append(char)
+				comparisonString.append(char)
+				toAppend.append(char)
 			} else if self.characterIsValid(char) {
-				newString.append("_")
+				comparisonString.append("_")
+				toAppend.append("_")
 			} else {
-				newString.append(char)
+				comparisonString.append(char)
+				toAppend.append(char)
 			}
+			if lastIndex == index {
+				toAppend.append(" ")
+			}
+			displayString.append(toAppend)
 		}
-		return newString
+		return (displayString, comparisonString)
 	}
 	
 	internal static func characterIsValid(_ character: Character) -> Bool {
