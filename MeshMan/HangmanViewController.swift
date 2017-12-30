@@ -104,7 +104,7 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 	internal func setUpHangman(with word: String, leader: MCPeerID) {
 		self.loadViewIfNeeded()
 		self.hangman = Hangman(word: word)
-		self.wordProgressLabel.text = self.hangman.obfuscatedWord
+		self.updateWordProgress(with: self.hangman.obfuscatedWord)
 		self.numberOfLettersLabel.text = String(format: Strings.numberOfLetters, self.hangman.numberOfBlanks)
 		if MCManager.shared.isThisMe(leader) {
 			self.iAmLeader = true

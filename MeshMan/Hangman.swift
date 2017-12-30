@@ -14,6 +14,7 @@ internal class Hangman {
 	
 	internal enum Rules {
 		static let numberOfGuesses = 9
+		static let maxCharacters = 100
 	}
 	
 	private let word: String

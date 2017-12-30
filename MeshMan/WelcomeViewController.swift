@@ -17,6 +17,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		static let invalidDisplayNameErrorTitle = NSLocalizedString("Invalid Display Name", comment: "The title of the error that is shown when the user enters an invalid display name")
 		static let invalidDisplayNameErrorMessage = NSLocalizedString("The display name field cannot be left blank.", comment: "The message to show when a user leaves the display name field blank")
 		static let chooseAWord = NSLocalizedString("Choose a word", comment: "Title of the prompt that asks the user to pick a word to play")
+		static let chooseAWordMessage = NSLocalizedString("Your word cannot be greater than %d characters long, including special characters.", comment: "Subtitle for the choose a word message in hangman")
 	}
 	
 	private enum Constants {
@@ -94,11 +95,12 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	private func prepareGame() {
-		let alertView = UIAlertController(title: Strings.chooseAWord, message: nil, preferredStyle: .alert)
+		let alertView = UIAlertController(title: Strings.chooseAWord, message: String(format: Strings.chooseAWordMessage, Hangman.Rules.maxCharacters), preferredStyle: .alert)
 		alertView.addTextField(configurationHandler: nil)
 		let cancel = UIAlertAction(title: VisibleStrings.Generic.cancel, style: .default, handler: nil)
 		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { [weak self] (_) in
-			guard let text = alertView.textFields?.first?.text else { return }
+			guard let text = alertView.textFields?.first?.text else { fatalError() }
+			guard text.count >= Hangman.Rules.maxCharacters else { fatalError() }
 			self?.showGame(with: text)
 		}
 		alertView.addAction(cancel)
