@@ -35,7 +35,7 @@ internal class Hangman {
 	}
 	
 	internal enum GuessResult {
-		case correct(String), alreadyGuessed(String), wrong(Character), invalid(String), win(String), lose(String)
+		case correct(String), alreadyGuessed(String), wrong(Character), invalid(String), wordGuessed(String), noMoreGuesses(String)
 	}
 	
 	internal func guess(letter: Character) -> GuessResult {
@@ -48,14 +48,14 @@ internal class Hangman {
 			let (displayString, comparisonString, _) = Hangman.obfuscate(word: self.word, excluding: guessedLetters)
 			self.obfuscatedWord = displayString
 			if self.word == comparisonString {
-				return .win(comparisonString)
+				return .wordGuessed(comparisonString)
 			} else {
 				return .correct(displayString)
 			}
 		} else if self.incorrectLetters.count >= Rules.numberOfGuesses {
 			self.guessedLetters.append(char)
 			self.incorrectLetters.append(char)
-			return .lose(self.word)
+			return .noMoreGuesses(self.word)
 		} else {
 			self.guessedLetters.append(char)
 			self.incorrectLetters.append(char)

@@ -19,12 +19,14 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		static let invalidLetterErrorTitle = NSLocalizedString("Invalid Guess", comment: "Error message title to show when the user guesses an invalid character")
 		static let invalidLetterErrorMessage = NSLocalizedString("%@ is not a valid guess. Please guess something else.", comment: "Message that shows when the user makes an incorrect hangman guess")
 		static let loseAlertTitle = NSLocalizedString("You Lose", comment: "Title of the alert that tells the user they lost")
-		static let loseAlertMessage = NSLocalizedString("You did not guess the word within the maximum number of guesses. The word was %@.", comment: "Message to show when the user loses a game of hangman")
-		static let leaderLoseAlertMessage = NSLocalizedString("Your opponents successfully guessed the word.", comment: "The message to show when the user's opponents guess the word")
+		static let guesserLoseAlertMessage = NSLocalizedString("You did not guess the word within the maximum number of guesses. The word was %@.", comment: "Message to show when the user loses a game of hangman")
+		static let pickerLoseAlertMessage = NSLocalizedString("Your opponents successfully guessed the word: %@.", comment: "The message to show when the user's opponents guess the word")
 		static let winAlertTitle = NSLocalizedString("You Win", comment: "Title of the alert that tells the user that they won")
-		static let winAlertMessage = NSLocalizedString("You guessed the word! It was %@.", comment: "The body of the message that shows when the user wins the game.")
-		static let leaderWinAlertMessage = NSLocalizedString("Your opponents failed to guess your word.", comment: "The message to show when the user's opponents fail to guess the word")
+		static let guesserWinAlertMessage = NSLocalizedString("You guessed the word! It was %@.", comment: "The body of the message that shows when the user wins the game.")
+		static let pickerWinAlertMessage = NSLocalizedString("Your opponents failed to guess your word: %@.", comment: "The message to show when the user's opponents fail to guess the word")
 		static let numberOfLetters = NSLocalizedString("%d Letters", comment: "Format string for the label that shows underneath the word progress label in hangman")
+		static let yourTurn = NSLocalizedString("Your Turn", comment: "Message that indicates that it is the current users' turn")
+		static let personsTurn = NSLocalizedString("%@'s Turn", comment: "Message that indicates that it is %@s turn")
 	}
 	
 	// MARK: - Outlets
@@ -47,6 +49,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		self.guessField.delegate = self
 		self.incorrectLetterCollection.dataSource = self
 		self.subscribeToKeyboardEvents()
+		self.turnManager.pingEvents()
     }
 	
 	override func viewDidLayoutSubviews() {
@@ -81,7 +84,31 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	}
 	
 	private func handleNewGuessRecieved(_ message: HangmanNetUtil.NewGuessMessage) {
-		self.processText(input: message.guess, fromPeer: true)
+		self.processText(input: message.guess, local: false)
+	}
+	
+	// MARK: - Turn Management
+	
+	internal var turnManager: HangmanTurnManager! {
+		didSet {
+			if let turnManager = self.turnManager { self.setUp(turnManager: turnManager) }
+		}
+	}
+	
+	private var currentGuesserChangedHandle: Event<HangmanTurnManager.RoleChangePayload>.Handle?
+	
+	private func setUp(turnManager: HangmanTurnManager) {
+		self.currentGuesserChangedHandle = turnManager.currentGuesserChanged.subscribe({ [weak self] in self?.setUp(newGuesser: $1) })
+	}
+	
+	private func setUp(newGuesser: HangmanTurnManager.RoleChangePayload) {
+		if newGuesser.isMe {
+			self.navigationItem.title = Strings.yourTurn
+			self.guessField.isHidden = false
+		} else {
+			self.navigationItem.title = String(format: Strings.personsTurn, newGuesser.name)
+			self.guessField.isHidden = true
+		}
 	}
 	
 	// MARK: - Keyboard
@@ -113,61 +140,49 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	private var hangman: Hangman!
 	
-	private var iAmLeader: Bool = false
-	
 	private var incorrectGuesses = [Character]()
 	
-	internal func setUpHangman(with word: String, asLeader: Bool) {
+	internal func setUpHangman(with word: String) {
 		self.loadViewIfNeeded()
 		self.hangman = Hangman(word: word)
 		self.updateWordProgress(with: self.hangman.obfuscatedWord)
 		self.numberOfLettersLabel.text = String(format: Strings.numberOfLetters, self.hangman.numberOfBlanks)
-		if asLeader {
-			self.iAmLeader = true
-			self.guessField.isHidden = true
-		} else {
-			self.iAmLeader = false
-			self.guessField.isHidden = false
-		}
 	}
 	
 	// MARK: - Input Processing
 	
-	private func processText(input: String, fromPeer: Bool = false) {
+	private func processText(input: String, local: Bool = true) {
 		let trimmedInput = input.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 		guard trimmedInput.count == 1 else { self.showInputNotOneCharMessage(); return }
 		let char = trimmedInput[trimmedInput.startIndex]
+		let validTurnMade: Bool
 		let result = self.hangman.guess(letter: char)
 		switch result {
 		case .alreadyGuessed(let guess):
-			if !self.iAmLeader {
+			if local {
 				self.showAlreadyGuessedMessage(guess: guess)
 			}
+			validTurnMade = false
 		case .correct(let updatedWord):
 			self.updateWordProgress(with: updatedWord)
-			if !fromPeer { self.broadcast(guess: char) }
+			validTurnMade = true
 		case .invalid(let guess):
-			if !self.iAmLeader {
+			if local {
 				self.showInvalidLetterMessage(guess: guess)
 			}
-		case .lose(let word):
-			if self.iAmLeader {
-				self.showLeaderWinMessage()
-			} else {
-				self.showLoseMessage(with: word)
-			}
-			if !fromPeer { self.broadcast(guess: char) }
-		case .win(let word):
-			if self.iAmLeader {
-				self.showLeaderLoseMessage()
-			} else {
-				self.showWinMessage(with: word)
-			}
-			if !fromPeer { self.broadcast(guess: char) }
+			validTurnMade = false
+		case .noMoreGuesses(let word):
+			self.showNoMoreGuessesMessage(with: word)
+			validTurnMade = true
+		case .wordGuessed(let word):
+			self.showWordGuessedMessage(with: word)
+			validTurnMade = true
 		case .wrong(let incorrectGuess):
 			self.updateFor(incorrectCharacter: incorrectGuess)
-			if !fromPeer { self.broadcast(guess: char) }
+			validTurnMade = true
 		}
+		if local { self.broadcast(guess: char) }
+		if validTurnMade { self.turnManager.turnCompleted() }
 	}
 	
 	private func broadcast(guess: Character) {
@@ -200,29 +215,27 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		self.present(alertView, animated: true, completion: nil)
 	}
 	
-	private func showLoseMessage(with revealedWord: String) {
-		let alertView = UIAlertController(title: Strings.loseAlertTitle, message: String(format: Strings.loseAlertMessage, revealedWord), preferredStyle: .alert)
+	private func showNoMoreGuessesMessage(with word: String) {
+		let alertView: UIAlertController
+		switch self.turnManager.myRole {
+		case .guesser, .waiting:
+			alertView = UIAlertController(title: Strings.loseAlertTitle, message: String(format: Strings.guesserLoseAlertMessage, word), preferredStyle: .alert)
+		case .picker:
+			alertView = UIAlertController(title: Strings.winAlertTitle, message: String(format: Strings.pickerWinAlertMessage, word), preferredStyle: .alert)
+		}
 		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
 		alertView.addAction(okay)
 		self.present(alertView, animated: true)
 	}
 	
-	private func showLeaderLoseMessage() {
-		let alertView = UIAlertController(title: Strings.loseAlertTitle, message: Strings.leaderLoseAlertMessage, preferredStyle: .alert)
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
-		alertView.addAction(okay)
-		self.present(alertView, animated: true)
-	}
-	
-	private func showWinMessage(with revealedWord: String) {
-		let alertView = UIAlertController(title: Strings.winAlertTitle, message: String(format: Strings.winAlertMessage, revealedWord), preferredStyle: .alert)
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
-		alertView.addAction(okay)
-		self.present(alertView, animated: true)
-	}
-	
-	private func showLeaderWinMessage() {
-		let alertView = UIAlertController(title: Strings.winAlertTitle, message: Strings.leaderWinAlertMessage, preferredStyle: .alert)
+	private func showWordGuessedMessage(with word: String) {
+		let alertView: UIAlertController
+		switch self.turnManager.myRole {
+		case .guesser, .waiting:
+			alertView = UIAlertController(title: Strings.winAlertTitle, message: String(format: Strings.guesserWinAlertMessage, word), preferredStyle: .alert)
+		case .picker:
+			alertView = UIAlertController(title: Strings.loseAlertTitle, message: String(format: Strings.pickerLoseAlertMessage, word), preferredStyle: .alert)
+		}
 		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
 		alertView.addAction(okay)
 		self.present(alertView, animated: true)

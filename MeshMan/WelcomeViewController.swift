@@ -117,9 +117,11 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	private func showGame(with word: String) {
 		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { return }
-		self.hangmanNetUtil.sendStartGameMessage(HangmanNetUtil.StartGameMessage(word: word))
+		self.hangmanNetUtil.sendStartGameMessage(HangmanNetUtil.StartGameMessage(word: word, picker: MCManager.shared.peerID))
+		let turnManager = HangmanTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID)
 		hangmanVC.hangmanNetUtil = self.hangmanNetUtil
-		hangmanVC.setUpHangman(with: word, asLeader: true)
+		hangmanVC.turnManager = turnManager
+		hangmanVC.setUpHangman(with: word)
 		self.navigationController?.setViewControllers([hangmanVC], animated: true)
 	}
 	

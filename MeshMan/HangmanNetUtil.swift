@@ -29,10 +29,33 @@ internal class HangmanNetUtil: NSObject, MCSessionDelegate {
 	
 	struct StartGameMessage: Codable {
 		internal let word: String
+		internal let picker: MCPeerID
 		
-		init(word: String) {
-			self.word = word
+		private enum CodingKeys: String, CodingKey {
+			case word
+			case picker
 		}
+		
+		init(word: String, picker: MCPeerID) {
+			self.word = word
+			self.picker = picker
+		}
+		
+		init(from decoder: Decoder) throws {
+			let values = try decoder.container(keyedBy: CodingKeys.self)
+			let word = try values.decode(String.self, forKey: .word)
+			let pickerData = try values.decode(Data.self, forKey: .picker)
+			let picker = NSKeyedUnarchiver.unarchiveObject(with: pickerData) as! MCPeerID
+			self.init(word: word, picker: picker)
+		}
+		
+		internal func encode(to encoder: Encoder) throws {
+			var container = encoder.container(keyedBy: CodingKeys.self)
+			try container.encode(self.word, forKey: .word)
+			let pickerData = NSKeyedArchiver.archivedData(withRootObject: self.picker)
+			try container.encode(pickerData, forKey: .picker)
+		}
+		
 	}
 	
 	struct NewGuessMessage: Codable {

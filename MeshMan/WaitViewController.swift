@@ -72,9 +72,11 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
 		self.present(alertView, animated: true)
 	}
 	
-	private func showGame(with word: String) {
+	private func showGame(with word: String, firstPicker: MCPeerID) {
 		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { return }
-		hangmanVC.setUpHangman(with: word, asLeader: false)
+		let turnManager = HangmanTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: firstPicker)
+		hangmanVC.turnManager = turnManager
+		hangmanVC.setUpHangman(with: word)
 		hangmanVC.hangmanNetUtil = self.hangmanNetUtil
 		self.navigationController?.setViewControllers([hangmanVC], animated: true)
 	}
@@ -97,7 +99,7 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
 		self.peerConnectionStateChangedHandle = self.hangmanNetUtil.peerConnectionStateChanged.subscribe({ [weak self] (_, payload) in self?.handle(peer: payload.peer, changedStateTo: payload.state) })
 		self.choosingWordMessageRecievedHandle = self.hangmanNetUtil.choosingWordMessageRecieved.subscribe({ [weak self] (_, _) in self?.statusLabel.text = Strings.leaderChoosingWord })
 		self.startGameMessageRecievedHandle = self.hangmanNetUtil.startGameMessageRecieved.subscribe({ [weak self] (_, message) in
-			self?.showGame(with: message.word)
+			self?.showGame(with: message.word, firstPicker: message.picker)
 		})
 	}
 	

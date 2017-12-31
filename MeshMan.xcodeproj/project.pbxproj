@@ -27,6 +27,7 @@
 		41AA8F691FF809F800C95DD6 /* HangmanNetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */; };
 		41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6A1FF80CCE00C95DD6 /* Event.swift */; };
 		41AA8F6D1FF80CD500C95DD6 /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6C1FF80CD500C95DD6 /* EventTests.swift */; };
+		41AA8F701FF98FEF00C95DD6 /* HangmanTurnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanNetUtil.swift; sourceTree = "<group>"; };
 		41AA8F6A1FF80CCE00C95DD6 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		41AA8F6C1FF80CD500C95DD6 /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
+		41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanTurnManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +142,7 @@
 				41536B2C1FF54D8200DBC164 /* Gallows.storyboard */,
 				41536B2A1FF54A0400DBC164 /* GallowsController.swift */,
 				41536B281FF5429A00DBC164 /* HangmanViewController.swift */,
+				41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */,
 				41536B421FF5544D00DBC164 /* Hangman.swift */,
 				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
 			);
@@ -263,6 +266,7 @@
 				41536B091FF06DF300DBC164 /* WelcomeViewController.swift in Sources */,
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
 				41536B431FF5544D00DBC164 /* Hangman.swift in Sources */,
+				41AA8F701FF98FEF00C95DD6 /* HangmanTurnManager.swift in Sources */,
 				41536B2B1FF54A0400DBC164 /* GallowsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
