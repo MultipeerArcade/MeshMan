@@ -35,7 +35,7 @@ internal class Hangman {
 	}
 	
 	internal enum GuessResult {
-		case correct(String), alreadyGuessed(String), wrong(Character), invalid(String), wordGuessed(String), noMoreGuesses(String)
+		case correct(String), alreadyGuessed(String), wrong(Character), invalid(String), wordGuessed(String), noMoreGuesses(Character, String)
 	}
 	
 	internal func guess(letter: Character) -> GuessResult {
@@ -55,7 +55,7 @@ internal class Hangman {
 		} else if self.incorrectLetters.count >= Rules.numberOfGuesses {
 			self.guessedLetters.append(char)
 			self.incorrectLetters.append(char)
-			return .noMoreGuesses(self.word)
+			return .noMoreGuesses(char, self.word)
 		} else {
 			self.guessedLetters.append(char)
 			self.incorrectLetters.append(char)

@@ -171,10 +171,12 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 				self.showInvalidLetterMessage(guess: guess)
 			}
 			validTurnMade = false
-		case .noMoreGuesses(let word):
+		case .noMoreGuesses(let incorrectGuess, let word):
+			self.updateFor(incorrectCharacter: incorrectGuess)
 			self.showNoMoreGuessesMessage(with: word)
 			validTurnMade = true
 		case .wordGuessed(let word):
+			self.updateWordProgress(with: word)
 			self.showWordGuessedMessage(with: word)
 			validTurnMade = true
 		case .wrong(let incorrectGuess):
