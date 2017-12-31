@@ -38,6 +38,10 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		}
     }
 	
+	// MARK: -
+	
+	private var hangmanNetUtil: HangmanNetUtil!
+	
 	// MARK: - Create/Join
 	
 	@IBAction func createButtonPressed() {
@@ -56,6 +60,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		guard let name = self.displayName else { self.showInvlaidNameError(); return }
 		UserDefaults.standard.set(name, forKey: Constants.displayNameKey)
 		MCManager.setUpIfNeeded(with: name)
+		self.hangmanNetUtil = HangmanNetUtil(session: MCManager.shared.session)
 		switch sessionType {
 		case .create:
 			self.showBrowser()
@@ -83,6 +88,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 			return
 		}
 		waitController.advertiser = MCManager.shared.makeAdvertiser()
+		waitController.hangmanNetUtil = self.hangmanNetUtil
 		self.navigationController?.pushViewController(waitController, animated: true)
 	}
 	
@@ -100,40 +106,21 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		let cancel = UIAlertAction(title: VisibleStrings.Generic.cancel, style: .default, handler: nil)
 		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { [weak self] (_) in
 			guard let text = alertView.textFields?.first?.text else { fatalError() }
-			guard text.count >= Hangman.Rules.maxCharacters else { fatalError() }
+			guard text.count <= Hangman.Rules.maxCharacters else { fatalError() }
 			self?.showGame(with: text)
 		}
 		alertView.addAction(cancel)
 		alertView.addAction(okay)
+		self.hangmanNetUtil.sendChoosingWordMessage()
 		self.present(alertView, animated: true, completion: nil)
 	}
 	
 	private func showGame(with word: String) {
 		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { return }
-		self.broadcastGameStart(with: word)
-		hangmanVC.setUpHangman(with: word, leader: MCManager.shared.peerID)
+		self.hangmanNetUtil.sendStartGameMessage(HangmanNetUtil.StartGameMessage(word: word))
+		hangmanVC.hangmanNetUtil = self.hangmanNetUtil
+		hangmanVC.setUpHangman(with: word, asLeader: true)
 		self.navigationController?.setViewControllers([hangmanVC], animated: true)
-	}
-	
-	private func broadcastGameStart(with word: String) {
-		guard let message = self.gameStartMessage(with: word) else { return }
-		try? MCManager.shared.session.send(message, toPeers: MCManager.shared.session.connectedPeers, with: .reliable)
-	}
-	
-	private func gameStartMessage(with word: String) -> Data? {
-		let message = GameStartMessage(word: word)
-		let encodedData = try? JSONEncoder().encode(message)
-		return encodedData
-	}
-	
-	class GameStartMessage: Codable {
-		
-		internal let word: String
-		
-		init(word: String) {
-			self.word = word
-		}
-		
 	}
 	
 	// MARK: MCBrowserViewControllerDelegate

@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import MultipeerConnectivity
 
-class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionViewDataSource, UITextFieldDelegate {
+class HangmanViewController: UIViewController, UICollectionViewDataSource, UITextFieldDelegate {
 	
 	// MARK: -
 	
@@ -47,7 +46,6 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
         super.viewDidLoad()
 		self.guessField.delegate = self
 		self.incorrectLetterCollection.dataSource = self
-		MCManager.shared.session.delegate = self
 		self.subscribeToKeyboardEvents()
     }
 	
@@ -67,6 +65,24 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 			break
 		}
     }
+	
+	// MARK: - Message Processing
+	
+	internal var hangmanNetUtil: HangmanNetUtil! {
+		didSet {
+			if let netUtil = self.hangmanNetUtil { self.setUp(netUtil: netUtil) }
+		}
+	}
+	
+	private var newMessageRecievedHandle: Event<HangmanNetUtil.NewGuessMessage>.Handle?
+	
+	private func setUp(netUtil: HangmanNetUtil) {
+		self.newMessageRecievedHandle = netUtil.newGuessRecieved.subscribe({ [weak self] in self?.handleNewGuessRecieved($1) })
+	}
+	
+	private func handleNewGuessRecieved(_ message: HangmanNetUtil.NewGuessMessage) {
+		self.processText(input: message.guess, fromPeer: true)
+	}
 	
 	// MARK: - Keyboard
 	
@@ -101,12 +117,12 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 	
 	private var incorrectGuesses = [Character]()
 	
-	internal func setUpHangman(with word: String, leader: MCPeerID) {
+	internal func setUpHangman(with word: String, asLeader: Bool) {
 		self.loadViewIfNeeded()
 		self.hangman = Hangman(word: word)
 		self.updateWordProgress(with: self.hangman.obfuscatedWord)
 		self.numberOfLettersLabel.text = String(format: Strings.numberOfLetters, self.hangman.numberOfBlanks)
-		if MCManager.shared.isThisMe(leader) {
+		if asLeader {
 			self.iAmLeader = true
 			self.guessField.isHidden = true
 		} else {
@@ -155,9 +171,8 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 	}
 	
 	private func broadcast(guess: Character) {
-		let message = NewGuessMessage(guess: String(guess))
-		guard let encodedData = try? JSONEncoder().encode(message) else { return }
-		try? MCManager.shared.session.send(encodedData, toPeers: MCManager.shared.session.connectedPeers, with: .reliable)
+		let message = HangmanNetUtil.NewGuessMessage(guess: String(guess))
+		self.hangmanNetUtil.sendNewGuessMessage(message)
 	}
 	
 	private func showInputNotOneCharMessage() {
@@ -219,41 +234,6 @@ class HangmanViewController: UIViewController, MCSessionDelegate, UICollectionVi
 		self.incorrectLetterCollection.insertItems(at: [lastIndex])
 		self.incorrectLetterCollection.scrollToItem(at: lastIndex, at: .left, animated: true)
 		self.gallowsController.next()
-	}
-	
-	struct NewGuessMessage: Codable {
-		
-		let guess: String
-		
-		init(guess: String) {
-			self.guess = guess
-		}
-		
-	}
-	
-	// MARK: - MCSessionDelegate
-	
-	internal func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-		guard let message = try? JSONDecoder().decode(NewGuessMessage.self, from: data) else { return }
-		DispatchQueue.main.async {
-			self.processText(input: message.guess, fromPeer: true)
-		}
-	}
-	
-	internal func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
-		
-	}
-	
-	internal func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
-		
-	}
-	
-	internal func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
-		
-	}
-	
-	internal func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-		
 	}
 	
 	// MARK: - UICollectionViewDataSource
