@@ -252,12 +252,15 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	// MARK: - UITextFieldDelegate
 	
-	
-	
 	internal func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-		if let count = textField.text?.count, count > 1 {
-			return false
-		} else {
+		guard string.count <= 1 else { return false } // If the replacement string has one or fewer characters, need this to protect against copy/paste
+		if let count = textField.text?.count, count > 0 { // If the text field has at least one character in it
+			if range.lowerBound == 0, range.upperBound == 1 { // If the single character is the one being edited
+				return true
+			} else {
+				return false
+			}
+		} else { // If the field has no characters in it
 			return true
 		}
 	}
