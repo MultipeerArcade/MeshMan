@@ -107,13 +107,7 @@
 			children = (
 				41536B241FF538C500DBC164 /* MCManager.swift */,
 				41536B221FF5369E00DBC164 /* VisibleStrings.swift */,
-				41536B261FF5428600DBC164 /* Hangman.storyboard */,
-				41536B441FF5B81600DBC164 /* LetterCell.swift */,
-				41536B2C1FF54D8200DBC164 /* Gallows.storyboard */,
-				41536B2A1FF54A0400DBC164 /* GallowsController.swift */,
-				41536B281FF5429A00DBC164 /* HangmanViewController.swift */,
-				41536B421FF5544D00DBC164 /* Hangman.swift */,
-				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
+				41AA8F6E1FF89EBD00C95DD6 /* Hangman */,
 				41AA8F6A1FF80CCE00C95DD6 /* Event.swift */,
 				41536AF61FF06DC800DBC164 /* AppDelegate.swift */,
 				41536AFA1FF06DC800DBC164 /* Main.storyboard */,
@@ -136,6 +130,20 @@
 				41536B3B1FF5532A00DBC164 /* Info.plist */,
 			);
 			path = MeshManTests;
+			sourceTree = "<group>";
+		};
+		41AA8F6E1FF89EBD00C95DD6 /* Hangman */ = {
+			isa = PBXGroup;
+			children = (
+				41536B261FF5428600DBC164 /* Hangman.storyboard */,
+				41536B441FF5B81600DBC164 /* LetterCell.swift */,
+				41536B2C1FF54D8200DBC164 /* Gallows.storyboard */,
+				41536B2A1FF54A0400DBC164 /* GallowsController.swift */,
+				41536B281FF5429A00DBC164 /* HangmanViewController.swift */,
+				41536B421FF5544D00DBC164 /* Hangman.swift */,
+				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
+			);
+			name = Hangman;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
