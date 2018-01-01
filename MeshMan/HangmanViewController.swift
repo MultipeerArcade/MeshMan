@@ -38,6 +38,12 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	@IBOutlet private weak var guessField: UITextField!
 	@IBOutlet private weak var numberOfLettersLabel: UILabel!
 	
+	// MARK: - Deinitialization
+	
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+	
 	// MARK: - Controllers
 	
 	private weak var gallowsController: GallowsController!
