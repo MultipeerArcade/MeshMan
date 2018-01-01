@@ -12,10 +12,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Hangman View Controller-->
+        <!--Hangman-->
         <scene sceneID="OFT-fC-FXi">
             <objects>
-                <viewController id="1Bw-FQ-7A4" customClass="HangmanViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Hangman" id="1Bw-FQ-7A4" customClass="HangmanViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DZ9-jM-fxv">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

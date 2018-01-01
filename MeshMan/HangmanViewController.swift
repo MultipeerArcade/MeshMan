@@ -103,10 +103,10 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	private func setUp(newGuesser: HangmanTurnManager.RoleChangePayload) {
 		if newGuesser.isMe {
-			self.navigationItem.title = Strings.yourTurn
+			self.navigationItem.prompt = Strings.yourTurn
 			self.guessField.isHidden = false
 		} else {
-			self.navigationItem.title = String(format: Strings.personsTurn, newGuesser.name)
+			self.navigationItem.prompt = String(format: Strings.personsTurn, newGuesser.name)
 			self.guessField.isHidden = true
 		}
 	}
