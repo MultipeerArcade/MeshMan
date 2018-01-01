@@ -105,9 +105,13 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		if newGuesser.isMe {
 			self.navigationItem.prompt = Strings.yourTurn
 			self.guessField.isHidden = false
+			self.guessField.isEnabled = true
+			self.guessField.becomeFirstResponder()
 		} else {
 			self.navigationItem.prompt = String(format: Strings.personsTurn, newGuesser.name)
 			self.guessField.isHidden = true
+			self.guessField.isEnabled = false
+			self.guessField.resignFirstResponder()
 		}
 	}
 	
