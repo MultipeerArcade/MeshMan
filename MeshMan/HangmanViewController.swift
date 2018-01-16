@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MultipeerConnectivity
 
 class HangmanViewController: UIViewController, UICollectionViewDataSource, UITextFieldDelegate {
 	
@@ -90,7 +91,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	}
 	
 	private func handleNewGuessRecieved(_ message: HangmanNetUtil.NewGuessMessage) {
-		self.processText(input: message.guess, local: false)
+		self.processText(input: message.guess, sender: message.sender)
 	}
 	
 	// MARK: - Turn Management
@@ -161,8 +162,9 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	// MARK: - Input Processing
 	
-	private func processText(input: String, local: Bool = true) {
+	private func processText(input: String, sender: MCPeerID = MCManager.shared.peerID) {
 		let trimmedInput = input.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+		let local = MCManager.shared.isThisMe(sender) // Sender won't be populated if the word was guessed locally
 		guard trimmedInput.count == 1 else { self.showInputNotOneCharMessage(); return }
 		let char = trimmedInput[trimmedInput.startIndex]
 		let validTurnMade: Bool
@@ -184,10 +186,12 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		case .noMoreGuesses(let incorrectGuess, let word):
 			self.updateFor(incorrectCharacter: incorrectGuess)
 			self.showNoMoreGuessesMessage(with: word)
+			self.turnManager.set(picker: sender)
 			validTurnMade = true
 		case .wordGuessed(let word):
 			self.updateWordProgress(with: word)
 			self.showWordGuessedMessage(with: word)
+			self.turnManager.set(picker: sender)
 			validTurnMade = true
 		case .wrong(let incorrectGuess):
 			self.updateFor(incorrectCharacter: incorrectGuess)
@@ -198,7 +202,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	}
 	
 	private func broadcast(guess: Character) {
-		let message = HangmanNetUtil.NewGuessMessage(guess: String(guess))
+		let message = HangmanNetUtil.NewGuessMessage(guess: String(guess), sender: MCManager.shared.peerID)
 		self.hangmanNetUtil.sendNewGuessMessage(message)
 	}
 	
@@ -235,7 +239,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		case .picker:
 			alertView = UIAlertController(title: Strings.winAlertTitle, message: String(format: Strings.pickerWinAlertMessage, word), preferredStyle: .alert)
 		}
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in self.prepareForNextGame() }
 		alertView.addAction(okay)
 		self.present(alertView, animated: true)
 	}
@@ -248,9 +252,40 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		case .picker:
 			alertView = UIAlertController(title: Strings.loseAlertTitle, message: String(format: Strings.pickerLoseAlertMessage, word), preferredStyle: .alert)
 		}
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in fatalError() }
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in self.prepareForNextGame() }
 		alertView.addAction(okay)
 		self.present(alertView, animated: true)
+	}
+	
+	private func prepareForNextGame() {
+		if self.turnManager.iAmPicker {
+			self.showWordSelection()
+		} else {
+			self.showWait()
+		}
+	}
+	
+	private func showWordSelection() {
+		let alertView = WordSelectionDialog.make(withOkayAction: { [weak self] (_, word) in self?.showGame(with: word) }) { (_) in fatalError() }
+		self.present(alertView, animated: true, completion: nil)
+	}
+	
+	private func showGame(with word: String) {
+		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { fatalError() }
+		self.hangmanNetUtil.sendStartGameMessage(HangmanNetUtil.StartGameMessage(word: word, picker: MCManager.shared.peerID))
+		hangmanVC.hangmanNetUtil = self.hangmanNetUtil
+		hangmanVC.turnManager = HangmanTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID)
+		hangmanVC.setUpHangman(with: word)
+		self.navigationController?.setViewControllers([hangmanVC], animated: true)
+	}
+	
+	private func showWait() {
+		guard let waitController = Storyboards.wait.instantiateInitialViewController() as? WaitViewController else {
+			print("Could not get a wait controller from the storyboard, make sure everything is set up right in the storyboard")
+			fatalError()
+		}
+		waitController.hangmanNetUtil = self.hangmanNetUtil
+		self.navigationController?.setViewControllers([waitController], animated: true)
 	}
 	
 	private func updateFor(incorrectCharacter: Character) {

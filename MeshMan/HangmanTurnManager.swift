@@ -52,6 +52,14 @@ internal class HangmanTurnManager {
 		return peers.sorted(by: { $0.hashValue <= $1.hashValue })
 	}
 	
+	internal func set(picker newPicker: MCPeerID) {
+		self.currentPicker = newPicker
+	}
+	
+	internal var iAmPicker: Bool {
+		return MCManager.shared.isThisMe(self.currentPicker)
+	}
+	
 	private func pickFirstGuesser() {
 		self.currentGuesser = self.getFirstPeer(otherThan: [self.currentPicker])
 	}
