@@ -16,16 +16,14 @@ internal class WordSelectionDialog {
 		static let chooseAWordMessage = NSLocalizedString("Your word cannot be greater than %d characters long, including special characters.", comment: "Subtitle for the choose a word message in hangman")
 	}
 	
-	internal static func make(withOkayAction okayAction: ((UIAlertAction, String) -> Void)?, cancelAction: ((UIAlertAction) -> Void)?) -> UIAlertController {
+	internal static func make(withOkayAction okayAction: @escaping ((UIAlertAction, String) -> Void)) -> UIAlertController {
 		let alertView = UIAlertController(title: Strings.chooseAWord, message: String(format: Strings.chooseAWordMessage, Hangman.Rules.maxCharacters), preferredStyle: .alert)
 		alertView.addTextField(configurationHandler: nil)
-		let cancel = UIAlertAction(title: VisibleStrings.Generic.cancel, style: .default) { (action) in cancelAction?(action)}
 		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (action) in
 			guard let text = alertView.textFields?.first?.text else { fatalError() }
 			guard text.count <= Hangman.Rules.maxCharacters else { fatalError() }
-			okayAction?(action, text)
+			okayAction(action, text)
 		}
-		alertView.addAction(cancel)
 		alertView.addAction(okay)
 		return alertView
 	}

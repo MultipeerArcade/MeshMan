@@ -99,7 +99,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	private func prepareGame() {
-		let alertView = WordSelectionDialog.make(withOkayAction: { [weak self] (_, word) in self?.showGame(with: word) }, cancelAction: nil)
+		let alertView = WordSelectionDialog.make(withOkayAction: { [weak self] (_, word) in self?.showGame(with: word) })
 		self.hangmanNetUtil.sendChoosingWordMessage(HangmanNetUtil.ChoosingWordMessage(pickerName: MCManager.shared.peerID.displayName))
 		self.present(alertView, animated: true, completion: nil)
 	}
