@@ -18,6 +18,7 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
 	// MARK: -
 	
 	private enum Strings {
+		static let waitingForInvite = NSLocalizedString("Waiting for a game invite...", comment: "Message that shows on the invite screen when the user is waiting to be invited to a game")
 		static let invitationTitle = NSLocalizedString("New Invitation", comment: "Title for the alert that shows when someone invites you to join their lobby")
 		static let invitationBody = NSLocalizedString("You have recieved an invitation from %@ to join their lobby.", comment: "Body of the message that shows when you recieve a game invite. %@ will be replaced with the name of the person sending the invitation")
 		static let join = NSLocalizedString("Join", comment: "The title of the button on an invitation alert that accepts the invitation")
@@ -26,36 +27,50 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
 		static let connectionErrorTitle = NSLocalizedString("Connection Error", comment: "The title of the alert that shows when the user fails to connect to a peer")
 		static let connectionErrorBody = NSLocalizedString("The connection could not be established. Please try again.", comment: "The message to show on the alert that is shown when the user fails to connect to a peer")
 		static let waiting = NSLocalizedString("Waiting for the game to start...", comment: "Text to show when the user is waiting for the leader to start the game")
-		static let leaderChoosingWord = NSLocalizedString("The leader is choosing the word...", comment: "Status label message for when the leader is choosing the word in hangman")
+		static let leaderChoosingWord = NSLocalizedString("Waiting for %@ to choose a word...", comment: "Status label message for when the leader is choosing the word in hangman")
 	}
 	
 	// MARK: - Properties
 	
-	internal var advertiser: MCNearbyServiceAdvertiser? {
-		didSet { self.advertiser?.delegate = self }
+	internal enum WaitPurpose {
+		case joining(MCNearbyServiceAdvertiser), awaitingNewWord(pickerName: String)
 	}
+	
+	internal var purpose: WaitPurpose!
 	
 	// MARK: - ViewController Lifecycle
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		self.startAdvertising()
+		self.setUp(for: self.purpose)
+	}
+	
+	private func setUp(for purpose: WaitPurpose) {
+		switch purpose {
+		case .joining(let advertiser):
+			self.statusLabel.text = Strings.waitingForInvite
+			advertiser.delegate = self
+			advertiser.startAdvertisingPeer()
+		case .awaitingNewWord(pickerName: let pickerName):
+			self.statusLabel.text = String(format: Strings.leaderChoosingWord, pickerName)
+		}
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		self.stopAdvertising()
+		self.tearDown(for: self.purpose)
+	}
+	
+	private func tearDown(for purpose: WaitPurpose) {
+		switch purpose {
+		case .joining(let advertiser):
+			advertiser.stopAdvertisingPeer()
+		case .awaitingNewWord:
+			break
+		}
 	}
 	
 	// MARK: -
-	
-	private func startAdvertising() {
-		self.advertiser?.startAdvertisingPeer()
-	}
-	
-	private func stopAdvertising() {
-		self.advertiser?.stopAdvertisingPeer()
-	}
 	
 	private func showInvite(from senderName: String, callback: @escaping (_ accepted: Bool) -> Void) {
 		let alertView = UIAlertController(title: Strings.invitationTitle, message: String(format: Strings.invitationBody, senderName), preferredStyle: .alert)
@@ -91,13 +106,13 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
 	
 	private var peerConnectionStateChangedHandle: Event<HangmanNetUtil.PeerConnectionState>.Handle?
 	
-	private var choosingWordMessageRecievedHandle: Event<Void>.Handle?
+	private var choosingWordMessageRecievedHandle: Event<HangmanNetUtil.ChoosingWordMessage>.Handle?
 	
 	private var startGameMessageRecievedHandle: Event<HangmanNetUtil.StartGameMessage>.Handle?
 	
 	private func setUp(netUtil: HangmanNetUtil) {
 		self.peerConnectionStateChangedHandle = self.hangmanNetUtil.peerConnectionStateChanged.subscribe({ [weak self] (_, payload) in self?.handle(peer: payload.peer, changedStateTo: payload.state) })
-		self.choosingWordMessageRecievedHandle = self.hangmanNetUtil.choosingWordMessageRecieved.subscribe({ [weak self] (_, _) in self?.statusLabel.text = Strings.leaderChoosingWord })
+		self.choosingWordMessageRecievedHandle = self.hangmanNetUtil.choosingWordMessageRecieved.subscribe({ [weak self] (_, message) in self?.statusLabel.text = String(format: Strings.leaderChoosingWord, message.pickerName) })
 		self.startGameMessageRecievedHandle = self.hangmanNetUtil.startGameMessageRecieved.subscribe({ [weak self] (_, message) in
 			self?.showGame(with: message.word, firstPicker: message.picker)
 		})

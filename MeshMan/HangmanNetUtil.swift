@@ -12,22 +12,22 @@ import MultipeerConnectivity
 internal class HangmanNetUtil: NSObject, MCSessionDelegate {
 	
 	private enum MessageType {
-		case choosingWord
+		case choosingWord(ChoosingWordMessage)
 		case startGame(StartGameMessage)
 		case newGuess(NewGuessMessage)
 	}
 	
-	private struct GenericState: Codable {
+	internal struct ChoosingWordMessage: Codable {
 		
-		internal enum GenericStateType: String, Codable {
-			case choosingWord
+		internal let pickerName: String
+		
+		init(pickerName: String) {
+			self.pickerName = pickerName
 		}
-		
-		internal let stateType: GenericStateType
 		
 	}
 	
-	struct StartGameMessage: Codable {
+	internal struct StartGameMessage: Codable {
 		internal let word: String
 		internal let picker: MCPeerID
 		
@@ -58,7 +58,7 @@ internal class HangmanNetUtil: NSObject, MCSessionDelegate {
 		
 	}
 	
-	struct NewGuessMessage: Codable {
+	internal struct NewGuessMessage: Codable {
 		internal let guess: String
 		internal let sender: MCPeerID
 		
@@ -100,8 +100,8 @@ internal class HangmanNetUtil: NSObject, MCSessionDelegate {
 		self.session.delegate = self
 	}
 	
-	internal func sendChoosingWordMessage() {
-		guard let encodedData = try? JSONEncoder().encode(GenericState(stateType: .choosingWord)) else { return }
+	internal func sendChoosingWordMessage(_ message: ChoosingWordMessage) {
+		guard let encodedData = try? JSONEncoder().encode(message) else { return }
 		try? self.session.send(encodedData, toPeers: self.session.connectedPeers, with: .reliable)
 	}
 	
@@ -123,7 +123,7 @@ internal class HangmanNetUtil: NSObject, MCSessionDelegate {
 	
 	// MARK: - Message Events
 	
-	internal let choosingWordMessageRecieved = Event<Void>()
+	internal let choosingWordMessageRecieved = Event<ChoosingWordMessage>()
 	
 	internal let startGameMessageRecieved = Event<StartGameMessage>()
 	
@@ -135,11 +135,8 @@ internal class HangmanNetUtil: NSObject, MCSessionDelegate {
 		let messageType: MessageType?
 		if let newGuessMessage = try? JSONDecoder().decode(NewGuessMessage.self, from: data) {
 			messageType = .newGuess(newGuessMessage)
-		} else if let genericMessage = try? JSONDecoder().decode(GenericState.self, from: data)  {
-			switch genericMessage.stateType {
-			case .choosingWord:
-				messageType = .choosingWord
-			}
+		} else if let choosingWordMessage = try? JSONDecoder().decode(ChoosingWordMessage.self, from: data)  {
+			messageType = .choosingWord(choosingWordMessage)
 		} else if let startGameMessage = try? JSONDecoder().decode(StartGameMessage.self, from: data) {
 			messageType = .startGame(startGameMessage)
 		} else {
@@ -150,8 +147,8 @@ internal class HangmanNetUtil: NSObject, MCSessionDelegate {
 			return
 		case .some(let ambigMessage):
 			switch ambigMessage {
-			case .choosingWord:
-				self.choosingWordMessageRecieved.raise(sender: self, arguments: ())
+			case .choosingWord(let message):
+				self.choosingWordMessageRecieved.raise(sender: self, arguments: message)
 			case .startGame(let message):
 				self.startGameMessageRecieved.raise(sender: self, arguments: message)
 			case .newGuess(let message):

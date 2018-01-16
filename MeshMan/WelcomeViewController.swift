@@ -85,7 +85,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 			print("Could not get a wait controller from the storyboard, make sure everything is set up right in the storyboard")
 			return
 		}
-		waitController.advertiser = MCManager.shared.makeAdvertiser()
+		waitController.purpose = .joining(MCManager.shared.makeAdvertiser())
 		waitController.hangmanNetUtil = self.hangmanNetUtil
 		self.navigationController?.pushViewController(waitController, animated: true)
 	}
@@ -100,7 +100,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	private func prepareGame() {
 		let alertView = WordSelectionDialog.make(withOkayAction: { [weak self] (_, word) in self?.showGame(with: word) }, cancelAction: nil)
-		self.hangmanNetUtil.sendChoosingWordMessage()
+		self.hangmanNetUtil.sendChoosingWordMessage(HangmanNetUtil.ChoosingWordMessage(pickerName: MCManager.shared.peerID.displayName))
 		self.present(alertView, animated: true, completion: nil)
 	}
 	

@@ -266,6 +266,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	}
 	
 	private func showWordSelection() {
+		self.hangmanNetUtil.sendChoosingWordMessage(HangmanNetUtil.ChoosingWordMessage(pickerName: self.turnManager.currentPickerName))
 		let alertView = WordSelectionDialog.make(withOkayAction: { [weak self] (_, word) in self?.showGame(with: word) }) { (_) in fatalError() }
 		self.present(alertView, animated: true, completion: nil)
 	}
@@ -285,6 +286,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 			fatalError()
 		}
 		waitController.hangmanNetUtil = self.hangmanNetUtil
+		waitController.purpose = .awaitingNewWord(pickerName: self.turnManager.currentPickerName)
 		self.navigationController?.setViewControllers([waitController], animated: true)
 	}
 	
