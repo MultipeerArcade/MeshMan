@@ -60,10 +60,36 @@ internal class HangmanNetUtil: NSObject, MCSessionDelegate {
 	
 	struct NewGuessMessage: Codable {
 		internal let guess: String
+		internal let sender: MCPeerID
 		
-		init(guess: String) {
+		init(guess: String, sender: MCPeerID) {
 			self.guess = guess
+			self.sender = sender
 		}
+		
+		// MARK: - Codable
+		
+		private enum CodingKeys: CodingKey {
+			case guess, sender
+		}
+		
+		internal func encode(to encoder: Encoder) throws {
+			var container = encoder.container(keyedBy: CodingKeys.self)
+			try container.encode(self.guess, forKey: .guess)
+			let peerData = NSKeyedArchiver.archivedData(withRootObject: self.sender)
+			try container.encode(peerData, forKey: .sender)
+		}
+		
+		init(from decoder: Decoder) throws {
+			let container = try decoder.container(keyedBy: CodingKeys.self)
+			self.guess = try container.decode(String.self, forKey: .guess)
+			let peerData = try container.decode(Data.self, forKey: .sender)
+			guard let sender = NSKeyedUnarchiver.unarchiveObject(with: peerData) as? MCPeerID else {
+				throw DecodingError.typeMismatch(MCPeerID.self, DecodingError.Context.init(codingPath: container.codingPath, debugDescription: "Could not get the MCPeerID from the sender field"))
+			}
+			self.sender = sender
+		}
+		
 	}
 	
 	private let session: MCSession
@@ -85,7 +111,7 @@ internal class HangmanNetUtil: NSObject, MCSessionDelegate {
 	}
 	
 	internal func sendNewGuessMessage(_ message: NewGuessMessage) {
-		guard let encodedData = try? JSONEncoder().encode(message) else { return }
+		guard let encodedData = try? JSONEncoder().encode(message) else { assertionFailure("Could not encode the new guess message"); return }
 		try? self.session.send(encodedData, toPeers: self.session.connectedPeers, with: .reliable)
 	}
 	

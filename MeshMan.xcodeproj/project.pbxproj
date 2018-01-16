@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		410FFB4020099BDA007DEE9E /* WordSelectionDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410FFB3F20099BDA007DEE9E /* WordSelectionDialog.swift */; };
 		41536AF71FF06DC800DBC164 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536AF61FF06DC800DBC164 /* AppDelegate.swift */; };
 		41536AFC1FF06DC800DBC164 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41536AFA1FF06DC800DBC164 /* Main.storyboard */; };
 		41536AFE1FF06DC800DBC164 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41536AFD1FF06DC800DBC164 /* Assets.xcassets */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		410FFB3F20099BDA007DEE9E /* WordSelectionDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordSelectionDialog.swift; sourceTree = "<group>"; };
 		41536AF31FF06DC800DBC164 /* MeshMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeshMan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41536AF61FF06DC800DBC164 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41536AFB1FF06DC800DBC164 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */,
 				41536B421FF5544D00DBC164 /* Hangman.swift */,
 				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
+				410FFB3F20099BDA007DEE9E /* WordSelectionDialog.swift */,
 			);
 			name = Hangman;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 			files = (
 				41536B451FF5B81600DBC164 /* LetterCell.swift in Sources */,
 				41AA8F691FF809F800C95DD6 /* HangmanNetUtil.swift in Sources */,
+				410FFB4020099BDA007DEE9E /* WordSelectionDialog.swift in Sources */,
 				41536B1B1FF437CD00DBC164 /* Storyboards.swift in Sources */,
 				41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */,
 				41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */,
