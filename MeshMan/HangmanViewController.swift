@@ -267,7 +267,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	private func showWordSelection() {
 		self.hangmanNetUtil.sendChoosingWordMessage(HangmanNetUtil.ChoosingWordMessage(pickerName: self.turnManager.currentPickerName))
-		let alertView = WordSelectionDialog.make(withOkayAction: { [weak self] (_, word) in self?.showGame(with: word) }) { (_) in fatalError() }
+		let alertView = WordSelectionDialog.make() { [weak self] (_, word) in self?.showGame(with: word) }
 		self.present(alertView, animated: true, completion: nil)
 	}
 	
