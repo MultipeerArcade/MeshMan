@@ -239,7 +239,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		case .picker:
 			alertView = UIAlertController(title: Strings.winAlertTitle, message: String(format: Strings.pickerWinAlertMessage, word), preferredStyle: .alert)
 		}
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in self.prepareForNextGame() }
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { [weak self] (_) in self?.prepareForNextGame() }
 		alertView.addAction(okay)
 		self.present(alertView, animated: true)
 	}
@@ -252,7 +252,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		case .picker:
 			alertView = UIAlertController(title: Strings.loseAlertTitle, message: String(format: Strings.pickerLoseAlertMessage, word), preferredStyle: .alert)
 		}
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in self.prepareForNextGame() }
+		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { [weak self] (_) in self?.prepareForNextGame() }
 		alertView.addAction(okay)
 		self.present(alertView, animated: true)
 	}
