@@ -266,18 +266,8 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	}
 	
 	private func showWordSelection() {
-		self.hangmanNetUtil.sendChoosingWordMessage(HangmanNetUtil.ChoosingWordMessage(pickerName: self.turnManager.currentPickerName))
-		let alertView = WordSelectionDialog.make() { [weak self] (_, word) in self?.showGame(with: word) }
-		self.present(alertView, animated: true, completion: nil)
-	}
-	
-	private func showGame(with word: String) {
-		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { fatalError() }
-		self.hangmanNetUtil.sendStartGameMessage(HangmanNetUtil.StartGameMessage(word: word, picker: MCManager.shared.peerID))
-		hangmanVC.hangmanNetUtil = self.hangmanNetUtil
-		hangmanVC.turnManager = HangmanTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID)
-		hangmanVC.setUpHangman(with: word)
-		self.navigationController?.setViewControllers([hangmanVC], animated: true)
+		let wordSelectionVC = WordSelectionViewController.newInstance(netUtil: self.hangmanNetUtil)
+		self.navigationController?.setViewControllers([wordSelectionVC], animated: true)
 	}
 	
 	private func showWait() {

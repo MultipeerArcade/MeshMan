@@ -15,6 +15,8 @@ internal class Hangman {
 	internal enum Rules {
 		static let numberOfGuesses = 9
 		static let maxCharacters = 100
+		static let minCharacters = 3
+		static let wordSelectionBlurb = NSLocalizedString("The word you choose must be no shorter than %d characters and no longer than %d characters. Any characters other than numbers and letters will be shown to your opponents.\n\nFor Example:\n\nTHE CAT'S MEOW\nwill become\n_ _ _   _ _ _ ' _   _ _ _ _", comment: "Writeup of the rules around choosing a word in hangman")
 	}
 	
 	private let word: String
@@ -64,6 +66,20 @@ internal class Hangman {
 	}
 	
 	// MARK: - Util
+	
+	internal enum ChoiceValidity {
+		case tooShort, tooLong, good
+	}
+	
+	internal static func checkValidChoice(_ text: String) -> ChoiceValidity {
+		var count = 0
+		for character in text.uppercased() {
+			if self.characterIsValid(character) { count += 1 }
+		}
+		guard count >= Rules.minCharacters else { return .tooShort }
+		guard count <= Rules.maxCharacters else { return .tooLong }
+		return .good
+	}
 	
 	internal static func sanitize(word: String) -> String {
 		return word.uppercased().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)

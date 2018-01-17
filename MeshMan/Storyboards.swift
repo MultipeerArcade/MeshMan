@@ -16,4 +16,6 @@ internal class Storyboards {
 	
 	internal static let hangman = UIStoryboard(name: "Hangman", bundle: nil)
 	
+	internal static let wordSelection = UIStoryboard(name: "WordSelection", bundle: nil)
+	
 }
