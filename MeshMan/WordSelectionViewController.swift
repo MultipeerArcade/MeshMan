@@ -14,6 +14,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 
 	@IBOutlet private weak var scrollView: UIScrollView!
 	@IBOutlet private weak var wordField: UITextField!
+	@IBOutlet private weak var doneButton: UIButton!
 	@IBOutlet private weak var rulesLabel: UILabel!
 	
 	// MARK: - Properties
@@ -32,6 +33,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
+		self.doneButton.titleLabel?.text = VisibleStrings.Generic.done
 		self.subscribeToKeyboardEvents()
 		self.wordField.delegate = self
 		self.rulesLabel.text = String(format: Hangman.Rules.wordSelectionBlurb, Hangman.Rules.minCharacters, Hangman.Rules.maxCharacters)
@@ -41,6 +43,11 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.netUtil.sendChoosingWordMessage(HangmanNetUtil.ChoosingWordMessage(pickerName: MCManager.shared.peerID.displayName))
+	}
+	
+	@IBAction func doneButtonPressed() {
+		guard let text = self.wordField.text else { return }
+		self.processText(input: text)
 	}
 	
 	private func processText(input: String) {
