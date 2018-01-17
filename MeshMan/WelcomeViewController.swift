@@ -98,20 +98,9 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		self.present(browserVC, animated: true)
 	}
 	
-	private func prepareGame() {
-		let alertView = WordSelectionDialog.make(withOkayAction: { [weak self] (_, word) in self?.showGame(with: word) })
-		self.hangmanNetUtil.sendChoosingWordMessage(HangmanNetUtil.ChoosingWordMessage(pickerName: MCManager.shared.peerID.displayName))
-		self.present(alertView, animated: true, completion: nil)
-	}
-	
-	private func showGame(with word: String) {
-		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { return }
-		self.hangmanNetUtil.sendStartGameMessage(HangmanNetUtil.StartGameMessage(word: word, picker: MCManager.shared.peerID))
-		let turnManager = HangmanTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID)
-		hangmanVC.hangmanNetUtil = self.hangmanNetUtil
-		hangmanVC.turnManager = turnManager
-		hangmanVC.setUpHangman(with: word)
-		self.navigationController?.setViewControllers([hangmanVC], animated: true)
+	private func showWordSelection() {
+		let wordSelectionVC = WordSelectionViewController.newInstance(netUtil: self.hangmanNetUtil)
+		self.navigationController?.setViewControllers([wordSelectionVC], animated: true)
 	}
 	
 	// MARK: MCBrowserViewControllerDelegate
@@ -121,7 +110,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	internal func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
-		self.dismiss(animated: true) { self.prepareGame() }
+		self.dismiss(animated: true) { self.showWordSelection() }
 	}
 	
 	internal func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {

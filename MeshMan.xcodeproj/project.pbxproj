@@ -25,6 +25,8 @@
 		41536B411FF5537100DBC164 /* HangmanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B301FF552DA00DBC164 /* HangmanTests.swift */; };
 		41536B431FF5544D00DBC164 /* Hangman.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B421FF5544D00DBC164 /* Hangman.swift */; };
 		41536B451FF5B81600DBC164 /* LetterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536B441FF5B81600DBC164 /* LetterCell.swift */; };
+		41A1F69F200EC22100865032 /* WordSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A1F69D200EC22100865032 /* WordSelectionViewController.swift */; };
+		41A1F6A0200EC22100865032 /* WordSelection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41A1F69E200EC22100865032 /* WordSelection.storyboard */; };
 		41AA8F691FF809F800C95DD6 /* HangmanNetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */; };
 		41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6A1FF80CCE00C95DD6 /* Event.swift */; };
 		41AA8F6D1FF80CD500C95DD6 /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6C1FF80CD500C95DD6 /* EventTests.swift */; };
@@ -64,6 +66,8 @@
 		41536B3B1FF5532A00DBC164 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		41536B421FF5544D00DBC164 /* Hangman.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hangman.swift; sourceTree = "<group>"; };
 		41536B441FF5B81600DBC164 /* LetterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterCell.swift; sourceTree = "<group>"; };
+		41A1F69D200EC22100865032 /* WordSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordSelectionViewController.swift; sourceTree = "<group>"; };
+		41A1F69E200EC22100865032 /* WordSelection.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WordSelection.storyboard; sourceTree = "<group>"; };
 		41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanNetUtil.swift; sourceTree = "<group>"; };
 		41AA8F6A1FF80CCE00C95DD6 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		41AA8F6C1FF80CD500C95DD6 /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
@@ -112,13 +116,12 @@
 				41536B241FF538C500DBC164 /* MCManager.swift */,
 				41536B221FF5369E00DBC164 /* VisibleStrings.swift */,
 				41AA8F6E1FF89EBD00C95DD6 /* Hangman */,
+				41A1F6A2200EC24200865032 /* Wait */,
 				41AA8F6A1FF80CCE00C95DD6 /* Event.swift */,
 				41536AF61FF06DC800DBC164 /* AppDelegate.swift */,
 				41536AFA1FF06DC800DBC164 /* Main.storyboard */,
-				41536B161FF435B800DBC164 /* Wait.storyboard */,
 				41536B081FF06DF300DBC164 /* WelcomeViewController.swift */,
 				41536B1A1FF437CD00DBC164 /* Storyboards.swift */,
-				41536B181FF4363800DBC164 /* WaitViewController.swift */,
 				41536AFD1FF06DC800DBC164 /* Assets.xcassets */,
 				41536AFF1FF06DC800DBC164 /* LaunchScreen.storyboard */,
 				41536B021FF06DC800DBC164 /* Info.plist */,
@@ -136,18 +139,53 @@
 			path = MeshManTests;
 			sourceTree = "<group>";
 		};
+		41A1F6A1200EC23000865032 /* Word Selection */ = {
+			isa = PBXGroup;
+			children = (
+				41A1F69E200EC22100865032 /* WordSelection.storyboard */,
+				41A1F69D200EC22100865032 /* WordSelectionViewController.swift */,
+			);
+			name = "Word Selection";
+			sourceTree = "<group>";
+		};
+		41A1F6A2200EC24200865032 /* Wait */ = {
+			isa = PBXGroup;
+			children = (
+				41536B161FF435B800DBC164 /* Wait.storyboard */,
+				41536B181FF4363800DBC164 /* WaitViewController.swift */,
+			);
+			name = Wait;
+			sourceTree = "<group>";
+		};
+		41A1F6A3200EC24F00865032 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */,
+				41536B421FF5544D00DBC164 /* Hangman.swift */,
+				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
+		41A1F6A5200EC27000865032 /* Gallows */ = {
+			isa = PBXGroup;
+			children = (
+				41536B2C1FF54D8200DBC164 /* Gallows.storyboard */,
+				41536B2A1FF54A0400DBC164 /* GallowsController.swift */,
+			);
+			name = Gallows;
+			sourceTree = "<group>";
+		};
 		41AA8F6E1FF89EBD00C95DD6 /* Hangman */ = {
 			isa = PBXGroup;
 			children = (
 				41536B261FF5428600DBC164 /* Hangman.storyboard */,
-				41536B441FF5B81600DBC164 /* LetterCell.swift */,
-				41536B2C1FF54D8200DBC164 /* Gallows.storyboard */,
-				41536B2A1FF54A0400DBC164 /* GallowsController.swift */,
 				41536B281FF5429A00DBC164 /* HangmanViewController.swift */,
-				41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */,
-				41536B421FF5544D00DBC164 /* Hangman.swift */,
-				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
+				41536B441FF5B81600DBC164 /* LetterCell.swift */,
+				41A1F6A5200EC27000865032 /* Gallows */,
+				41A1F6A3200EC24F00865032 /* Util */,
 				410FFB3F20099BDA007DEE9E /* WordSelectionDialog.swift */,
+				41A1F6A1200EC23000865032 /* Word Selection */,
 			);
 			name = Hangman;
 			sourceTree = "<group>";
@@ -240,6 +278,7 @@
 				41536B271FF5428600DBC164 /* Hangman.storyboard in Resources */,
 				41536AFC1FF06DC800DBC164 /* Main.storyboard in Resources */,
 				41536B2D1FF54D8200DBC164 /* Gallows.storyboard in Resources */,
+				41A1F6A0200EC22100865032 /* WordSelection.storyboard in Resources */,
 				41536B171FF435B800DBC164 /* Wait.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -266,6 +305,7 @@
 				41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */,
 				41536B291FF5429A00DBC164 /* HangmanViewController.swift in Sources */,
 				41536B251FF538C500DBC164 /* MCManager.swift in Sources */,
+				41A1F69F200EC22100865032 /* WordSelectionViewController.swift in Sources */,
 				41536AF71FF06DC800DBC164 /* AppDelegate.swift in Sources */,
 				41536B091FF06DF300DBC164 /* WelcomeViewController.swift in Sources */,
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
