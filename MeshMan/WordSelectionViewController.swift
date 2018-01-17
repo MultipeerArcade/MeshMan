@@ -12,6 +12,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	
 	// MARK: - Outlets
 
+	@IBOutlet private weak var scrollView: UIScrollView!
 	@IBOutlet private weak var wordField: UITextField!
 	@IBOutlet private weak var rulesLabel: UILabel!
 	
@@ -31,6 +32,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
+		self.subscribeToKeyboardEvents()
 		self.wordField.delegate = self
 		self.rulesLabel.text = String(format: Hangman.Rules.wordSelectionBlurb, Hangman.Rules.minCharacters, Hangman.Rules.maxCharacters)
 		self.wordField.becomeFirstResponder()
@@ -68,6 +70,35 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 		hangmanVC.turnManager = turnManager
 		hangmanVC.setUpHangman(with: word)
 		self.navigationController?.setViewControllers([hangmanVC], animated: true)
+	}
+	
+	// MARK: - Keyboard
+	
+	private func subscribeToKeyboardEvents() {
+		NotificationCenter.default.addObserver(forName: Notification.Name.UIKeyboardDidShow, object: nil, queue: OperationQueue.main) { [weak self] in self?.keyboardDidShow($0) }
+		NotificationCenter.default.addObserver(forName: Notification.Name.UIKeyboardWillHide, object: nil, queue: OperationQueue.main) { [weak self] in self?.keyboardWillHide($0) }
+	}
+	
+	private func keyboardDidShow(_ notification: Notification) {
+		guard let userInfo = notification.userInfo else { return }
+		guard let size = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+		let existingInsets = self.scrollView.contentInset
+		let newInsets = UIEdgeInsetsMake(existingInsets.top, existingInsets.left, size.height, existingInsets.right)
+		self.scrollView.contentInset = newInsets
+		self.scrollView.scrollIndicatorInsets = newInsets
+		
+		var frame = self.view.frame
+		frame.size.height -= size.height
+		if !frame.contains(self.wordField.frame.origin) {
+			self.scrollView.scrollRectToVisible(frame, animated: true)
+		}
+	}
+	
+	private func keyboardWillHide(_ notification: Notification) {
+		let existingInsets = self.scrollView.contentInset
+		let newInsets = UIEdgeInsetsMake(existingInsets.top, existingInsets.left, 0, existingInsets.right)
+		self.scrollView.contentInset = newInsets
+		self.scrollView.scrollIndicatorInsets = newInsets
 	}
 	
 	// MARK: - UITextFieldDelegate
