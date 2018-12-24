@@ -13,9 +13,9 @@ class HangmanTests: XCTestCase {
 	
 	private enum Constants {
 		static let testWord = "IS THE BEAN MEAN? YES 123."
-		static let testWordFullObfuscation = "__ ___ ____ ____? ___ 123."
+		static let testWordFullObfuscation = "_ _   _ _ _   _ _ _ _   _ _ _ _ ?   _ _ _   1 2 3 . "
 		static let exluded: [Character] = ["I", "E", "N"]
-		static let testWordExcludingExcluded = "I_ __E _E_N _E_N? _E_ 123."
+		static let testWordExcludingExcluded = "I _   _ _ E   _ E _ N   _ E _ N ?   _ E _   1 2 3 . "
 		static let someInvalidCharacters = "!.,#@?/\"+= 1234567890"
 		static let validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		static let testWordExcludingE = "__ __E _E_N _E_N? _E_ 123."
@@ -47,12 +47,12 @@ class HangmanTests: XCTestCase {
     
 	func testObfuscation() {
 		let result = Hangman.obfuscate(word: Constants.testWord)
-		XCTAssert(Constants.testWordFullObfuscation == result, "Obfuscation did not meet expectations: \(result)")
+		XCTAssert(Constants.testWordFullObfuscation == result.displayString, "Obfuscation did not meet expectations: \(result)")
 	}
 	
 	func testObfuscationWithExclusion() {
 		let result = Hangman.obfuscate(word: Constants.testWord, excluding: Constants.exluded)
-		XCTAssert(Constants.testWordExcludingExcluded == result, "Obfuscation with exclusion did not meet expectations: \(result)")
+		XCTAssert(Constants.testWordExcludingExcluded == result.displayString, "Obfuscation with exclusion did not meet expectations: \(result)")
 	}
 	
 	func testGuess() {
@@ -90,7 +90,7 @@ class HangmanTests: XCTestCase {
 		result = self.testman.guess(letter: "t")
 		result = self.testman.guess(letter: "h")
 		switch result {
-		case .win:
+        case .wordGuessed:
 			break
 		default:
 			XCTAssert(false, "The result was not a win")
