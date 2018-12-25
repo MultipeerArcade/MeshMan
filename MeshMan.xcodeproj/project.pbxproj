@@ -30,6 +30,11 @@
 		41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6A1FF80CCE00C95DD6 /* Event.swift */; };
 		41AA8F6D1FF80CD500C95DD6 /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6C1FF80CD500C95DD6 /* EventTests.swift */; };
 		41AA8F701FF98FEF00C95DD6 /* HangmanTurnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */; };
+		41AD841921D1D4AA00AB1089 /* Questions.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41AD841821D1D4AA00AB1089 /* Questions.storyboard */; };
+		41AD841B21D1D54200AB1089 /* QuestionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD841A21D1D54200AB1089 /* QuestionListViewController.swift */; };
+		41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD841C21D1D57300AB1089 /* AnswerViewController.swift */; };
+		41AD841F21D1D59100AB1089 /* GuessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD841E21D1D59100AB1089 /* GuessViewController.swift */; };
+		41AD842121D1D97400AB1089 /* QuestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842021D1D97400AB1089 /* QuestionCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +75,11 @@
 		41AA8F6A1FF80CCE00C95DD6 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		41AA8F6C1FF80CD500C95DD6 /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
 		41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanTurnManager.swift; sourceTree = "<group>"; };
+		41AD841821D1D4AA00AB1089 /* Questions.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Questions.storyboard; sourceTree = "<group>"; };
+		41AD841A21D1D54200AB1089 /* QuestionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionListViewController.swift; sourceTree = "<group>"; };
+		41AD841C21D1D57300AB1089 /* AnswerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerViewController.swift; sourceTree = "<group>"; };
+		41AD841E21D1D59100AB1089 /* GuessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuessViewController.swift; sourceTree = "<group>"; };
+		41AD842021D1D97400AB1089 /* QuestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +123,7 @@
 			children = (
 				41536B241FF538C500DBC164 /* MCManager.swift */,
 				41536B221FF5369E00DBC164 /* VisibleStrings.swift */,
+				41AD841721D1D48C00AB1089 /* Questions */,
 				41AA8F6E1FF89EBD00C95DD6 /* Hangman */,
 				41A1F6A2200EC24200865032 /* Wait */,
 				41AA8F6A1FF80CCE00C95DD6 /* Event.swift */,
@@ -185,6 +196,18 @@
 				41A1F6A1200EC23000865032 /* Word Selection */,
 			);
 			name = Hangman;
+			sourceTree = "<group>";
+		};
+		41AD841721D1D48C00AB1089 /* Questions */ = {
+			isa = PBXGroup;
+			children = (
+				41AD841821D1D4AA00AB1089 /* Questions.storyboard */,
+				41AD842021D1D97400AB1089 /* QuestionCell.swift */,
+				41AD841E21D1D59100AB1089 /* GuessViewController.swift */,
+				41AD841C21D1D57300AB1089 /* AnswerViewController.swift */,
+				41AD841A21D1D54200AB1089 /* QuestionListViewController.swift */,
+			);
+			name = Questions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -276,6 +299,7 @@
 				41536AFC1FF06DC800DBC164 /* Main.storyboard in Resources */,
 				41536B2D1FF54D8200DBC164 /* Gallows.storyboard in Resources */,
 				41A1F6A0200EC22100865032 /* WordSelection.storyboard in Resources */,
+				41AD841921D1D4AA00AB1089 /* Questions.storyboard in Resources */,
 				41536B171FF435B800DBC164 /* Wait.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -298,6 +322,8 @@
 				41AA8F691FF809F800C95DD6 /* HangmanNetUtil.swift in Sources */,
 				41536B1B1FF437CD00DBC164 /* Storyboards.swift in Sources */,
 				41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */,
+				41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */,
+				41AD841F21D1D59100AB1089 /* GuessViewController.swift in Sources */,
 				41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */,
 				41536B291FF5429A00DBC164 /* HangmanViewController.swift in Sources */,
 				41536B251FF538C500DBC164 /* MCManager.swift in Sources */,
@@ -307,7 +333,9 @@
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
 				41536B431FF5544D00DBC164 /* Hangman.swift in Sources */,
 				41AA8F701FF98FEF00C95DD6 /* HangmanTurnManager.swift in Sources */,
+				41AD842121D1D97400AB1089 /* QuestionCell.swift in Sources */,
 				41536B2B1FF54A0400DBC164 /* GallowsController.swift in Sources */,
+				41AD841B21D1D54200AB1089 /* QuestionListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
