@@ -8,7 +8,7 @@
 
 import XCTest
 import Foundation
-@testable import Rave
+@testable import MeshMan
 
 
 class EventTests: XCTestCase {
