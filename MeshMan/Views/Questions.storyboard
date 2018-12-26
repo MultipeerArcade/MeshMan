@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="333.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="f0B-d0-vPC" customClass="QuestionCell" customModule="MeshMan" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="questionCell" id="f0B-d0-vPC" customClass="QuestionCell" customModule="MeshMan" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="f0B-d0-vPC" id="Bex-f7-XDl">
@@ -89,7 +89,7 @@
         <!--Answer View Controller-->
         <scene sceneID="TGT-tN-SfV">
             <objects>
-                <viewController id="xBT-OR-EkB" customClass="AnswerViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="answer" id="xBT-OR-EkB" customClass="AnswerViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TUc-4n-Qn1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -97,39 +97,57 @@
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jam-MK-D69">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="333.5"/>
                                 <connections>
-                                    <segue destination="sv1-9w-pS5" kind="embed" id="3g2-xh-g5d"/>
+                                    <segue destination="sv1-9w-pS5" kind="embed" identifier="questionList" id="3g2-xh-g5d"/>
                                 </connections>
                             </containerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subject" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x6d-N3-n7T">
+                                <rect key="frame" x="154.5" y="349.5" width="66.5" height="24"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="PBd-nL-ReM">
-                                <rect key="frame" x="0.0" y="333.5" width="375" height="333.5"/>
+                                <rect key="frame" x="0.0" y="381.5" width="375" height="285.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="apY-nI-ARr">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="167"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="143"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kIB-WT-FzY">
-                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="167"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="143"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                                 <state key="normal" title="Yes"/>
+                                                <connections>
+                                                    <action selector="yesButtonPressed" destination="xBT-OR-EkB" eventType="touchUpInside" id="ZTW-AK-whE"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZT-3C-W9F">
-                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="167"/>
+                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="143"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                                 <state key="normal" title="No"/>
+                                                <connections>
+                                                    <action selector="noButtonPressed" destination="xBT-OR-EkB" eventType="touchUpInside" id="3gk-xY-4Qw"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="g8v-iv-Xe8">
-                                        <rect key="frame" x="0.0" y="167" width="375" height="166.5"/>
+                                        <rect key="frame" x="0.0" y="143" width="375" height="142.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AEb-10-G6P">
-                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="166.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="142.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                 <state key="normal" title="Sometimes"/>
+                                                <connections>
+                                                    <action selector="sometimesButtonPressed" destination="xBT-OR-EkB" eventType="touchUpInside" id="uHY-FQ-Mli"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v7w-eo-Opw">
-                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="166.5"/>
+                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="142.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                 <state key="normal" title="Unknown"/>
+                                                <connections>
+                                                    <action selector="unknownButtonPressed" destination="xBT-OR-EkB" eventType="touchUpInside" id="C2c-h1-Ixk"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -140,8 +158,10 @@
                         <constraints>
                             <constraint firstAttribute="top" secondItem="jam-MK-D69" secondAttribute="top" id="12C-Gr-Wuw"/>
                             <constraint firstItem="uux-ez-xK2" firstAttribute="bottom" secondItem="PBd-nL-ReM" secondAttribute="bottom" id="7oJ-7E-H6R"/>
-                            <constraint firstItem="PBd-nL-ReM" firstAttribute="top" secondItem="jam-MK-D69" secondAttribute="bottom" id="BoT-iX-5Je"/>
+                            <constraint firstItem="PBd-nL-ReM" firstAttribute="top" secondItem="x6d-N3-n7T" secondAttribute="bottom" constant="8" id="AWG-hV-drN"/>
+                            <constraint firstItem="x6d-N3-n7T" firstAttribute="centerX" secondItem="uux-ez-xK2" secondAttribute="centerX" id="E8R-lE-Wmu"/>
                             <constraint firstAttribute="trailing" secondItem="jam-MK-D69" secondAttribute="trailing" id="Rwg-hZ-EAL"/>
+                            <constraint firstItem="x6d-N3-n7T" firstAttribute="top" secondItem="jam-MK-D69" secondAttribute="bottom" constant="16" id="ZRy-Xp-g1A"/>
                             <constraint firstItem="jam-MK-D69" firstAttribute="leading" secondItem="TUc-4n-Qn1" secondAttribute="leading" id="msm-PB-BTJ"/>
                             <constraint firstItem="PBd-nL-ReM" firstAttribute="leading" secondItem="uux-ez-xK2" secondAttribute="leading" id="pcI-EN-1cG"/>
                             <constraint firstItem="uux-ez-xK2" firstAttribute="trailing" secondItem="PBd-nL-ReM" secondAttribute="trailing" id="uYy-u8-LIL"/>
@@ -152,6 +172,7 @@
                     <connections>
                         <outlet property="noButton" destination="hZT-3C-W9F" id="eca-eY-UpF"/>
                         <outlet property="sometimesButton" destination="AEb-10-G6P" id="Mt3-mm-OGu"/>
+                        <outlet property="subjectLabel" destination="x6d-N3-n7T" id="cIN-J5-Ncm"/>
                         <outlet property="unknownButton" destination="v7w-eo-Opw" id="9Ga-E4-KBA"/>
                         <outlet property="yesButton" destination="kIB-WT-FzY" id="6kB-NY-jfB"/>
                     </connections>
@@ -163,7 +184,7 @@
         <!--Guess View Controller-->
         <scene sceneID="Pnw-c3-Vaf">
             <objects>
-                <viewController id="eh0-LW-BkO" customClass="GuessViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="questions" id="eh0-LW-BkO" customClass="GuessViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iuo-70-GKt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -171,7 +192,7 @@
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSC-Ig-fqO">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="333.5"/>
                                 <connections>
-                                    <segue destination="sv1-9w-pS5" kind="embed" id="pZT-tC-NzO"/>
+                                    <segue destination="sv1-9w-pS5" kind="embed" identifier="questionList" id="pZT-tC-NzO"/>
                                 </connections>
                             </containerView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Question" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="f56-It-gon">
@@ -183,6 +204,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCx-Ds-w7c">
                                 <rect key="frame" x="172.5" y="395.5" width="30" height="30"/>
                                 <state key="normal" title="Ask"/>
+                                <connections>
+                                    <action selector="askButtonPressed" destination="eh0-LW-BkO" eventType="touchUpInside" id="aZ0-YL-W5p"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -210,6 +234,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="pZT-tC-NzO"/>
+        <segue reference="3g2-xh-g5d"/>
     </inferredMetricsTieBreakers>
 </document>

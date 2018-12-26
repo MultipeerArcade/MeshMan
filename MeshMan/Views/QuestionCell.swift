@@ -14,15 +14,16 @@ class QuestionCell: UITableViewCell {
     @IBOutlet private weak var answerLabel: UILabel!
     @IBOutlet private weak var waitingIndicator: UIActivityIndicatorView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    func configureWith(question: Questions.Question) {
+        questionLabel.text = question.question
+        if let answer = question.answer {
+            answerLabel.isHidden = false
+            answerLabel.text = answer.rawValue
+            waitingIndicator.stopAnimating()
+        } else {
+            answerLabel.isHidden = true
+            waitingIndicator.startAnimating()
+        }
     }
 
 }

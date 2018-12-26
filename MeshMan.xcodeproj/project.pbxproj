@@ -35,6 +35,11 @@
 		41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD841C21D1D57300AB1089 /* AnswerViewController.swift */; };
 		41AD841F21D1D59100AB1089 /* GuessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD841E21D1D59100AB1089 /* GuessViewController.swift */; };
 		41AD842121D1D97400AB1089 /* QuestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842021D1D97400AB1089 /* QuestionCell.swift */; };
+		41AD842521D1DD0200AB1089 /* QuestionsNetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842421D1DD0200AB1089 /* QuestionsNetUtil.swift */; };
+		41AD842721D1DEAF00AB1089 /* Questions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842621D1DEAF00AB1089 /* Questions.swift */; };
+		41AD842921D1E16400AB1089 /* Subject.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41AD842821D1E16400AB1089 /* Subject.storyboard */; };
+		41AD842B21D1E17F00AB1089 /* SubjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842A21D1E17F00AB1089 /* SubjectViewController.swift */; };
+		41AD843121D3EE0700AB1089 /* QuestionsTurnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +85,11 @@
 		41AD841C21D1D57300AB1089 /* AnswerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerViewController.swift; sourceTree = "<group>"; };
 		41AD841E21D1D59100AB1089 /* GuessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuessViewController.swift; sourceTree = "<group>"; };
 		41AD842021D1D97400AB1089 /* QuestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionCell.swift; sourceTree = "<group>"; };
+		41AD842421D1DD0200AB1089 /* QuestionsNetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsNetUtil.swift; sourceTree = "<group>"; };
+		41AD842621D1DEAF00AB1089 /* Questions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Questions.swift; sourceTree = "<group>"; };
+		41AD842821D1E16400AB1089 /* Subject.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Subject.storyboard; sourceTree = "<group>"; };
+		41AD842A21D1E17F00AB1089 /* SubjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectViewController.swift; sourceTree = "<group>"; };
+		41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsTurnManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +212,9 @@
 			isa = PBXGroup;
 			children = (
 				41AD842221D1DC8D00AB1089 /* Views */,
+				41AD842421D1DD0200AB1089 /* QuestionsNetUtil.swift */,
+				41AD842621D1DEAF00AB1089 /* Questions.swift */,
+				41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */,
 			);
 			name = Questions;
 			sourceTree = "<group>";
@@ -214,6 +227,8 @@
 				41AD841E21D1D59100AB1089 /* GuessViewController.swift */,
 				41AD841C21D1D57300AB1089 /* AnswerViewController.swift */,
 				41AD841A21D1D54200AB1089 /* QuestionListViewController.swift */,
+				41AD842821D1E16400AB1089 /* Subject.storyboard */,
+				41AD842A21D1E17F00AB1089 /* SubjectViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -305,6 +320,7 @@
 				41536AFE1FF06DC800DBC164 /* Assets.xcassets in Resources */,
 				41536B271FF5428600DBC164 /* Hangman.storyboard in Resources */,
 				41536AFC1FF06DC800DBC164 /* Main.storyboard in Resources */,
+				41AD842921D1E16400AB1089 /* Subject.storyboard in Resources */,
 				41536B2D1FF54D8200DBC164 /* Gallows.storyboard in Resources */,
 				41A1F6A0200EC22100865032 /* WordSelection.storyboard in Resources */,
 				41AD841921D1D4AA00AB1089 /* Questions.storyboard in Resources */,
@@ -330,14 +346,18 @@
 				41AA8F691FF809F800C95DD6 /* HangmanNetUtil.swift in Sources */,
 				41536B1B1FF437CD00DBC164 /* Storyboards.swift in Sources */,
 				41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */,
+				41AD842B21D1E17F00AB1089 /* SubjectViewController.swift in Sources */,
 				41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */,
 				41AD841F21D1D59100AB1089 /* GuessViewController.swift in Sources */,
 				41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */,
 				41536B291FF5429A00DBC164 /* HangmanViewController.swift in Sources */,
+				41AD842521D1DD0200AB1089 /* QuestionsNetUtil.swift in Sources */,
 				41536B251FF538C500DBC164 /* MCManager.swift in Sources */,
 				41A1F69F200EC22100865032 /* WordSelectionViewController.swift in Sources */,
+				41AD843121D3EE0700AB1089 /* QuestionsTurnManager.swift in Sources */,
 				41536AF71FF06DC800DBC164 /* AppDelegate.swift in Sources */,
 				41536B091FF06DF300DBC164 /* WelcomeViewController.swift in Sources */,
+				41AD842721D1DEAF00AB1089 /* Questions.swift in Sources */,
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
 				41536B431FF5544D00DBC164 /* Hangman.swift in Sources */,
 				41AA8F701FF98FEF00C95DD6 /* HangmanTurnManager.swift in Sources */,

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ibs-aM-Xq6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ibs-aM-Xq6">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,10 +22,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G86-fo-uqa">
-                                        <rect key="frame" x="0.0" y="0.0" width="376" height="140.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="140.5"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="k0t-wl-bQH">
-                                                <rect key="frame" x="58" y="20" width="260" height="30"/>
+                                                <rect key="frame" x="57.5" y="20" width="260" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" priority="999" constant="260" id="zLX-Yd-5qt"/>
                                                 </constraints>
@@ -34,14 +34,14 @@
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWr-Rw-EMR">
-                                                <rect key="frame" x="169.5" y="58" width="37" height="30"/>
+                                                <rect key="frame" x="169" y="58" width="37" height="30"/>
                                                 <state key="normal" title="Done"/>
                                                 <connections>
                                                     <action selector="doneButtonPressed" destination="Ibs-aM-Xq6" eventType="touchUpInside" id="Lic-iM-oqq"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is where the rules will go." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Elk-kZ-tUD" userLabel="Rules Label">
-                                                <rect key="frame" x="73.5" y="104" width="229" height="20.5"/>
+                                                <rect key="frame" x="73" y="104" width="229" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -52,6 +52,7 @@
                                             <constraint firstItem="Elk-kZ-tUD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="G86-fo-uqa" secondAttribute="leading" constant="16" id="5sU-Ez-NVR"/>
                                             <constraint firstAttribute="bottom" secondItem="Elk-kZ-tUD" secondAttribute="bottom" constant="16" id="8cI-3L-P4W"/>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Elk-kZ-tUD" secondAttribute="trailing" constant="16" id="EsR-7Y-8ih"/>
+                                            <constraint firstItem="hWr-Rw-EMR" firstAttribute="top" secondItem="k0t-wl-bQH" secondAttribute="bottom" constant="8" id="Q99-r8-usn"/>
                                             <constraint firstItem="k0t-wl-bQH" firstAttribute="top" secondItem="G86-fo-uqa" secondAttribute="top" constant="20" id="Qcm-Lp-zDa"/>
                                             <constraint firstItem="k0t-wl-bQH" firstAttribute="centerX" secondItem="G86-fo-uqa" secondAttribute="centerX" id="U33-Lv-Rc5"/>
                                             <constraint firstItem="k0t-wl-bQH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="G86-fo-uqa" secondAttribute="leading" constant="16" id="WPy-o6-Zs8"/>
