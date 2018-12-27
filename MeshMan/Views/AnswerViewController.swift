@@ -18,17 +18,15 @@ class AnswerViewController: UIViewController {
     @IBOutlet private weak var sometimesButton: UIButton!
     @IBOutlet private weak var unknownButton: UIButton!
     
-    // MARL: - Internal Members
+    // MARL: - Private Members
     
-    var netUtil: QuestionNetUtil! {
+    private var netUtil: QuestionNetUtil! {
         didSet {
             if let netUtil = self.netUtil { self.setUp(netUtil: netUtil) }
         }
     }
     
-    var turnManager: QuestionsTurnManager!
-    
-    // MARK: - Private Members
+    private var turnManager: QuestionsTurnManager!
     
     private var questionListController: QuestionListViewController!
     
@@ -37,6 +35,15 @@ class AnswerViewController: UIViewController {
     private var questionRecievedHandle: Event<QuestionNetUtil.QuestionMessage>.Handle?
     
     private var answerRecievedHanle: Event<QuestionNetUtil.AnswerMessage>.Handle?
+    
+    // MARK: - New Instance
+    
+    static func newInstance(netUtil: QuestionNetUtil, turnManager: QuestionsTurnManager) -> AnswerViewController {
+        let answerVC = Storyboards.questions.instantiateViewController(withIdentifier: "answer") as! AnswerViewController
+        answerVC.netUtil = netUtil
+        answerVC.turnManager = turnManager
+        return answerVC
+    }
     
     // MARK: - ViewController Lifecycle
     

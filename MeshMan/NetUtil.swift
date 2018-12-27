@@ -50,7 +50,7 @@ extension NetUtil {
     
     func send<T: Encodable>(message: T) {
         guard let encodedData = try? JSONEncoder().encode(message) else { return }
-        try? self.session.send(encodedData, toPeers: self.session.connectedPeers, with: .reliable)
+        try! self.session.send(encodedData, toPeers: self.session.connectedPeers, with: .reliable)
     }
     
 }

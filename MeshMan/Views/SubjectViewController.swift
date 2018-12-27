@@ -53,7 +53,7 @@ class SubjectViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Showing the Game
     
     private func showGame(subject: String) {
-        guard let answersVC = Storyboards.questions.instantiateViewController(withIdentifier: "answer") as? AnswerViewController else { fatalError("Could not properly cast the given controller") }
+        let answersVC = AnswerViewController.newInstance(netUtil: netUtil, turnManager: QuestionsTurnManager(session: netUtil.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID))
         netUtil.send(message: StartMessage(gameType: .questions, payload: QuestionNetUtil.StartGamePayload(subject: subject, firstPicker: MCManager.shared.peerID)))
         navigationController?.setViewControllers([answersVC], animated: true)
     }
