@@ -11,13 +11,7 @@ import MultipeerConnectivity
 
 internal class HangmanNetUtil: NSObject, NetUtil {
 	
-	private enum MessageType {
-		case choosingWord(WaitMessage)
-		case startGame(StartGameMessage)
-		case newGuess(NewGuessMessage)
-	}
-	
-	internal struct StartGameMessage: Codable {
+	internal struct StartGamePayload: Codable {
 		internal let word: String
 		internal let pickerData: Data
         
@@ -27,7 +21,6 @@ internal class HangmanNetUtil: NSObject, NetUtil {
 			self.word = word
 			self.pickerData = picker.dataRepresentation
 		}
-		
 	}
 	
 	internal struct NewGuessMessage: Codable {
@@ -66,7 +59,7 @@ internal class HangmanNetUtil: NSObject, NetUtil {
 	
     let session: MCSession
 	
-	init(session: MCSession) {
+	init(session: MCSession = MCManager.shared.session) {
 		self.session = session
 		super.init()
 		self.session.delegate = self
@@ -79,36 +72,20 @@ internal class HangmanNetUtil: NSObject, NetUtil {
 	// MARK: - Message Events
 	
 	internal let waitMessageRecieved = Event<WaitMessage>()
-	
-	internal let startGameMessageRecieved = Event<StartGameMessage>()
+    
+    let startMessageRecieved = Event<StartMessage>()
 	
 	internal let newGuessRecieved = Event<NewGuessMessage>()
 	
 	// MARK: - MCSessionDelegate
 	
 	internal func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-		let messageType: MessageType?
 		if let newGuessMessage = try? JSONDecoder().decode(NewGuessMessage.self, from: data) {
-			messageType = .newGuess(newGuessMessage)
+			newGuessRecieved.raise(sender: self, arguments: newGuessMessage)
 		} else if let choosingWordMessage = try? JSONDecoder().decode(WaitMessage.self, from: data)  {
-			messageType = .choosingWord(choosingWordMessage)
-		} else if let startGameMessage = try? JSONDecoder().decode(StartGameMessage.self, from: data) {
-			messageType = .startGame(startGameMessage)
-		} else {
-			messageType = nil
-		}
-		switch messageType {
-		case .none:
-			return
-		case .some(let ambigMessage):
-			switch ambigMessage {
-			case .choosingWord(let message):
-                waitMessageRecieved.raise(sender: self, arguments: message)
-			case .startGame(let message):
-				self.startGameMessageRecieved.raise(sender: self, arguments: message)
-			case .newGuess(let message):
-				self.newGuessRecieved.raise(sender: self, arguments: message)
-			}
+			waitMessageRecieved.raise(sender: self, arguments: choosingWordMessage)
+		} else if let startGameMessage = try? JSONDecoder().decode(StartMessage.self, from: data) {
+			startMessageRecieved.raise(sender: self, arguments: startGameMessage)
 		}
 	}
     

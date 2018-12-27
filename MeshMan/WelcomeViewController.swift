@@ -38,34 +38,43 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	// MARK: -
 	
-	private var hangmanNetUtil: HangmanNetUtil!
+	private var gameType: GameType!
 	
 	// MARK: - Create/Join
 	
 	@IBAction func createButtonPressed() {
-		self.validateNameAndStartSession(for: .create)
+        validateName {
+            showGameSelection()
+        }
 	}
 	
 	@IBAction func joinButtonPressed() {
-		self.validateNameAndStartSession(for: .join)
+        validateName {
+            showWait()
+        }
 	}
-	
-	private enum SessionType {
-		case join, create
-	}
-	
-	private func validateNameAndStartSession(for sessionType: SessionType) {
-		guard let name = self.displayName else { self.showInvlaidNameError(); return }
-		UserDefaults.standard.set(name, forKey: Constants.displayNameKey)
-		MCManager.setUpIfNeeded(with: name)
-		self.hangmanNetUtil = HangmanNetUtil(session: MCManager.shared.session)
-		switch sessionType {
-		case .create:
-			self.showBrowser()
-		case .join:
-			self.showWait()
-		}
-	}
+    
+    func showGameSelection() {
+        let actionSheet = UIAlertController(title: "Choose a game", message: nil, preferredStyle: .actionSheet)
+        let hangmanAction = UIAlertAction(title: "Hangman", style: .default) { _ in
+            self.gameType = .hangman
+            self.showBrowser()
+        }
+        let questionsAction = UIAlertAction(title: "20 Questions", style: .default) { _ in
+            self.gameType = .questions
+            self.showBrowser()
+        }
+        actionSheet.addAction(hangmanAction)
+        actionSheet.addAction(questionsAction)
+        present(actionSheet, animated: true)
+    }
+    
+    private func validateName(success: () -> Void) {
+        guard let name = self.displayName else { self.showInvlaidNameError(); return }
+        UserDefaults.standard.set(name, forKey: Constants.displayNameKey)
+        MCManager.setUpIfNeeded(with: name)
+        success()
+    }
 	
 	private var displayName: String? {
 		guard let text = self.displayNameField.text else { return nil }
@@ -81,7 +90,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	private func showWait() {
-        let waitVC = WaitViewController.newInstance(purpose: .joining(MCManager.shared.makeAdvertiser()), gameType: .hangman(hangmanNetUtil))
+        let waitVC = WaitViewController.newInstance(purpose: .joining(MCManager.shared.makeAdvertiser()), utilType: .wait(WaitNetUtil()))
 		self.navigationController?.pushViewController(waitVC, animated: true)
 	}
 	
@@ -94,9 +103,14 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	private func showWordSelection() {
-		let wordSelectionVC = WordSelectionViewController.newInstance(netUtil: self.hangmanNetUtil)
+		let wordSelectionVC = WordSelectionViewController.newInstance(netUtil: HangmanNetUtil(session: MCManager.shared.session))
 		self.navigationController?.setViewControllers([wordSelectionVC], animated: true)
 	}
+    
+    private func showSubjectSelection() {
+        let subjectVC = SubjectViewController.newInstance(netUtil: QuestionNetUtil(session: MCManager.shared.session))
+        self.navigationController?.setViewControllers([subjectVC], animated: true)
+    }
 	
 	// MARK: MCBrowserViewControllerDelegate
 	
@@ -105,7 +119,14 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	internal func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
-		self.dismiss(animated: true) { self.showWordSelection() }
+		self.dismiss(animated: true) {
+            switch self.gameType! {
+            case .hangman:
+                self.showWordSelection()
+            case .questions:
+                self.showSubjectSelection()
+            }
+        }
 	}
 	
 	internal func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {

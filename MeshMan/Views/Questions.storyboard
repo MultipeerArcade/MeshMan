@@ -225,7 +225,7 @@
                     </view>
                     <connections>
                         <outlet property="askButton" destination="OCx-Ds-w7c" id="SIn-j5-dFP"/>
-                        <outlet property="qestionField" destination="f56-It-gon" id="bd4-gL-l3h"/>
+                        <outlet property="questionField" destination="f56-It-gon" id="05x-Rg-fTV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ttC-m3-tjm" userLabel="First Responder" sceneMemberID="firstResponder"/>

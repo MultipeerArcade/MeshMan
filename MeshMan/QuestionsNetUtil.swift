@@ -20,7 +20,7 @@ class QuestionNetUtil: NSObject, NetUtil {
         case answer(AnswerMessage)
     }
     
-    struct StartGameMessage: Codable {
+    struct StartGamePayload: Codable {
         let firstPickerData: Data
         let subject: String
         
@@ -52,7 +52,7 @@ class QuestionNetUtil: NSObject, NetUtil {
     
     let waitMessageRecieved = Event<WaitMessage>()
     
-    let startGameMessageRecieved = Event<StartGameMessage>()
+    let startMessageRecieved = Event<StartMessage>()
     
     let questionMessageRecieved = Event<QuestionMessage>()
     
@@ -60,7 +60,7 @@ class QuestionNetUtil: NSObject, NetUtil {
     
     // MARK: - Initialization
     
-    init(session: MCSession) {
+    init(session: MCSession = MCManager.shared.session) {
         self.session = session
         super.init()
         self.session.delegate = self
@@ -69,14 +69,14 @@ class QuestionNetUtil: NSObject, NetUtil {
     // MARK: - MCSessionDelegate
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        
+        peerConnectionStateChanged.raise(sender: self, arguments: (peer: peerID, state: state))
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         if let choosingSubjectMessage = try? JSONDecoder().decode(WaitMessage.self, from: data) {
             waitMessageRecieved.raise(sender: self, arguments: choosingSubjectMessage)
-        } else if let startGameMessage = try? JSONDecoder().decode(StartGameMessage.self, from: data) {
-            startGameMessageRecieved.raise(sender: self, arguments: startGameMessage)
+        } else if let startGameMessage = try? JSONDecoder().decode(StartMessage.self, from: data) {
+            startMessageRecieved.raise(sender: self, arguments: startGameMessage)
         } else if let questionMessage = try? JSONDecoder().decode(QuestionMessage.self, from: data) {
             questionMessageRecieved.raise(sender: self, arguments: questionMessage)
         } else if let answerMessage = try? JSONDecoder().decode(AnswerMessage.self, from: data) {

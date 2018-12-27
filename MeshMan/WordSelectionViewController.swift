@@ -71,7 +71,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	
 	private func showGame(word: String) {
 		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { fatalError("Could not properly cast the given controller") }
-        netUtil.send(message: HangmanNetUtil.StartGameMessage(word: word, picker: MCManager.shared.peerID))
+        netUtil.send(message: StartMessage(gameType: .hangman, payload: HangmanNetUtil.StartGamePayload(word: word, picker: MCManager.shared.peerID)))
 		let turnManager = HangmanTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID)
 		hangmanVC.hangmanNetUtil = self.netUtil
 		hangmanVC.turnManager = turnManager

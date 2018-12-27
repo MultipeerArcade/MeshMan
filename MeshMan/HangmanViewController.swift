@@ -271,7 +271,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	}
 	
 	private func showWait() {
-        let waitVC = WaitViewController.newInstance(purpose: .waiting, gameType: .hangman(hangmanNetUtil))
+        let waitVC = WaitViewController.newInstance(purpose: .waiting, utilType: .hangman(hangmanNetUtil))
 		self.navigationController?.setViewControllers([waitVC], animated: true)
 	}
 	

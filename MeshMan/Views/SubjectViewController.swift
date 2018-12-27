@@ -36,6 +36,13 @@ class SubjectViewController: UIViewController, UITextFieldDelegate {
         subjectField.becomeFirstResponder()
     }
     
+    // MARK: -
+    
+    @IBAction func doneButtonPressed() {
+        guard let text = subjectField.text else { return }
+        processText(input: text)
+    }
+    
     // MARK: - Input Sanitation
     
     private func processText(input: String) {
@@ -47,7 +54,7 @@ class SubjectViewController: UIViewController, UITextFieldDelegate {
     
     private func showGame(subject: String) {
         guard let answersVC = Storyboards.questions.instantiateViewController(withIdentifier: "answer") as? AnswerViewController else { fatalError("Could not properly cast the given controller") }
-        netUtil.send(message: QuestionNetUtil.StartGameMessage(subject: subject, firstPicker: MCManager.shared.peerID))
+        netUtil.send(message: StartMessage(gameType: .questions, payload: QuestionNetUtil.StartGamePayload(subject: subject, firstPicker: MCManager.shared.peerID)))
         navigationController?.setViewControllers([answersVC], animated: true)
     }
     

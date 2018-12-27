@@ -11,6 +11,11 @@ import MultipeerConnectivity
 
 typealias PeerConnectionState = (peer: MCPeerID, state: MCSessionState)
 
+enum GameType: String, Codable {
+    case hangman
+    case questions
+}
+
 struct WaitMessage: Codable {
     let message: String
     
@@ -19,9 +24,24 @@ struct WaitMessage: Codable {
     }
 }
 
+struct StartMessage: Codable {
+    let gameType: GameType
+    let payload: Data?
+    
+    init(gameType: GameType, payloadData: Data? = nil) {
+        self.gameType = gameType
+        self.payload = payloadData
+    }
+    
+    init<PayloadType: Encodable>(gameType: GameType, payload: PayloadType) {
+        self.init(gameType: gameType, payloadData: try! JSONEncoder().encode(payload))
+    }
+}
+
 protocol NetUtil: MCSessionDelegate {
     var peerConnectionStateChanged: Event<PeerConnectionState> { get }
     var waitMessageRecieved: Event<WaitMessage> { get }
+    var startMessageRecieved: Event<StartMessage> { get }
     
     var session: MCSession { get }
 }

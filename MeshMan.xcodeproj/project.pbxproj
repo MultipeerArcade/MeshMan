@@ -42,6 +42,7 @@
 		41AD843121D3EE0700AB1089 /* QuestionsTurnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */; };
 		41AD843721D5280900AB1089 /* NetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843621D5280900AB1089 /* NetUtil.swift */; };
 		41AD843921D52E1400AB1089 /* MCPeerID+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */; };
+		41AD843B21D55E7800AB1089 /* WaitNetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843A21D55E7800AB1089 /* WaitNetUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,7 @@
 		41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsTurnManager.swift; sourceTree = "<group>"; };
 		41AD843621D5280900AB1089 /* NetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetUtil.swift; sourceTree = "<group>"; };
 		41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MCPeerID+Data.swift"; sourceTree = "<group>"; };
+		41AD843A21D55E7800AB1089 /* WaitNetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitNetUtil.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +180,7 @@
 			children = (
 				41536B161FF435B800DBC164 /* Wait.storyboard */,
 				41536B181FF4363800DBC164 /* WaitViewController.swift */,
+				41AD843A21D55E7800AB1089 /* WaitNetUtil.swift */,
 			);
 			name = Wait;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 				41536B451FF5B81600DBC164 /* LetterCell.swift in Sources */,
 				41AA8F691FF809F800C95DD6 /* HangmanNetUtil.swift in Sources */,
 				41536B1B1FF437CD00DBC164 /* Storyboards.swift in Sources */,
+				41AD843B21D55E7800AB1089 /* WaitNetUtil.swift in Sources */,
 				41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */,
 				41AD842B21D1E17F00AB1089 /* SubjectViewController.swift in Sources */,
 				41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */,

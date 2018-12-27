@@ -30,12 +30,22 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
         case waiting
     }
     
-    enum GameType {
+    enum UtilType {
+        case wait(WaitNetUtil)
         case hangman(HangmanNetUtil)
         case questions(QuestionNetUtil)
+        
+        var netUtil: NetUtil {
+            switch self {
+            case .wait(let netUtil):
+                return netUtil
+            case .hangman(let netUtil):
+                return netUtil
+            case .questions(let netUtil):
+                return netUtil
+            }
+        }
     }
-    
-    
 	
 	// MARK: - Outlets
 	
@@ -47,25 +57,29 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
     
     private var waitMessageRecievedHandle: Event<WaitMessage>.Handle?
     
-    private var startHangmanMessageRecievedHandle: Event<HangmanNetUtil.StartGameMessage>.Handle?
-    
-    private var startQuestionsMessageRecievedHandle: Event<QuestionNetUtil.StartGameMessage>.Handle?
+    private var startMessageRecievedHandle: Event<StartMessage>.Handle?
 	
 	// MARK: - Private Members
 	
 	private var purpose: WaitPurpose!
-    private var gameType: GameType!
+    private var utilType: UtilType!
     
     // MARK: - New Instance
     
-    static func newInstance(purpose: WaitPurpose, gameType: GameType) -> WaitViewController {
+    static func newInstance(purpose: WaitPurpose, utilType: UtilType) -> WaitViewController {
         let vc = Storyboards.wait.instantiateInitialViewController() as! WaitViewController
         vc.purpose = purpose
-        vc.gameType = gameType
+        vc.utilType = utilType
         return vc
     }
 	
 	// MARK: - ViewController Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setUp(for: utilType.netUtil)
+    }
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -99,24 +113,12 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
         }
     }
     
-    private func setUp(for gameType: GameType) {
-        switch gameType {
-        case .hangman(let netUtil):
-            setUp(for: netUtil)
-            startHangmanMessageRecievedHandle = netUtil.startGameMessageRecieved.subscribe({ [weak self] (_, message) in
-                self?.startHangman(with: message.word, firstPicker: message.picker, netUtil: netUtil)
-            })
-        case .questions(let netUtil):
-            setUp(for: netUtil)
-            startQuestionsMessageRecievedHandle = netUtil.startGameMessageRecieved.subscribe({ [weak self] (_, message) in
-                self?.startQuestions(with: message.subject, firstPicker: message.firstPicker, netUtil: netUtil)
-            })
-        }
-    }
-    
     private func setUp(for netUtil: NetUtil) {
         peerConnectionStateChangedHandle = netUtil.peerConnectionStateChanged.subscribe({ [weak self] (_, payload) in self?.handle(peer: payload.peer, changedStateTo: payload.state) })
         waitMessageRecievedHandle = netUtil.waitMessageRecieved.subscribe({ [weak self] (_, message) in self?.statusLabel.text = message.message })
+        startMessageRecievedHandle = netUtil.startMessageRecieved.subscribe({ [weak self] (_, message) in
+            self?.process(startMessage: message)
+        })
     }
 	
 	// MARK: -
@@ -137,6 +139,19 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
 	}
 	
     // MARK: - Starting Games
+    
+    private func process(startMessage: StartMessage) {
+        switch startMessage.gameType {
+        case .hangman:
+            guard let data = startMessage.payload else { return }
+            let payload = try! JSONDecoder().decode(HangmanNetUtil.StartGamePayload.self, from: data)
+            startHangman(with: payload.word, firstPicker: payload.picker, netUtil: HangmanNetUtil())
+        case .questions:
+            guard let data = startMessage.payload else { return }
+            let payload = try! JSONDecoder().decode(QuestionNetUtil.StartGamePayload.self, from: data)
+            startQuestions(with: payload.subject, firstPicker: payload.firstPicker, netUtil: QuestionNetUtil())
+        }
+    }
     
     private func startHangman(with word: String, firstPicker: MCPeerID, netUtil: HangmanNetUtil) {
         let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as! HangmanViewController
