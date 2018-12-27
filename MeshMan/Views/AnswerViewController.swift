@@ -52,8 +52,31 @@ class AnswerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        setControls(enabled: false)
+    }
+    
+    // MARK: - UI Control
+    
+    private func setControls(enabled: Bool) {
+        yesButton.isEnabled = enabled
+        noButton.isEnabled = enabled
+        sometimesButton.isEnabled = enabled
+        unknownButton.isEnabled = enabled
+    }
+    
+    // MARK: -
+    
+    private func addQuestion(number: Int, question: String) {
+        let updateIndex = questions.addQuestion(number, question: question)
+        questionListController.insert(at: updateIndex)
+        setControls(enabled: true)
+    }
+    
+    private func answerQuestion(number: Int, with answer: Questions.Answer) {
+        let updateIndex = questions.answerQuestion(number, with: answer)
+        questionListController.update(at: updateIndex)
+        turnManager.pickNextAsker()
+        setControls(enabled: false)
     }
     
     // MARK: - Input Handling
@@ -76,8 +99,7 @@ class AnswerViewController: UIViewController {
     
     private func give(answer: Questions.Answer) {
         broadcast(answer: answer) // updating the model increments the current question
-        let updateIndex = questions.answerQuestion(questions.currentQuestion, with: answer)
-        questionListController.update(at: updateIndex)
+        answerQuestion(number: questions.currentQuestion, with: answer)
     }
     
     func broadcast(answer: Questions.Answer) {
@@ -97,13 +119,11 @@ class AnswerViewController: UIViewController {
     }
     
     private func handleQuestionRecieved(_ message: QuestionNetUtil.QuestionMessage) {
-        let updateIndex = questions.addQuestion(message.number, question: message.question)
-        questionListController.insert(at: updateIndex)
+        addQuestion(number: message.number, question: message.question)
     }
     
     private func handleAnswerRecieved(_ message: QuestionNetUtil.AnswerMessage) {
-        let updateIndex = questions.answerQuestion(message.number, with: message.answer)
-        questionListController.update(at: updateIndex)
+        answerQuestion(number: message.number, with: message.answer)
     }
     
     // MARK: - Navigation

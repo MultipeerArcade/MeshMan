@@ -45,12 +45,43 @@ class GuessViewController: UIViewController {
     
     private var answerRecievedHanle: Event<QuestionNetUtil.AnswerMessage>.Handle?
     
+    // MARK: - ViewController Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setControls(enabled: turnManager.iAmAsker)
+    }
+    
+    // MARK: - UI Control
+    
+    private func setControls(enabled: Bool) {
+        _ = enabled ? questionField.becomeFirstResponder() : questionField.resignFirstResponder()
+        questionField.isEnabled = enabled
+        askButton.isEnabled = enabled
+    }
+    
+    // MARK: -
+    
+    private func addQuestion(number: Int, question: String) {
+        let updateIndex = questions.addQuestion(number, question: question)
+        questionListController.insert(at: updateIndex)
+        setControls(enabled: false)
+    }
+    
+    private func answerQuestion(number: Int, with answer: Questions.Answer) {
+        let updateIndex = questions.answerQuestion(number, with: answer)
+        questionListController.update(at: updateIndex)
+        turnManager.pickNextAsker()
+        if turnManager.iAmAsker {
+            setControls(enabled: true)
+        }
+    }
+    
     // MARK: - Input Processing
     
     @IBAction private func askButtonPressed() {
         guard let text = questionField.text else { return }
-        let updateIndex = questions.addQuestion(questions.currentQuestion, question: text)
-        questionListController.insert(at: updateIndex)
+        addQuestion(number: questions.currentQuestion, question: text)
         broadcast(question: text)
     }
     
@@ -71,13 +102,11 @@ class GuessViewController: UIViewController {
     }
     
     private func handleQuestionRecieved(_ message: QuestionNetUtil.QuestionMessage) {
-        let updateIndex = questions.addQuestion(message.number, question: message.question)
-        questionListController.insert(at: updateIndex)
+        addQuestion(number: message.number, question: message.question)
     }
     
     private func handleAnswerRecieved(_ message: QuestionNetUtil.AnswerMessage) {
-        let updateIndex = questions.answerQuestion(message.number, with: message.answer)
-        questionListController.update(at: updateIndex)
+        answerQuestion(number: message.number, with: message.answer)
     }
     
     // MARK: - Navigation

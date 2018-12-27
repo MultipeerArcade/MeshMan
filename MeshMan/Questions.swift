@@ -61,7 +61,9 @@ final class Questions {
     }
     
     func answerQuestion(_ number: Int, with answer: Questions.Answer) -> Int {
-        defer { currentQuestion += 1 }
+        defer {
+            currentQuestion = number + 1
+        }
         for (index, existing) in questions.enumerated() {
             guard existing.number == number else { continue }
             let updatedQuestion = Question(number: number, question: existing.question, answer: answer)

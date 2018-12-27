@@ -9,22 +9,29 @@
 import Foundation
 import MultipeerConnectivity
 
-final class QuestionsTurnManager {
+final class QuestionsTurnManager: TurnManager {
+
+    // MARK: - Internal Members
+    
+    var iAmAsker: Bool {
+        return currentAsker == myID
+    }
     
     // MARK: - Private Members
     
-    private let session: MCSession
-    
-    private let myID: MCPeerID
-    
     private var currentPicker: MCPeerID
+    
+    private lazy var currentAsker: MCPeerID = getFirstPeer(otherThan: [currentPicker])
     
     // MARK: - Initialization
     
     init(session: MCSession, myPeerID: MCPeerID, firstPicker: MCPeerID) {
-        self.session = session
-        self.myID = myPeerID
         currentPicker = firstPicker
+        super.init(session: session, myPeerID: myPeerID)
+    }
+    
+    func pickNextAsker() {
+        currentAsker = getPeer(after: currentAsker, otherThan: currentPicker)
     }
     
 }
