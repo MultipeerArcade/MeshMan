@@ -81,13 +81,8 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	private func showWait() {
-		guard let waitController = Storyboards.wait.instantiateInitialViewController() as? WaitViewController else {
-			print("Could not get a wait controller from the storyboard, make sure everything is set up right in the storyboard")
-			return
-		}
-		waitController.purpose = .joining(MCManager.shared.makeAdvertiser())
-		waitController.hangmanNetUtil = self.hangmanNetUtil
-		self.navigationController?.pushViewController(waitController, animated: true)
+        let waitVC = WaitViewController.newInstance(purpose: .joining(MCManager.shared.makeAdvertiser()), gameType: .hangman(hangmanNetUtil))
+		self.navigationController?.pushViewController(waitVC, animated: true)
 	}
 	
 	private func showBrowser() {

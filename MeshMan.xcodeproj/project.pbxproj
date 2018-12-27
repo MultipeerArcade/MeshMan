@@ -40,6 +40,8 @@
 		41AD842921D1E16400AB1089 /* Subject.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41AD842821D1E16400AB1089 /* Subject.storyboard */; };
 		41AD842B21D1E17F00AB1089 /* SubjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842A21D1E17F00AB1089 /* SubjectViewController.swift */; };
 		41AD843121D3EE0700AB1089 /* QuestionsTurnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */; };
+		41AD843721D5280900AB1089 /* NetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843621D5280900AB1089 /* NetUtil.swift */; };
+		41AD843921D52E1400AB1089 /* MCPeerID+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +92,8 @@
 		41AD842821D1E16400AB1089 /* Subject.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Subject.storyboard; sourceTree = "<group>"; };
 		41AD842A21D1E17F00AB1089 /* SubjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectViewController.swift; sourceTree = "<group>"; };
 		41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsTurnManager.swift; sourceTree = "<group>"; };
+		41AD843621D5280900AB1089 /* NetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetUtil.swift; sourceTree = "<group>"; };
+		41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MCPeerID+Data.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +141,8 @@
 				41AA8F6E1FF89EBD00C95DD6 /* Hangman */,
 				41A1F6A2200EC24200865032 /* Wait */,
 				41AA8F6A1FF80CCE00C95DD6 /* Event.swift */,
+				41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */,
+				41AD843621D5280900AB1089 /* NetUtil.swift */,
 				41536AF61FF06DC800DBC164 /* AppDelegate.swift */,
 				41536AFA1FF06DC800DBC164 /* Main.storyboard */,
 				41536B081FF06DF300DBC164 /* WelcomeViewController.swift */,
@@ -349,8 +355,10 @@
 				41AD842B21D1E17F00AB1089 /* SubjectViewController.swift in Sources */,
 				41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */,
 				41AD841F21D1D59100AB1089 /* GuessViewController.swift in Sources */,
+				41AD843921D52E1400AB1089 /* MCPeerID+Data.swift in Sources */,
 				41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */,
 				41536B291FF5429A00DBC164 /* HangmanViewController.swift in Sources */,
+				41AD843721D5280900AB1089 /* NetUtil.swift in Sources */,
 				41AD842521D1DD0200AB1089 /* QuestionsNetUtil.swift in Sources */,
 				41536B251FF538C500DBC164 /* MCManager.swift in Sources */,
 				41A1F69F200EC22100865032 /* WordSelectionViewController.swift in Sources */,

@@ -9,7 +9,7 @@
 import Foundation
 import MultipeerConnectivity
 
-class QuestionNetUtil: NSObject, MCSessionDelegate {
+class QuestionNetUtil: NSObject, NetUtil {
     
     // MARK: - Types
     
@@ -20,15 +20,15 @@ class QuestionNetUtil: NSObject, MCSessionDelegate {
         case answer(AnswerMessage)
     }
     
-    struct ChoosingSubjectMessage: Codable {
-        let subjectMessage = "Placeholder"
-    }
-    
     struct StartGameMessage: Codable {
+        let firstPickerData: Data
         let subject: String
         
-        init(subject: String) {
+        var firstPicker: MCPeerID { return MCPeerID.from(data: firstPickerData) }
+        
+        init(subject: String, firstPicker: MCPeerID) {
             self.subject = subject
+            self.firstPickerData = firstPicker.dataRepresentation
         }
     }
     
@@ -42,13 +42,15 @@ class QuestionNetUtil: NSObject, MCSessionDelegate {
         let answer: Questions.Answer
     }
     
-    // MARK: - Private Members
+    // MARK: - Internal Members
     
-    private let session: MCSession
+    let session: MCSession
     
     // MARK: - Message Events
     
-    let choosingSubjectMessageRecieved = Event<ChoosingSubjectMessage>()
+    let peerConnectionStateChanged = Event<PeerConnectionState>()
+    
+    let waitMessageRecieved = Event<WaitMessage>()
     
     let startGameMessageRecieved = Event<StartGameMessage>()
     
@@ -64,28 +66,6 @@ class QuestionNetUtil: NSObject, MCSessionDelegate {
         self.session.delegate = self
     }
     
-    // MARK: - Sending Messages
-    
-    func sendChoosingSubjectMessage() {
-        guard let encodedData = try? JSONEncoder().encode(ChoosingSubjectMessage()) else { return }
-        try? self.session.send(encodedData, toPeers: self.session.connectedPeers, with: .reliable)
-    }
-    
-    func sendStartGameMessage(_ message: StartGameMessage) {
-        guard let encodedData = try? JSONEncoder().encode(message) else { return }
-        try? session.send(encodedData, toPeers: session.connectedPeers, with: .reliable)
-    }
-    
-    func sendQuestionMessage(_ message: QuestionMessage) {
-        guard let encodedData = try? JSONEncoder().encode(message) else { return }
-        try? self.session.send(encodedData, toPeers: self.session.connectedPeers, with: .reliable)
-    }
-    
-    func sendAnswerMessage(_ message: AnswerMessage) {
-        guard let encodedData = try? JSONEncoder().encode(message) else { return }
-        try? self.session.send(encodedData, toPeers: self.session.connectedPeers, with: .reliable)
-    }
-    
     // MARK: - MCSessionDelegate
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
@@ -93,8 +73,8 @@ class QuestionNetUtil: NSObject, MCSessionDelegate {
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        if let choosingSubjectMessage = try? JSONDecoder().decode(ChoosingSubjectMessage.self, from: data) {
-            choosingSubjectMessageRecieved.raise(sender: self, arguments: choosingSubjectMessage)
+        if let choosingSubjectMessage = try? JSONDecoder().decode(WaitMessage.self, from: data) {
+            waitMessageRecieved.raise(sender: self, arguments: choosingSubjectMessage)
         } else if let startGameMessage = try? JSONDecoder().decode(StartGameMessage.self, from: data) {
             startGameMessageRecieved.raise(sender: self, arguments: startGameMessage)
         } else if let questionMessage = try? JSONDecoder().decode(QuestionMessage.self, from: data) {

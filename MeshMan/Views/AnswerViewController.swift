@@ -67,7 +67,7 @@ class AnswerViewController: UIViewController {
     func broadcast(answer: Questions.Answer) {
         turnManager.currentQuestion += 1
         let message = QuestionNetUtil.AnswerMessage(number: turnManager.currentQuestion, answer: answer)
-        netUtil.sendAnswerMessage(message)
+        netUtil.send(message: message)
     }
     
     // MARK: - Message Processing

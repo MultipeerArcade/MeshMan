@@ -15,17 +15,24 @@ class GuessViewController: UIViewController {
     @IBOutlet private weak var questionField: UITextField!
     @IBOutlet private weak var askButton: UIButton!
     
-    // MARK: - Internal Members
+    // MARK: - New Instance
+
+    static func newInstance(netUtil: QuestionNetUtil, turnManager: QuestionsTurnManager) -> GuessViewController {
+        let vc = Storyboards.questions.instantiateViewController(withIdentifier: "questions") as! GuessViewController
+        vc.netUtil = netUtil
+        vc.turnManager = turnManager
+        return vc
+    }
     
-    var netUtil: QuestionNetUtil! {
+    // MARK: - Private Members
+    
+    private var netUtil: QuestionNetUtil! {
         didSet {
             if let netUtil = self.netUtil { self.setUp(netUtil: netUtil) }
         }
     }
     
-    var turnManager: QuestionsTurnManager!
-    
-    // MARK: - Private Members
+    private var turnManager: QuestionsTurnManager!
     
     private var questionListController: QuestionListViewController!
     
@@ -52,7 +59,7 @@ class GuessViewController: UIViewController {
     
     func broadcast(question: String) {
         let message = QuestionNetUtil.QuestionMessage(number: turnManager.currentQuestion, question: question)
-        netUtil.sendQuestionMessage(message)
+        netUtil.send(message: message)
     }
     
     // MARK: - Message Processing
