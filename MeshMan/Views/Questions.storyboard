@@ -44,7 +44,7 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Lr4-Yi-bYR" userLabel="Waiting Indicator">
+                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Lr4-Yi-bYR" userLabel="Waiting Indicator">
                                                             <rect key="frame" x="324" y="0.0" width="20" height="20.5"/>
                                                         </activityIndicatorView>
                                                     </subviews>

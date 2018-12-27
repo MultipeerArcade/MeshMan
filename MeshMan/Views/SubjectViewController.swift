@@ -53,7 +53,7 @@ class SubjectViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Showing the Game
     
     private func showGame(subject: String) {
-        let answersVC = AnswerViewController.newInstance(netUtil: netUtil, turnManager: QuestionsTurnManager(session: netUtil.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID))
+        let answersVC = AnswerViewController.newInstance(subject: subject, netUtil: netUtil, turnManager: QuestionsTurnManager(session: netUtil.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID))
         netUtil.send(message: StartMessage(gameType: .questions, payload: QuestionNetUtil.StartGamePayload(subject: subject, firstPicker: MCManager.shared.peerID)))
         navigationController?.setViewControllers([answersVC], animated: true)
     }

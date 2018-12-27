@@ -16,7 +16,7 @@ class QuestionListViewController: UIViewController, UITableViewDataSource {
     
     // MARK: - Private Members
     
-    private var questionList = [Questions.Question]()
+    var questions: Questions!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,19 +26,12 @@ class QuestionListViewController: UIViewController, UITableViewDataSource {
     
     // MARK: - Adding and Updating Rows
     
-    func addQuestion(_ number: Int, question: String) {
-        let index = questionList.firstIndex { $0.number == number } ?? questionList.count
-        questionList.append(Questions.Question(number: number, question: question, answer: nil))
-        questionTable.insertRows(at: [IndexPath(item: index, section: 0)], with: .automatic)
+    func insert(at row: Int) {
+        questionTable.insertRows(at: [IndexPath(item: row, section: 0)], with: .automatic)
     }
     
-    func updateQuestion(_ number: Int, with answer: Questions.Answer) {
-        for (index, existing) in questionList.enumerated() {
-            guard existing.number == number else { continue }
-            let updatedQuestion = Questions.Question(number: number, question: existing.question, answer: answer)
-            questionList[index] = updatedQuestion
-            questionTable.reloadRows(at: [IndexPath(item: index, section: 0)], with: .automatic)
-        }
+    func update(at row: Int) {
+        questionTable.reloadRows(at: [IndexPath(item: row, section: 0)], with: .automatic)
     }
     
     // MARK: - UITableViewDataSource
@@ -48,12 +41,12 @@ class QuestionListViewController: UIViewController, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return questionList.count
+        return questions.questions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "questionCell", for: indexPath) as! QuestionCell
-        cell.configureWith(question: questionList[indexPath.item])
+        cell.configureWith(question: questions.questions[indexPath.item])
         return cell
     }
 

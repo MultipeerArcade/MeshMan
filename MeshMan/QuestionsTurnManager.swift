@@ -11,10 +11,6 @@ import MultipeerConnectivity
 
 final class QuestionsTurnManager {
     
-    // MARK: - Internal Members
-    
-    var currentQuestion = 1
-    
     // MARK: - Private Members
     
     private let session: MCSession

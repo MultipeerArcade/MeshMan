@@ -17,8 +17,9 @@ class GuessViewController: UIViewController {
     
     // MARK: - New Instance
 
-    static func newInstance(netUtil: QuestionNetUtil, turnManager: QuestionsTurnManager) -> GuessViewController {
+    static func newInstance(subject: String, netUtil: QuestionNetUtil, turnManager: QuestionsTurnManager) -> GuessViewController {
         let vc = Storyboards.questions.instantiateViewController(withIdentifier: "questions") as! GuessViewController
+        vc.questions = Questions(subject: subject)
         vc.netUtil = netUtil
         vc.turnManager = turnManager
         return vc
@@ -32,6 +33,8 @@ class GuessViewController: UIViewController {
         }
     }
     
+    private var questions: Questions!
+    
     private var turnManager: QuestionsTurnManager!
     
     private var questionListController: QuestionListViewController!
@@ -42,23 +45,17 @@ class GuessViewController: UIViewController {
     
     private var answerRecievedHanle: Event<QuestionNetUtil.AnswerMessage>.Handle?
     
-    // MARK: - ViewController Lifecycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-    
     // MARK: - Input Processing
     
     @IBAction private func askButtonPressed() {
         guard let text = questionField.text else { return }
+        let updateIndex = questions.addQuestion(questions.currentQuestion, question: text)
+        questionListController.insert(at: updateIndex)
         broadcast(question: text)
     }
     
-    func broadcast(question: String) {
-        let message = QuestionNetUtil.QuestionMessage(number: turnManager.currentQuestion, question: question)
+    private func broadcast(question: String) {
+        let message = QuestionNetUtil.QuestionMessage(number: questions.currentQuestion, question: question)
         netUtil.send(message: message)
     }
     
@@ -74,13 +71,13 @@ class GuessViewController: UIViewController {
     }
     
     private func handleQuestionRecieved(_ message: QuestionNetUtil.QuestionMessage) {
-        print("Got question")
-        questionListController.addQuestion(message.number, question: message.question)
+        let updateIndex = questions.addQuestion(message.number, question: message.question)
+        questionListController.insert(at: updateIndex)
     }
     
     private func handleAnswerRecieved(_ message: QuestionNetUtil.AnswerMessage) {
-        turnManager.currentQuestion += 1
-        questionListController.updateQuestion(message.number, with: message.answer)
+        let updateIndex = questions.answerQuestion(message.number, with: message.answer)
+        questionListController.update(at: updateIndex)
     }
     
     // MARK: - Navigation
@@ -90,6 +87,7 @@ class GuessViewController: UIViewController {
         switch identifier {
         case "questionList":
             questionListController = segue.destination as? QuestionListViewController
+            questionListController.questions = questions
         default:
             return
         }

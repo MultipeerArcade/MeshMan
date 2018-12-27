@@ -26,6 +26,8 @@ class AnswerViewController: UIViewController {
         }
     }
     
+    private var questions: Questions!
+    
     private var turnManager: QuestionsTurnManager!
     
     private var questionListController: QuestionListViewController!
@@ -38,8 +40,9 @@ class AnswerViewController: UIViewController {
     
     // MARK: - New Instance
     
-    static func newInstance(netUtil: QuestionNetUtil, turnManager: QuestionsTurnManager) -> AnswerViewController {
+    static func newInstance(subject: String, netUtil: QuestionNetUtil, turnManager: QuestionsTurnManager) -> AnswerViewController {
         let answerVC = Storyboards.questions.instantiateViewController(withIdentifier: "answer") as! AnswerViewController
+        answerVC.questions = Questions(subject: subject)
         answerVC.netUtil = netUtil
         answerVC.turnManager = turnManager
         return answerVC
@@ -55,25 +58,30 @@ class AnswerViewController: UIViewController {
     
     // MARK: - Input Handling
     
-    @IBAction func yesButtonPressed() {
-        broadcast(answer: .yes)
+    @IBAction private func yesButtonPressed() {
+        give(answer: .yes)
     }
     
-    @IBAction func noButtonPressed() {
-        broadcast(answer: .no)
+    @IBAction private func noButtonPressed() {
+        give(answer: .no)
     }
     
-    @IBAction func sometimesButtonPressed() {
-        broadcast(answer: .sometimes)
+    @IBAction private func sometimesButtonPressed() {
+        give(answer: .sometimes)
     }
     
-    @IBAction func unknownButtonPressed() {
-        broadcast(answer: .unknown)
+    @IBAction private func unknownButtonPressed() {
+        give(answer: .unknown)
+    }
+    
+    private func give(answer: Questions.Answer) {
+        broadcast(answer: answer) // updating the model increments the current question
+        let updateIndex = questions.answerQuestion(questions.currentQuestion, with: answer)
+        questionListController.update(at: updateIndex)
     }
     
     func broadcast(answer: Questions.Answer) {
-        turnManager.currentQuestion += 1
-        let message = QuestionNetUtil.AnswerMessage(number: turnManager.currentQuestion, answer: answer)
+        let message = QuestionNetUtil.AnswerMessage(number: questions.currentQuestion, answer: answer)
         netUtil.send(message: message)
     }
     
@@ -89,13 +97,13 @@ class AnswerViewController: UIViewController {
     }
     
     private func handleQuestionRecieved(_ message: QuestionNetUtil.QuestionMessage) {
-        print("Got question")
-        questionListController.addQuestion(message.number, question: message.question)
+        let updateIndex = questions.addQuestion(message.number, question: message.question)
+        questionListController.insert(at: updateIndex)
     }
     
     private func handleAnswerRecieved(_ message: QuestionNetUtil.AnswerMessage) {
-        print("Got answer")
-        questionListController.updateQuestion(message.number, with: message.answer)
+        let updateIndex = questions.answerQuestion(message.number, with: message.answer)
+        questionListController.update(at: updateIndex)
     }
     
     // MARK: - Navigation
@@ -105,6 +113,7 @@ class AnswerViewController: UIViewController {
         switch identifier {
         case "questionList":
             questionListController = segue.destination as? QuestionListViewController
+            questionListController.questions = questions
         default:
             return
         }

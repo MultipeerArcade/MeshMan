@@ -164,7 +164,7 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
     
     private func startQuestions(with subject: String, firstPicker: MCPeerID, netUtil: QuestionNetUtil) {
         let turnManager = QuestionsTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: firstPicker)
-        let guessVC = GuessViewController.newInstance(netUtil: netUtil, turnManager: turnManager)
+        let guessVC = GuessViewController.newInstance(subject: subject, netUtil: netUtil, turnManager: turnManager)
         self.navigationController?.setViewControllers([guessVC], animated: true)
     }
 	
