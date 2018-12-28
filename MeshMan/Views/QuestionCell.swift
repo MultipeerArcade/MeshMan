@@ -15,7 +15,7 @@ class QuestionCell: UITableViewCell {
     @IBOutlet private weak var waitingIndicator: UIActivityIndicatorView!
     
     func configureWith(question: Questions.Question) {
-        questionLabel.text = question.question
+        questionLabel.text = "\(question.number)) \(question.question)"
         if let answer = question.answer {
             answerLabel.isHidden = false
             answerLabel.text = answer.rawValue
