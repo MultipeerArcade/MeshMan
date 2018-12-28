@@ -141,9 +141,9 @@
 			children = (
 				41536B241FF538C500DBC164 /* MCManager.swift */,
 				41536B221FF5369E00DBC164 /* VisibleStrings.swift */,
-				41AD841721D1D48C00AB1089 /* Questions */,
-				41AA8F6E1FF89EBD00C95DD6 /* Hangman */,
-				41A1F6A2200EC24200865032 /* Wait */,
+				41AD843F21D6ED5D00AB1089 /* Hangman */,
+				41AD843E21D6ED4600AB1089 /* Questions */,
+				41AD844021D6ED8A00AB1089 /* Wait */,
 				41AA8F6A1FF80CCE00C95DD6 /* Event.swift */,
 				41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */,
 				41AD843621D5280900AB1089 /* NetUtil.swift */,
@@ -169,68 +169,6 @@
 			path = MeshManTests;
 			sourceTree = "<group>";
 		};
-		41A1F6A1200EC23000865032 /* Word Selection */ = {
-			isa = PBXGroup;
-			children = (
-				41A1F69E200EC22100865032 /* WordSelection.storyboard */,
-				41A1F69D200EC22100865032 /* WordSelectionViewController.swift */,
-			);
-			name = "Word Selection";
-			sourceTree = "<group>";
-		};
-		41A1F6A2200EC24200865032 /* Wait */ = {
-			isa = PBXGroup;
-			children = (
-				41536B161FF435B800DBC164 /* Wait.storyboard */,
-				41536B181FF4363800DBC164 /* WaitViewController.swift */,
-				41AD843A21D55E7800AB1089 /* WaitNetUtil.swift */,
-			);
-			name = Wait;
-			sourceTree = "<group>";
-		};
-		41A1F6A3200EC24F00865032 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */,
-				41536B421FF5544D00DBC164 /* Hangman.swift */,
-				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
-			);
-			name = Util;
-			sourceTree = "<group>";
-		};
-		41A1F6A5200EC27000865032 /* Gallows */ = {
-			isa = PBXGroup;
-			children = (
-				41536B2C1FF54D8200DBC164 /* Gallows.storyboard */,
-				41536B2A1FF54A0400DBC164 /* GallowsController.swift */,
-			);
-			name = Gallows;
-			sourceTree = "<group>";
-		};
-		41AA8F6E1FF89EBD00C95DD6 /* Hangman */ = {
-			isa = PBXGroup;
-			children = (
-				41536B261FF5428600DBC164 /* Hangman.storyboard */,
-				41536B281FF5429A00DBC164 /* HangmanViewController.swift */,
-				41536B441FF5B81600DBC164 /* LetterCell.swift */,
-				41A1F6A5200EC27000865032 /* Gallows */,
-				41A1F6A3200EC24F00865032 /* Util */,
-				41A1F6A1200EC23000865032 /* Word Selection */,
-			);
-			name = Hangman;
-			sourceTree = "<group>";
-		};
-		41AD841721D1D48C00AB1089 /* Questions */ = {
-			isa = PBXGroup;
-			children = (
-				41AD842221D1DC8D00AB1089 /* Views */,
-				41AD842421D1DD0200AB1089 /* QuestionsNetUtil.swift */,
-				41AD842621D1DEAF00AB1089 /* Questions.swift */,
-				41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */,
-			);
-			name = Questions;
-			sourceTree = "<group>";
-		};
 		41AD842221D1DC8D00AB1089 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -243,6 +181,68 @@
 				41AD842A21D1E17F00AB1089 /* SubjectViewController.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		41AD843E21D6ED4600AB1089 /* Questions */ = {
+			isa = PBXGroup;
+			children = (
+				41AD842221D1DC8D00AB1089 /* Views */,
+				41AD842421D1DD0200AB1089 /* QuestionsNetUtil.swift */,
+				41AD842621D1DEAF00AB1089 /* Questions.swift */,
+				41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */,
+			);
+			path = Questions;
+			sourceTree = "<group>";
+		};
+		41AD843F21D6ED5D00AB1089 /* Hangman */ = {
+			isa = PBXGroup;
+			children = (
+				41536B261FF5428600DBC164 /* Hangman.storyboard */,
+				41536B281FF5429A00DBC164 /* HangmanViewController.swift */,
+				41536B441FF5B81600DBC164 /* LetterCell.swift */,
+				41AD844121D6EDC500AB1089 /* Gallows */,
+				41AD844221D6EDD700AB1089 /* Util */,
+				41AD844321D6EDEB00AB1089 /* Word Selection */,
+			);
+			path = Hangman;
+			sourceTree = "<group>";
+		};
+		41AD844021D6ED8A00AB1089 /* Wait */ = {
+			isa = PBXGroup;
+			children = (
+				41536B161FF435B800DBC164 /* Wait.storyboard */,
+				41536B181FF4363800DBC164 /* WaitViewController.swift */,
+				41AD843A21D55E7800AB1089 /* WaitNetUtil.swift */,
+			);
+			path = Wait;
+			sourceTree = "<group>";
+		};
+		41AD844121D6EDC500AB1089 /* Gallows */ = {
+			isa = PBXGroup;
+			children = (
+				41536B2C1FF54D8200DBC164 /* Gallows.storyboard */,
+				41536B2A1FF54A0400DBC164 /* GallowsController.swift */,
+			);
+			path = Gallows;
+			sourceTree = "<group>";
+		};
+		41AD844221D6EDD700AB1089 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */,
+				41536B421FF5544D00DBC164 /* Hangman.swift */,
+				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		41AD844321D6EDEB00AB1089 /* Word Selection */ = {
+			isa = PBXGroup;
+			children = (
+				41A1F69E200EC22100865032 /* WordSelection.storyboard */,
+				41A1F69D200EC22100865032 /* WordSelectionViewController.swift */,
+			);
+			path = "Word Selection";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
