@@ -25,8 +25,6 @@ final class QuestionsTurnManager: TurnManager {
     
     private(set) lazy var currentAsker: MCPeerID = getFirstPeer(otherThan: [currentPicker])
     
-    // MARK: - Private Members
-    
     // MARK: - Initialization
     
     init(session: MCSession, myPeerID: MCPeerID, firstPicker: MCPeerID) {
