@@ -10,12 +10,14 @@ import UIKit
 
 class QuestionCell: UITableViewCell {
     
+    @IBOutlet private weak var questionNumberLabel: UILabel!
     @IBOutlet private weak var questionLabel: UILabel!
     @IBOutlet private weak var answerLabel: UILabel!
     @IBOutlet private weak var waitingIndicator: UIActivityIndicatorView!
     
     func configureWith(question: Questions.Question) {
-        questionLabel.text = "\(question.number)) \(question.question)"
+        questionNumberLabel.text = "\(question.number)."
+        questionLabel.text = question.question
         if let answer = question.answer {
             answerLabel.isHidden = false
             answerLabel.text = answer.rawValue
