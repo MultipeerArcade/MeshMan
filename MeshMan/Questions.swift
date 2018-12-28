@@ -12,8 +12,10 @@ final class Questions {
     
     // MARK: - Types
     
-    enum Rules {
-        static let numberOfQuestions = 20
+    struct Rules {
+        let numberOfQuestions: Int
+        
+        static let `default` = Rules(numberOfQuestions: 20)
     }
     
     struct Question {
@@ -47,10 +49,13 @@ final class Questions {
     
     let subject: String
     
+    let rules: Rules
+    
     // MARK: - Initialization
     
-    init(subject: String) {
+    init(subject: String, rules: Rules = Rules.default) {
         self.subject = subject
+        self.rules = rules
     }
     
     // MARK: - Gameplay
@@ -74,7 +79,7 @@ final class Questions {
             let updatedQuestion = Question(number: number, question: existing.question, answer: answer)
             questions[index] = updatedQuestion
             currentQuestion = number + 1
-            return .update(index, done: currentQuestion > Rules.numberOfQuestions)
+            return .update(index, done: currentQuestion > rules.numberOfQuestions)
         }
         fatalError("Can't answer a question that doesnt exist")
     }
