@@ -70,6 +70,7 @@ class GuessViewController: UIViewController {
     
     private func changeToGuess() {
         if turnManager.iAmAsker {
+            questionField.placeholder = "Guess"
             askButton.setTitle("Guess", for: .normal)
             guessing = true
         } else {
@@ -116,6 +117,7 @@ class GuessViewController: UIViewController {
         if !guessing {
             addQuestion(number: questions.currentQuestion, question: text)
             broadcast(question: text)
+            questionField.text = ""
         } else {
             confirmAndMake(guess: text)
         }
@@ -126,6 +128,7 @@ class GuessViewController: UIViewController {
         let alert = UIAlertController(title: "Is \"\(guess)\" your final answer?", message: "Your guess will be sent to the leader.", preferredStyle: .alert)
         let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
             self.make(guess: guess)
+            self.questionField.text = ""
         }
         let noAction = UIAlertAction(title: "No", style: .cancel) { _ in
             self.setControls(enabled: true)
