@@ -203,7 +203,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	private func broadcast(guess: Character) {
 		let message = HangmanNetUtil.NewGuessMessage(guess: String(guess), sender: MCManager.shared.peerID)
-		self.hangmanNetUtil.sendNewGuessMessage(message)
+        hangmanNetUtil.send(message: message)
 	}
 	
 	private func showInputNotOneCharMessage() {
@@ -271,13 +271,8 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	}
 	
 	private func showWait() {
-		guard let waitController = Storyboards.wait.instantiateInitialViewController() as? WaitViewController else {
-			print("Could not get a wait controller from the storyboard, make sure everything is set up right in the storyboard")
-			fatalError()
-		}
-		waitController.hangmanNetUtil = self.hangmanNetUtil
-		waitController.purpose = .awaitingNewWord(pickerName: self.turnManager.currentPickerName)
-		self.navigationController?.setViewControllers([waitController], animated: true)
+        let waitVC = WaitViewController.newInstance(purpose: .waiting, utilType: .hangman(hangmanNetUtil))
+		self.navigationController?.setViewControllers([waitVC], animated: true)
 	}
 	
 	private func updateFor(incorrectCharacter: Character) {

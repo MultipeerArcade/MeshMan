@@ -42,7 +42,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		self.netUtil.sendChoosingWordMessage(HangmanNetUtil.ChoosingWordMessage(pickerName: MCManager.shared.peerID.displayName))
+        netUtil.send(message: WaitMessage(message: "Waiting for \(MCManager.shared.peerID.displayName) to choose a word..."))
 	}
 	
 	@IBAction func doneButtonPressed() {
@@ -71,7 +71,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	
 	private func showGame(word: String) {
 		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { fatalError("Could not properly cast the given controller") }
-		self.netUtil.sendStartGameMessage(HangmanNetUtil.StartGameMessage(word: word, picker: MCManager.shared.peerID))
+        netUtil.send(message: StartMessage(gameType: .hangman, payload: HangmanNetUtil.StartGamePayload(word: word, picker: MCManager.shared.peerID)))
 		let turnManager = HangmanTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID)
 		hangmanVC.hangmanNetUtil = self.netUtil
 		hangmanVC.turnManager = turnManager

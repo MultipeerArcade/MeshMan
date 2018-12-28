@@ -9,15 +9,10 @@
 import Foundation
 import MultipeerConnectivity
 
-internal class HangmanTurnManager {
-	
-	private let session: MCSession
-	
-	private let myID: MCPeerID
+final class HangmanTurnManager: TurnManager {
 	
 	init(session: MCSession, myPeerID: MCPeerID, firstPicker: MCPeerID) {
-		self.session = session
-		self.myID = myPeerID
+		super.init(session: session, myPeerID: myPeerID)
 		self.currentPicker = firstPicker
 		self.pickFirstGuesser()
 	}
@@ -46,12 +41,6 @@ internal class HangmanTurnManager {
 	
 	internal let currentGuesserChanged = Event<RoleChangePayload>()
 	
-	private var sortedAllPeers: [MCPeerID] {
-		var peers = self.session.connectedPeers
-		peers.append(self.myID)
-		return peers.sorted(by: { $0.hashValue <= $1.hashValue })
-	}
-	
 	internal func set(picker newPicker: MCPeerID) {
 		self.currentPicker = newPicker
 	}
@@ -66,37 +55,6 @@ internal class HangmanTurnManager {
 	
 	private func pickNextGuesser() {
 		self.currentGuesser = self.getPeer(after: self.currentGuesser, otherThan: self.currentPicker)
-	}
-	
-	private func getFirstPeer(otherThan unwanted: [MCPeerID]) -> MCPeerID {
-		for peer in self.sortedAllPeers {
-			for unwantedPeer in unwanted {
-				if peer != unwantedPeer {
-					return peer
-				}
-			}
-		}
-		fatalError()
-	}
-	
-	private func getPeer(after afterPeer: MCPeerID) -> MCPeerID {
-		let sortedPeers = self.sortedAllPeers
-		guard sortedPeers.count > 1 else { fatalError() }
-		guard let index = sortedPeers.index(of: afterPeer) else { fatalError() }
-		let nextIndex = sortedPeers.index(after: index)
-		if nextIndex < sortedPeers.endIndex {
-			return sortedPeers[nextIndex]
-		} else {
-			return sortedPeers[0]
-		}
-	}
-	
-	private func getPeer(after afterPeer: MCPeerID, otherThan unwanted: MCPeerID) -> MCPeerID {
-		var currentPeer = afterPeer
-		repeat {
-			currentPeer = self.getPeer(after: currentPeer)
-		} while currentPeer == unwanted
-		return currentPeer
 	}
 	
 	internal enum Role {
