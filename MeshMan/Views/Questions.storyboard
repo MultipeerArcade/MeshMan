@@ -30,22 +30,22 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f2Z-r3-fHn">
-                                                    <rect key="frame" x="8" y="11.5" width="344" height="20.5"/>
+                                                    <rect key="frame" x="8" y="11.5" width="351" height="20.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Question" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Wh-Q3-mqZ" userLabel="Question Label">
-                                                            <rect key="frame" x="0.0" y="0.0" width="267" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="274" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Answer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LHd-eM-xrW" userLabel="Answer Label">
-                                                            <rect key="frame" x="267" y="0.0" width="57" height="20.5"/>
+                                                            <rect key="frame" x="274" y="0.0" width="57" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Lr4-Yi-bYR" userLabel="Waiting Indicator">
-                                                            <rect key="frame" x="324" y="0.0" width="20" height="20.5"/>
+                                                            <rect key="frame" x="331" y="0.0" width="20" height="20.5"/>
                                                         </activityIndicatorView>
                                                     </subviews>
                                                 </stackView>
@@ -196,13 +196,13 @@
                                 </connections>
                             </containerView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Question" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="f56-It-gon">
-                                <rect key="frame" x="16" y="349.5" width="343" height="30"/>
+                                <rect key="frame" x="16" y="349.5" width="297" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCx-Ds-w7c">
-                                <rect key="frame" x="172.5" y="395.5" width="30" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCx-Ds-w7c">
+                                <rect key="frame" x="329" y="349.5" width="30" height="30"/>
                                 <state key="normal" title="Ask"/>
                                 <connections>
                                     <action selector="askButtonPressed" destination="eh0-LW-BkO" eventType="touchUpInside" id="aZ0-YL-W5p"/>
@@ -211,14 +211,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="hc2-PF-PkE" firstAttribute="trailing" secondItem="f56-It-gon" secondAttribute="trailing" constant="16" id="14A-Va-ekR"/>
+                            <constraint firstItem="hc2-PF-PkE" firstAttribute="trailing" secondItem="OCx-Ds-w7c" secondAttribute="trailing" constant="16" id="BBn-0N-BD0"/>
                             <constraint firstItem="tSC-Ig-fqO" firstAttribute="height" secondItem="iuo-70-GKt" secondAttribute="height" multiplier="0.5" id="FDz-nF-uaS"/>
+                            <constraint firstItem="OCx-Ds-w7c" firstAttribute="leading" secondItem="f56-It-gon" secondAttribute="trailing" constant="16" id="NqH-ri-FPb"/>
+                            <constraint firstItem="OCx-Ds-w7c" firstAttribute="centerY" secondItem="f56-It-gon" secondAttribute="centerY" id="Rk1-ox-VXc"/>
                             <constraint firstItem="f56-It-gon" firstAttribute="leading" secondItem="hc2-PF-PkE" secondAttribute="leading" constant="16" id="a2Q-UZ-7GE"/>
                             <constraint firstItem="tSC-Ig-fqO" firstAttribute="leading" secondItem="iuo-70-GKt" secondAttribute="leading" id="fOo-oH-Myh"/>
-                            <constraint firstItem="OCx-Ds-w7c" firstAttribute="centerX" secondItem="hc2-PF-PkE" secondAttribute="centerX" id="fPo-iY-ta9"/>
                             <constraint firstItem="f56-It-gon" firstAttribute="top" secondItem="tSC-Ig-fqO" secondAttribute="bottom" constant="16" id="gJ9-Ei-Ua9"/>
                             <constraint firstAttribute="trailing" secondItem="tSC-Ig-fqO" secondAttribute="trailing" id="o25-Sd-5lL"/>
-                            <constraint firstItem="OCx-Ds-w7c" firstAttribute="top" secondItem="f56-It-gon" secondAttribute="bottom" constant="16" id="rJ5-HT-4B4"/>
                             <constraint firstAttribute="top" secondItem="tSC-Ig-fqO" secondAttribute="top" id="rxV-nQ-yG6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="hc2-PF-PkE"/>
@@ -234,6 +234,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="3g2-xh-g5d"/>
+        <segue reference="pZT-tC-NzO"/>
     </inferredMetricsTieBreakers>
 </document>

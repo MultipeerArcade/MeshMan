@@ -63,9 +63,9 @@ class GuessViewController: UIViewController {
     // MARK: - UI Control
     
     private func setControls(enabled: Bool) {
-        _ = enabled ? questionField.becomeFirstResponder() : questionField.resignFirstResponder()
         questionField.isEnabled = enabled
         askButton.isEnabled = enabled
+        _ = enabled ? questionField.becomeFirstResponder() : questionField.resignFirstResponder()
     }
     
     private func changeToGuess() {
@@ -117,7 +117,7 @@ class GuessViewController: UIViewController {
         if !guessing {
             addQuestion(number: questions.currentQuestion, question: text)
             broadcast(question: text)
-            questionField.text = ""
+            questionField.text = nil
         } else {
             confirmAndMake(guess: text)
         }
@@ -128,7 +128,7 @@ class GuessViewController: UIViewController {
         let alert = UIAlertController(title: "Is \"\(guess)\" your final answer?", message: "Your guess will be sent to the leader.", preferredStyle: .alert)
         let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
             self.make(guess: guess)
-            self.questionField.text = ""
+            self.questionField.text = nil
         }
         let noAction = UIAlertAction(title: "No", style: .cancel) { _ in
             self.setControls(enabled: true)
