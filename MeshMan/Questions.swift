@@ -14,7 +14,6 @@ final class Questions {
     
     enum Rules {
         static let numberOfQuestions = 20
-        static let finalGuesses = 3
     }
     
     struct Question {
