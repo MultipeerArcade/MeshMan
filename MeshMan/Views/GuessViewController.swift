@@ -57,7 +57,7 @@ class GuessViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setControls(enabled: turnManager.iAmAsker)
+        setControls(enabled: false)
     }
     
     // MARK: - UI Control

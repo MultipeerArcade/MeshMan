@@ -58,6 +58,7 @@ class AnswerViewController: UIViewController {
         super.viewDidLoad()
         subjectLabel.text = questions.subject
         setControls(enabled: false)
+        showFirstQuestion(subject: questions.subject)
     }
     
     // MARK: - UI Control
@@ -94,6 +95,36 @@ class AnswerViewController: UIViewController {
                 waitForGuess()
             }
         }
+    }
+    
+    private func showFirstQuestion(subject: String) {
+        let question = "What is it?"
+        addQuestion(number: 1, question: question)
+        broadcastFirstQuestion(question)
+        let alert = UIAlertController(title: "First Question", message: "What is \(questions.subject)?", preferredStyle: .alert)
+        let personAction = UIAlertAction(title: "Person", style: .default) { (_) in
+            self.give(answer: .person)
+        }
+        let placeAction = UIAlertAction(title: "Place", style: .default) { (_) in
+            self.give(answer: .place)
+        }
+        let thingAction = UIAlertAction(title: "Thing", style: .default) { (_) in
+            self.give(answer: .thing)
+        }
+        let ideaAction = UIAlertAction(title: "Idea", style: .default) { (_) in
+            self.give(answer: .idea)
+        }
+        alert.addAction(personAction)
+        alert.addAction(placeAction)
+        alert.addAction(thingAction)
+        alert.addAction(ideaAction)
+        present(alert, animated: true)
+    }
+    
+    private func broadcastFirstQuestion(_ question: String) {
+        let q = Questions.Question(number: 1, question: question, answer: nil)
+        let message = QuestionNetUtil.QuestionMessage(number: q.number, question: q.question)
+        netUtil.send(message: message)
     }
     
     private func waitForGuess() {

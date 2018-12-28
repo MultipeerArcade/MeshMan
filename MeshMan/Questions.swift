@@ -28,6 +28,11 @@ final class Questions {
         case no
         case sometimes
         case unknown
+        
+        case person
+        case place
+        case thing
+        case idea
     }
     
     enum Result {
