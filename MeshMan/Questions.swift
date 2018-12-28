@@ -23,15 +23,15 @@ final class Questions {
     }
     
     enum Answer: String, Codable {
-        case yes
-        case no
-        case sometimes
-        case unknown
+        case yes = "Yes"
+        case no = "No"
+        case sometimes = "Sometimes"
+        case unknown = "Unkown"
         
-        case person
-        case place
-        case thing
-        case idea
+        case person = "Person"
+        case place = "Place"
+        case thing = "Thing"
+        case idea = "Idea"
     }
     
     enum Result {
