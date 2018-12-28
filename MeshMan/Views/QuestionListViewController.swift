@@ -27,11 +27,15 @@ class QuestionListViewController: UIViewController, UITableViewDataSource {
     // MARK: - Adding and Updating Rows
     
     func insert(at row: Int) {
-        questionTable.insertRows(at: [IndexPath(item: row, section: 0)], with: .automatic)
+        let ip = IndexPath(item: row, section: 0)
+        questionTable.insertRows(at: [ip], with: .automatic)
+        questionTable.scrollToRow(at: ip, at: .bottom, animated: true)
     }
     
     func update(at row: Int) {
-        questionTable.reloadRows(at: [IndexPath(item: row, section: 0)], with: .automatic)
+        let ip = IndexPath(item: row, section: 0)
+        questionTable.reloadRows(at: [ip], with: .automatic)
+        questionTable.scrollToRow(at: ip, at: .bottom, animated: true)
     }
     
     // MARK: - UITableViewDataSource

@@ -58,7 +58,9 @@ class AnswerViewController: UIViewController {
         super.viewDidLoad()
         subjectLabel.text = questions.subject
         setControls(enabled: false)
-        showFirstQuestion(subject: questions.subject)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+            self.showFirstQuestion(subject: self.questions.subject)
+        }
     }
     
     // MARK: - UI Control
