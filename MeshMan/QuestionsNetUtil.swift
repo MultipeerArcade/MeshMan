@@ -42,6 +42,14 @@ class QuestionNetUtil: NSObject, NetUtil {
         let answer: Questions.Answer
     }
     
+    struct GuessMessage: Codable {
+        let guess: String
+    }
+    
+    struct GuessConfirmationMessage: Codable {
+        let guessWasCorrect: Bool
+    }
+    
     // MARK: - Internal Members
     
     let session: MCSession
@@ -57,6 +65,10 @@ class QuestionNetUtil: NSObject, NetUtil {
     let questionMessageRecieved = Event<QuestionMessage>()
     
     let answerMessageRecieved = Event<AnswerMessage>()
+    
+    let guessMessageRecieved = Event<GuessMessage>()
+    
+    let guessConfirmationRecieved = Event<GuessConfirmationMessage>()
     
     // MARK: - Initialization
     
@@ -81,6 +93,10 @@ class QuestionNetUtil: NSObject, NetUtil {
             questionMessageRecieved.raise(sender: self, arguments: questionMessage)
         } else if let answerMessage = try? JSONDecoder().decode(AnswerMessage.self, from: data) {
             answerMessageRecieved.raise(sender: self, arguments: answerMessage)
+        } else if let guessMessage = try? JSONDecoder().decode(GuessMessage.self, from: data) {
+            guessMessageRecieved.raise(sender: self, arguments: guessMessage)
+        } else if let confirmation = try? JSONDecoder().decode(GuessConfirmationMessage.self, from: data) {
+            guessConfirmationRecieved.raise(sender: self, arguments: confirmation)
         }
     }
     

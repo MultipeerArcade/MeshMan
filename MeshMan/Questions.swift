@@ -14,6 +14,7 @@ final class Questions {
     
     enum Rules {
         static let numberOfQuestions = 20
+        static let finalGuesses = 3
     }
     
     struct Question {
@@ -29,15 +30,18 @@ final class Questions {
         case unknown
     }
     
+    enum Result {
+        case insert(Int)
+        case update(Int, done: Bool)
+    }
+    
     // MARK: - Internal Members
     
     private(set) var currentQuestion = 1
     
     private(set) var questions = [Question]()
     
-    // MARK: - Private Members
-    
-    private let subject: String
+    let subject: String
     
     // MARK: - Initialization
     
@@ -47,7 +51,7 @@ final class Questions {
     
     // MARK: - Gameplay
     
-    func addQuestion(_ number: Int, question: String) -> Int {
+    func addQuestion(_ number: Int, question: String) -> Result {
         let index: Int
         let q = Question(number: number, question: question, answer: nil)
         if let previous = questions.firstIndex(where: { $0.number == number - 1 }) {
@@ -57,20 +61,18 @@ final class Questions {
             index = questions.count
             questions.append(q)
         }
-        return index
+        return .insert(index)
     }
     
-    func answerQuestion(_ number: Int, with answer: Questions.Answer) -> Int {
-        defer {
-            currentQuestion = number + 1
-        }
+    func answerQuestion(_ number: Int, with answer: Questions.Answer) -> Result {
         for (index, existing) in questions.enumerated() {
             guard existing.number == number else { continue }
             let updatedQuestion = Question(number: number, question: existing.question, answer: answer)
             questions[index] = updatedQuestion
-            return index
+            currentQuestion = number + 1
+            return .update(index, done: currentQuestion > Rules.numberOfQuestions)
         }
-        return 0
+        fatalError("Can't answer a question that doesnt exist")
     }
     
 }

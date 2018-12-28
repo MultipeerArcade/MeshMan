@@ -17,11 +17,15 @@ final class QuestionsTurnManager: TurnManager {
         return currentAsker == myID
     }
     
+    var iAmPicker: Bool {
+        return currentPicker == myID
+    }
+    
+    private(set) var currentPicker: MCPeerID
+    
+    private(set) lazy var currentAsker: MCPeerID = getFirstPeer(otherThan: [currentPicker])
+    
     // MARK: - Private Members
-    
-    private var currentPicker: MCPeerID
-    
-    private lazy var currentAsker: MCPeerID = getFirstPeer(otherThan: [currentPicker])
     
     // MARK: - Initialization
     
@@ -32,6 +36,11 @@ final class QuestionsTurnManager: TurnManager {
     
     func pickNextAsker() {
         currentAsker = getPeer(after: currentAsker, otherThan: currentPicker)
+    }
+    
+    func gameOver() {
+        currentPicker = getPeer(after: currentPicker)
+        currentAsker = getPeer(after: currentPicker)
     }
     
 }

@@ -172,7 +172,7 @@
                     <connections>
                         <outlet property="noButton" destination="hZT-3C-W9F" id="eca-eY-UpF"/>
                         <outlet property="sometimesButton" destination="AEb-10-G6P" id="Mt3-mm-OGu"/>
-                        <outlet property="subjectLabel" destination="x6d-N3-n7T" id="cIN-J5-Ncm"/>
+                        <outlet property="subjectLabel" destination="x6d-N3-n7T" id="vPV-Mw-PoO"/>
                         <outlet property="unknownButton" destination="v7w-eo-Opw" id="9Ga-E4-KBA"/>
                         <outlet property="yesButton" destination="kIB-WT-FzY" id="6kB-NY-jfB"/>
                     </connections>
@@ -234,6 +234,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="pZT-tC-NzO"/>
+        <segue reference="3g2-xh-g5d"/>
     </inferredMetricsTieBreakers>
 </document>

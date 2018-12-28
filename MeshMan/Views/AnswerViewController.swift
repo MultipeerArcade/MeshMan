@@ -32,11 +32,15 @@ class AnswerViewController: UIViewController {
     
     private var questionListController: QuestionListViewController!
     
+    private var waitAlert: UIAlertController!
+    
     // MARK: - Event Handles
     
     private var questionRecievedHandle: Event<QuestionNetUtil.QuestionMessage>.Handle?
     
-    private var answerRecievedHanle: Event<QuestionNetUtil.AnswerMessage>.Handle?
+    private var answerRecievedHandle: Event<QuestionNetUtil.AnswerMessage>.Handle?
+    
+    private var guessRecievedHandle: Event<QuestionNetUtil.GuessMessage>.Handle?
     
     // MARK: - New Instance
     
@@ -52,6 +56,7 @@ class AnswerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        subjectLabel.text = questions.subject
         setControls(enabled: false)
     }
     
@@ -67,16 +72,66 @@ class AnswerViewController: UIViewController {
     // MARK: -
     
     private func addQuestion(number: Int, question: String) {
-        let updateIndex = questions.addQuestion(number, question: question)
-        questionListController.insert(at: updateIndex)
+        let result = questions.addQuestion(number, question: question)
+        process(result: result)
         setControls(enabled: true)
     }
     
     private func answerQuestion(number: Int, with answer: Questions.Answer) {
-        let updateIndex = questions.answerQuestion(number, with: answer)
-        questionListController.update(at: updateIndex)
+        let result = questions.answerQuestion(number, with: answer)
+        process(result: result)
         turnManager.pickNextAsker()
         setControls(enabled: false)
+    }
+    
+    private func process(result: Questions.Result) {
+        switch result {
+        case .insert(let row):
+            questionListController.insert(at: row)
+        case .update(let row, done: let done):
+            questionListController.update(at: row)
+            if done {
+                waitForGuess()
+            }
+        }
+    }
+    
+    private func waitForGuess() {
+        setControls(enabled: false)
+        let alert = UIAlertController(title: "Get ready!", message: "\(turnManager.currentAsker.displayName) is preparing a guess.", preferredStyle: .alert)
+        waitAlert = alert
+        present(alert, animated: true)
+    }
+    
+    private func showGuess(_ guess: String) {
+        waitAlert.dismiss(animated: true)
+        let alert = UIAlertController(title: guess, message: "Is this what you were thinking of?", preferredStyle: .alert)
+        let yesAction = UIAlertAction(title: "Yes", style: .default) { (_) in
+            self.gameOver(correct: true)
+        }
+        let noAction = UIAlertAction(title: "No", style: .destructive) { (_) in
+            self.gameOver(correct: false)
+        }
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        present(alert, animated: true)
+    }
+    
+    private func gameOver(correct: Bool) {
+        broadcast(correct: correct)
+        turnManager.gameOver()
+        if turnManager.iAmPicker {
+            let subjectSelection = SubjectViewController.newInstance(netUtil: netUtil)
+            navigationController?.setViewControllers([subjectSelection], animated: true)
+        } else {
+            let wait = WaitViewController.newInstance(purpose: .waiting, utilType: .questions(netUtil))
+            navigationController?.setViewControllers([wait], animated: true)
+        }
+    }
+    
+    private func broadcast(correct: Bool) {
+        let message = QuestionNetUtil.GuessConfirmationMessage(guessWasCorrect: correct)
+        netUtil.send(message: message)
     }
     
     // MARK: - Input Handling
@@ -113,8 +168,11 @@ class AnswerViewController: UIViewController {
         questionRecievedHandle = netUtil.questionMessageRecieved.subscribe({ [weak self] in
             self?.handleQuestionRecieved($1)
         })
-        answerRecievedHanle = netUtil.answerMessageRecieved.subscribe({ [weak self] in
+        answerRecievedHandle = netUtil.answerMessageRecieved.subscribe({ [weak self] in
             self?.handleAnswerRecieved($1)
+        })
+        guessRecievedHandle = netUtil.guessMessageRecieved.subscribe({ [weak self] in
+            self?.showGuess($1.guess)
         })
     }
     
