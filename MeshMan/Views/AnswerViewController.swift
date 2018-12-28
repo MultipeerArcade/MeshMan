@@ -77,6 +77,7 @@ class AnswerViewController: UIViewController {
     private func addQuestion(number: Int, question: String) {
         let result = questions.addQuestion(number, question: question)
         process(result: result)
+        navigationItem.title = "Your Turn"
         setControls(enabled: true)
     }
     
@@ -84,6 +85,7 @@ class AnswerViewController: UIViewController {
         let result = questions.answerQuestion(number, with: answer)
         process(result: result)
         turnManager.pickNextAsker()
+        navigationItem.title = "\(turnManager.currentAsker.displayName)'s Turn"
         setControls(enabled: false)
     }
     

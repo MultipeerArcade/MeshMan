@@ -86,6 +86,7 @@ class GuessViewController: UIViewController {
     private func addQuestion(number: Int, question: String) {
         let result = questions.addQuestion(number, question: question)
         process(result: result)
+        navigationItem.title = "\(turnManager.currentPicker.displayName)'s Turn"
         setControls(enabled: false)
     }
     
@@ -94,7 +95,10 @@ class GuessViewController: UIViewController {
         process(result: result)
         turnManager.pickNextAsker()
         if turnManager.iAmAsker {
+            navigationItem.title = "Your Turn"
             setControls(enabled: true)
+        } else {
+            navigationItem.title = "\(turnManager.currentAsker.displayName)'s Turn"
         }
     }
     
