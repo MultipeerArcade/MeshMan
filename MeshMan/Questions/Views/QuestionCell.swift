@@ -14,6 +14,7 @@ class QuestionCell: UITableViewCell {
     @IBOutlet private weak var questionLabel: UILabel!
     @IBOutlet private weak var answerLabel: UILabel!
     @IBOutlet private weak var waitingIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var spinnerContainer: UIView!
     
     func configureWith(question: Questions.Question) {
         questionNumberLabel.text = "\(question.number)."
@@ -22,8 +23,10 @@ class QuestionCell: UITableViewCell {
             answerLabel.isHidden = false
             answerLabel.text = answer.rawValue
             waitingIndicator.stopAnimating()
+            spinnerContainer.isHidden = true
         } else {
             answerLabel.isHidden = true
+            spinnerContainer.isHidden = false
             waitingIndicator.startAnimating()
         }
     }
