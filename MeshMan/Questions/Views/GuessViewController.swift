@@ -125,13 +125,36 @@ class GuessViewController: UIViewController {
     @IBAction private func askButtonPressed() {
         guard let text = questionField.text else { return }
         if !guessing {
-            addQuestion(number: questions.currentQuestion, question: text)
-            broadcast(question: text)
-            questionField.text = nil
+            switch Questions.sanitize(question: text) {
+            case .invalid:
+                showInvalidQuestionMessage(for: text)
+            case .sanitized(question: let question):
+                addQuestion(number: questions.currentQuestion, question: question)
+                broadcast(question: question)
+                questionField.text = nil
+            }
         } else {
-            confirmAndMake(guess: text)
+            switch Questions.sanitize(guess: text) {
+            case .invalid:
+                showInvalidGuessMessage(for: text)
+            case .sanitized(let guess):
+                confirmAndMake(guess: guess)
+            }
         }
-        
+    }
+    
+    private func showInvalidQuestionMessage(for question: String) {
+        let alert = UIAlertController(title: "Invalid Question", message: "\"\(question)\" is not a valid entry.", preferredStyle: .alert)
+        let okayAction = UIAlertAction(title: "Okay", style: .default)
+        alert.addAction(okayAction)
+        present(alert, animated: true)
+    }
+    
+    private func showInvalidGuessMessage(for guess: String) {
+        let alert = UIAlertController(title: "Invalid Guess", message: "\"\(guess)\" is not a valid entry.", preferredStyle: .alert)
+        let okayAction = UIAlertAction(title: "Okay", style: .default)
+        alert.addAction(okayAction)
+        present(alert, animated: true)
     }
     
     private func confirmAndMake(guess: String) {
