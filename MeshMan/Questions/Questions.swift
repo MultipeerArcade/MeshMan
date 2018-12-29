@@ -102,7 +102,7 @@ final class Questions {
         guard question.count > 0 else { return .invalid }
         var sanitized = question.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         guard sanitized.count > 0 else { return .invalid }
-        if sanitized[sanitized.endIndex] != "?" {
+        if sanitized.last != "?" {
             sanitized.append("?")
         }
         return .sanitized(sanitized)
