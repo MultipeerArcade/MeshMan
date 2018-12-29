@@ -213,13 +213,17 @@
                                 </connections>
                             </containerView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Question" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="f56-It-gon">
-                                <rect key="frame" x="16" y="349.5" width="297" height="30"/>
+                                <rect key="frame" x="16" y="349.5" width="277" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCx-Ds-w7c">
-                                <rect key="frame" x="329" y="349.5" width="30" height="30"/>
+                                <rect key="frame" x="309" y="339.5" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="Ib2-pv-z1l"/>
+                                    <constraint firstAttribute="height" constant="50" id="Id3-1o-iNv"/>
+                                </constraints>
                                 <state key="normal" title="Ask"/>
                                 <connections>
                                     <action selector="askButtonPressed" destination="eh0-LW-BkO" eventType="touchUpInside" id="aZ0-YL-W5p"/>
