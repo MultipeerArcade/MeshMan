@@ -31,8 +31,6 @@ class SubjectViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        subjectField.delegate = self
         subjectField.becomeFirstResponder()
     }
     
