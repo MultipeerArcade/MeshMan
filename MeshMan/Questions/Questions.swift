@@ -41,6 +41,11 @@ final class Questions {
         case update(Int, done: Bool)
     }
     
+    enum SanitizationResult {
+        case sanitized(String)
+        case invalid
+    }
+    
     // MARK: - Internal Members
     
     private(set) var currentQuestion = 1
@@ -82,6 +87,32 @@ final class Questions {
             return .update(index, done: currentQuestion > rules.numberOfQuestions)
         }
         fatalError("Can't answer a question that doesnt exist")
+    }
+    
+    // MARK: - Input Sanitization
+    
+    static func sanitize(subject: String) -> SanitizationResult {
+        guard subject.count > 0 else { return .invalid }
+        let sanitized = subject.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        guard sanitized.count > 0 else { return .invalid }
+        return .sanitized(sanitized)
+    }
+    
+    static func sanitize(question: String) -> SanitizationResult {
+        guard question.count > 0 else { return .invalid }
+        var sanitized = question.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        guard sanitized.count > 0 else { return .invalid }
+        if sanitized.last != "?" {
+            sanitized.append("?")
+        }
+        return .sanitized(sanitized)
+    }
+    
+    static func sanitize(guess: String) -> SanitizationResult {
+        guard guess.count > 0 else { return .invalid }
+        let sanitized = guess.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        guard sanitized.count > 0 else { return .invalid }
+        return .sanitized(sanitized)
     }
     
 }

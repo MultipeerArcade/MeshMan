@@ -46,8 +46,19 @@ class SubjectViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Input Sanitation
     
     private func processText(input: String) {
-        // TODO: Add sanitation code here
-        showGame(subject: input)
+        switch Questions.sanitize(subject: input) {
+        case .invalid:
+            showInvalidSubjectMessage(for: input)
+        case .sanitized(let subject):
+            showGame(subject: subject)
+        }
+    }
+    
+    private func showInvalidSubjectMessage(for input: String) {
+        let alert = UIAlertController(title: "Invalid Subject", message: "\"\(input)\" is not a valid entry.", preferredStyle: .alert)
+        let okayAction = UIAlertAction(title: "Okay", style: .default)
+        alert.addAction(okayAction)
+        present(alert, animated: true)
     }
     
     // MARK: - Showing the Game
