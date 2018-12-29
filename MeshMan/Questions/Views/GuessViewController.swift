@@ -43,6 +43,8 @@ class GuessViewController: UIViewController {
     
     private var waitingAlert: UIAlertController!
     
+    private let feedbackGenerator = UINotificationFeedbackGenerator()
+    
     // MARK: - Event Handles
     
     private var questionRecievedHandle: Event<QuestionNetUtil.QuestionMessage>.Handle?
@@ -70,12 +72,15 @@ class GuessViewController: UIViewController {
     
     private func changeToGuess() {
         if turnManager.iAmAsker {
+            feedbackGenerator.notificationOccurred(.success)
+            navigationItem.title = "Final Guess"
             questionField.placeholder = "Guess"
             askButton.setTitle("Guess", for: .normal)
             guessing = true
         } else {
             setControls(enabled: false)
             let alert = UIAlertController(title: "Oh boy!", message: "\(turnManager.currentAsker) is deciding on a final guess.", preferredStyle: .alert)
+            navigationItem.title = "\(turnManager.currentAsker)'s Final Guess"
             waitingAlert = alert
             present(alert, animated: true)
         }
@@ -96,6 +101,7 @@ class GuessViewController: UIViewController {
         turnManager.pickNextAsker()
         if turnManager.iAmAsker {
             navigationItem.title = "Your Turn"
+            feedbackGenerator.notificationOccurred(.success)
             setControls(enabled: true)
         } else {
             navigationItem.title = "\(turnManager.currentAsker.displayName)'s Turn"
