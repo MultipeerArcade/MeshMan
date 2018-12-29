@@ -125,15 +125,15 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	// MARK: - Keyboard
 	
 	private func subscribeToKeyboardEvents() {
-		NotificationCenter.default.addObserver(forName: Notification.Name.UIKeyboardDidShow, object: nil, queue: OperationQueue.main) { [weak self] in self?.keyboardDidShow($0) }
-		NotificationCenter.default.addObserver(forName: Notification.Name.UIKeyboardWillHide, object: nil, queue: OperationQueue.main) { [weak self] in self?.keyboardWillHide($0) }
+		NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification, object: nil, queue: OperationQueue.main) { [weak self] in self?.keyboardDidShow($0) }
+		NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: OperationQueue.main) { [weak self] in self?.keyboardWillHide($0) }
 	}
 	
 	private func keyboardDidShow(_ notification: Notification) {
 		guard let userInfo = notification.userInfo else { return }
-		guard let size = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+		guard let size = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
 		let existingInsets = self.scrollView.contentInset
-		self.scrollView.contentInset = UIEdgeInsetsMake(existingInsets.top, existingInsets.left, size.height, existingInsets.right)
+		self.scrollView.contentInset = UIEdgeInsets(top: existingInsets.top, left: existingInsets.left, bottom: size.height, right: existingInsets.right)
 		
 		var frame = self.view.frame
 		frame.size.height -= size.height
@@ -144,7 +144,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	private func keyboardWillHide(_ notification: Notification) {
 		let existingInsets = self.scrollView.contentInset
-		self.scrollView.contentInset = UIEdgeInsetsMake(existingInsets.top, existingInsets.left, 0, existingInsets.right)
+		self.scrollView.contentInset = UIEdgeInsets(top: existingInsets.top, left: existingInsets.left, bottom: 0, right: existingInsets.right)
 	}
 	
 	// MARK: - Hangman
