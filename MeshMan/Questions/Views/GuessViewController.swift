@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GuessViewController: UIViewController {
+class GuessViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: - Outlets
     
@@ -124,6 +124,10 @@ class GuessViewController: UIViewController {
     
     @IBAction private func askButtonPressed() {
         guard let text = questionField.text else { return }
+        process(textInput: text)
+    }
+    
+    private func process(textInput text: String) {
         if !guessing {
             switch Questions.sanitize(question: text) {
             case .invalid:
@@ -257,6 +261,14 @@ class GuessViewController: UIViewController {
         default:
             return
         }
+    }
+    
+    // MARK: - UITextFieldDelegate
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        guard let text = textField.text else { return true }
+        process(textInput: text)
+        return true
     }
 
 }
