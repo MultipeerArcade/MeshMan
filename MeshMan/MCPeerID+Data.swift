@@ -12,11 +12,11 @@ import MultipeerConnectivity
 extension MCPeerID {
     
     var dataRepresentation: Data {
-        return NSKeyedArchiver.archivedData(withRootObject: self)
+        return try! NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
     }
     
     static func from(data: Data) -> MCPeerID {
-        return NSKeyedUnarchiver.unarchiveObject(with: data) as! MCPeerID
+        return try! NSKeyedUnarchiver.unarchivedObject(ofClass: MCPeerID.self, from: data)!
     }
     
 }

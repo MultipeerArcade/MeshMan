@@ -21,7 +21,7 @@ class QuestionListViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        questionTable.rowHeight = UITableViewAutomaticDimension
+        questionTable.rowHeight = UITableView.automaticDimension
     }
     
     // MARK: - Adding and Updating Rows
