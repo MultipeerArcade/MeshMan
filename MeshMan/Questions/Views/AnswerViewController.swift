@@ -34,6 +34,8 @@ class AnswerViewController: UIViewController {
     
     private var waitAlert: UIAlertController!
     
+    private let feedbackGenerator = UINotificationFeedbackGenerator()
+    
     // MARK: - Event Handles
     
     private var questionRecievedHandle: Event<QuestionNetUtil.QuestionMessage>.Handle?
@@ -78,6 +80,7 @@ class AnswerViewController: UIViewController {
         let result = questions.addQuestion(number, question: question)
         process(result: result)
         navigationItem.title = "Your Turn"
+        feedbackGenerator.notificationOccurred(.success)
         setControls(enabled: true)
     }
     
@@ -140,6 +143,7 @@ class AnswerViewController: UIViewController {
     
     private func showGuess(_ guess: String) {
         waitAlert.dismiss(animated: true)
+        feedbackGenerator.notificationOccurred(.success)
         let alert = UIAlertController(title: guess, message: "Is this what you were thinking of?", preferredStyle: .alert)
         let yesAction = UIAlertAction(title: "Yes", style: .default) { (_) in
             self.gameOver(correct: true)
