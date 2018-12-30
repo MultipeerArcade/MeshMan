@@ -15,7 +15,7 @@
             <objects>
                 <viewController id="sv1-9w-pS5" customClass="QuestionListViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cmN-sQ-2to">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="333.5"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fun-Th-jRe">
@@ -183,6 +183,7 @@
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <accessibility key="accessibilityConfiguration" identifier="questions.answers"/>
                         <constraints>
                             <constraint firstAttribute="top" secondItem="jam-MK-D69" secondAttribute="top" id="12C-Gr-Wuw"/>
                             <constraint firstItem="uux-ez-xK2" firstAttribute="bottom" secondItem="PBd-nL-ReM" secondAttribute="bottom" id="7oJ-7E-H6R"/>
