@@ -54,7 +54,7 @@ struct WelcomeElements {
         case .questions:
             elements.questionsButton.tap()
         }
-//        instance.waitForBrowserToAppear(app: app)
+        instance.waitForBrowserToAppear(app: app)
     }
     
     private static func fillNameIfNeeded(elements: WelcomeElements, name: String) {
@@ -68,7 +68,7 @@ struct WelcomeElements {
 
 extension XCTestCase {
     func waitForBrowserToAppear(app: XCUIApplication) {
-        let browserExpectation = expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: app.tables.containing(.other, identifier: "CHOOSE 1 TO 7 INVITEES"), handler: nil)
+        let browserExpectation = expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: app.otherElements["browser"], handler: nil)
         wait(for: [browserExpectation], timeout: 5)
     }
 }
