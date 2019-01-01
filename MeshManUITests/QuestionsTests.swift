@@ -32,7 +32,10 @@ class QuestionsTests: XCTestCase {
         waitForSubjectToAppear(elements: subjectElements)
         let subject = "Car"
         SubjectElements.fillSubject(elements: subjectElements, with: subject, done: true)
-        waitForAnswersToAppear(app: app)
+        let answersElements = AnswersElements(app: app)
+        waitForAnswersToAppear(elements: answersElements)
+        waitForFirstQuestionToAppear(elements: answersElements)
+        answersElements.pick(answer: .thing)
     }
 
 }

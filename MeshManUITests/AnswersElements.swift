@@ -17,6 +17,14 @@ struct AnswersElements {
         return app.otherElements["questions.answers"]
     }
     
+    var firstQuestionAlert: XCUIElement {
+        return app.alerts["First Question"]
+    }
+    
+    func pick(answer: Questions.Answer) {
+        firstQuestionAlert.buttons[answer.rawValue].tap()
+    }
+    
 }
 
 extension XCTestCase {
@@ -29,6 +37,11 @@ extension XCTestCase {
     func waitForAnswersToAppear(elements: AnswersElements) {
         let answersExpectation = expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: elements.rootView, handler: nil)
         wait(for: [answersExpectation], timeout: 4)
+    }
+    
+    func waitForFirstQuestionToAppear(elements: AnswersElements) {
+        let alertExpectation = expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: elements.firstQuestionAlert, handler: nil)
+        wait(for: [alertExpectation], timeout: 4)
     }
     
 }
