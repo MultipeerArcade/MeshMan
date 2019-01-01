@@ -11,7 +11,7 @@ import MultipeerConnectivity
 
 internal class MCManager {
 	
-	private static let serviceType = "hangman-mesh"
+	static let serviceType = "hangman-mesh"
 	
 	internal private(set) static var shared: MCManager! = nil
 	

@@ -42,9 +42,10 @@ struct WelcomeElements {
         case questions
     }
     
-    static func createGame(app: XCUIApplication, instance: XCTestCase, name: String = "Test", game: GameSelection) {
+    @discardableResult static func createGame(app: XCUIApplication, instance: XCTestCase, name: String = "Test", game: GameSelection) -> String {
         let elements = WelcomeElements(app: app)
         fillNameIfNeeded(elements: elements, name: name)
+        let name = elements.nameField.stringValue!
         elements.createButton.tap()
         let expectation = instance.expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: elements.chooseGameAlert, handler: nil)
         instance.wait(for: [expectation], timeout: 3)
@@ -55,6 +56,7 @@ struct WelcomeElements {
             elements.questionsButton.tap()
         }
         instance.waitForBrowserToAppear(app: app)
+        return name
     }
     
     private static func fillNameIfNeeded(elements: WelcomeElements, name: String) {
