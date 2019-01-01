@@ -10,9 +10,19 @@ import UIKit
 
 class AnswerViewController: UIViewController {
     
+    // MARK: - Constants
+    
+    enum Constants {
+        static let subjectTimerDuration: TimeInterval = 2
+    }
+    
+    private enum Strings {
+        static let subjectLabelHiddenText = NSLocalizedString("Tap to Show Subject", comment: "Text shown on the subject label in 20 questions when it is hidden")
+    }
+    
     // MARK: - Outlets
     
-    @IBOutlet private weak var subjectLabel: UILabel!
+    @IBOutlet private weak var subjectButton: UIButton!
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var sometimesButton: UIButton!
@@ -36,6 +46,8 @@ class AnswerViewController: UIViewController {
     
     private let feedbackGenerator = UINotificationFeedbackGenerator()
     
+    private var subjectTimer: Timer?
+    
     // MARK: - Event Handles
     
     private var questionRecievedHandle: Event<QuestionNetUtil.QuestionMessage>.Handle?
@@ -58,7 +70,7 @@ class AnswerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        subjectLabel.text = questions.subject
+        subjectButton.setTitle(Strings.subjectLabelHiddenText, for: .normal)
         setControls(enabled: false)
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
             self.showFirstQuestion(subject: self.questions.subject)
@@ -72,6 +84,28 @@ class AnswerViewController: UIViewController {
         noButton.isEnabled = enabled
         sometimesButton.isEnabled = enabled
         unknownButton.isEnabled = enabled
+    }
+    
+    private func showSubject() {
+        startSubjectTimer() {
+            self.hideSubject()
+        }
+        subjectButton.setTitle(questions.subject, for: .normal)
+    }
+    
+    private func hideSubject() {
+        subjectButton.setTitle(Strings.subjectLabelHiddenText, for: .normal)
+        subjectTimer?.invalidate()
+    }
+    
+    private func startSubjectTimer(block: @escaping () -> Void) {
+        let timer = Timer(timeInterval: Constants.subjectTimerDuration, repeats: false, block: { _ in
+            block()
+        })
+        timer.tolerance = Constants.subjectTimerDuration * 0.1
+        subjectTimer?.invalidate()
+        RunLoop.main.add(timer, forMode: .default)
+        subjectTimer = timer
     }
     
     // MARK: -
@@ -189,6 +223,10 @@ class AnswerViewController: UIViewController {
     
     @IBAction private func unknownButtonPressed() {
         give(answer: .unknown)
+    }
+    
+    @IBAction func subjectButtonPressed() {
+        showSubject()
     }
     
     private func give(answer: Questions.Answer) {
