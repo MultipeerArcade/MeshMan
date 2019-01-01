@@ -18,9 +18,10 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		static let invalidDisplayNameErrorMessage = NSLocalizedString("The display name field cannot be left blank.", comment: "The message to show when a user leaves the display name field blank")
 	}
 	
-	private enum Constants {
+	enum Constants {
 		static let minimumNumberOfPeers = 2
 		static let displayNameKey = "displayName"
+        static let browserAccessabilityIdentifier = "browser"
 	}
 	
 	// MARK: - Outlets
@@ -97,6 +98,8 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	private func showBrowser() {
 		let browser = MCManager.shared.makeBrowser()
 		let browserVC = MCBrowserViewController.init(browser: browser, session: MCManager.shared.session)
+        browserVC.loadViewIfNeeded()
+        browserVC.view.accessibilityIdentifier = Constants.browserAccessabilityIdentifier
 		browserVC.minimumNumberOfPeers = Constants.minimumNumberOfPeers
 		browserVC.delegate = self
 		self.present(browserVC, animated: true)
