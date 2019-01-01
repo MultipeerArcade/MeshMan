@@ -128,20 +128,24 @@
                                     <segue destination="sv1-9w-pS5" kind="embed" identifier="questionList" id="3g2-xh-g5d"/>
                                 </connections>
                             </containerView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subject" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x6d-N3-n7T">
-                                <rect key="frame" x="154.5" y="349.5" width="66.5" height="24"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3tH-bQ-Yzv">
+                                <rect key="frame" x="130.5" y="349.5" width="114" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Subject Button">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="subjectButtonPressed" destination="xBT-OR-EkB" eventType="touchUpInside" id="NTn-FA-NhB"/>
+                                </connections>
+                            </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="PBd-nL-ReM">
-                                <rect key="frame" x="0.0" y="381.5" width="375" height="285.5"/>
+                                <rect key="frame" x="0.0" y="390.5" width="375" height="276.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="apY-nI-ARr">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="143"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="138.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kIB-WT-FzY">
-                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="143"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="138.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                                 <state key="normal" title="Yes"/>
                                                 <connections>
@@ -149,7 +153,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZT-3C-W9F">
-                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="143"/>
+                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="138.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                                 <state key="normal" title="No"/>
                                                 <connections>
@@ -159,10 +163,10 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="g8v-iv-Xe8">
-                                        <rect key="frame" x="0.0" y="143" width="375" height="142.5"/>
+                                        <rect key="frame" x="0.0" y="138.5" width="375" height="138"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AEb-10-G6P">
-                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="142.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="138"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                 <state key="normal" title="Sometimes"/>
                                                 <connections>
@@ -170,7 +174,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v7w-eo-Opw">
-                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="142.5"/>
+                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="138"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                 <state key="normal" title="Unknown"/>
                                                 <connections>
@@ -186,22 +190,22 @@
                         <accessibility key="accessibilityConfiguration" identifier="questions.answers"/>
                         <constraints>
                             <constraint firstAttribute="top" secondItem="jam-MK-D69" secondAttribute="top" id="12C-Gr-Wuw"/>
+                            <constraint firstItem="3tH-bQ-Yzv" firstAttribute="top" secondItem="jam-MK-D69" secondAttribute="bottom" constant="16" id="1Sd-wt-ep2"/>
+                            <constraint firstItem="PBd-nL-ReM" firstAttribute="top" secondItem="3tH-bQ-Yzv" secondAttribute="bottom" constant="8" id="2Fy-md-SLv"/>
                             <constraint firstItem="uux-ez-xK2" firstAttribute="bottom" secondItem="PBd-nL-ReM" secondAttribute="bottom" id="7oJ-7E-H6R"/>
-                            <constraint firstItem="PBd-nL-ReM" firstAttribute="top" secondItem="x6d-N3-n7T" secondAttribute="bottom" constant="8" id="AWG-hV-drN"/>
-                            <constraint firstItem="x6d-N3-n7T" firstAttribute="centerX" secondItem="uux-ez-xK2" secondAttribute="centerX" id="E8R-lE-Wmu"/>
                             <constraint firstAttribute="trailing" secondItem="jam-MK-D69" secondAttribute="trailing" id="Rwg-hZ-EAL"/>
-                            <constraint firstItem="x6d-N3-n7T" firstAttribute="top" secondItem="jam-MK-D69" secondAttribute="bottom" constant="16" id="ZRy-Xp-g1A"/>
                             <constraint firstItem="jam-MK-D69" firstAttribute="leading" secondItem="TUc-4n-Qn1" secondAttribute="leading" id="msm-PB-BTJ"/>
                             <constraint firstItem="PBd-nL-ReM" firstAttribute="leading" secondItem="uux-ez-xK2" secondAttribute="leading" id="pcI-EN-1cG"/>
                             <constraint firstItem="uux-ez-xK2" firstAttribute="trailing" secondItem="PBd-nL-ReM" secondAttribute="trailing" id="uYy-u8-LIL"/>
                             <constraint firstItem="jam-MK-D69" firstAttribute="height" secondItem="TUc-4n-Qn1" secondAttribute="height" multiplier="0.5" id="yPd-4E-wfz"/>
+                            <constraint firstItem="3tH-bQ-Yzv" firstAttribute="centerX" secondItem="uux-ez-xK2" secondAttribute="centerX" id="zWo-kp-y1A"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="uux-ez-xK2"/>
                     </view>
                     <connections>
                         <outlet property="noButton" destination="hZT-3C-W9F" id="eca-eY-UpF"/>
                         <outlet property="sometimesButton" destination="AEb-10-G6P" id="Mt3-mm-OGu"/>
-                        <outlet property="subjectLabel" destination="x6d-N3-n7T" id="vPV-Mw-PoO"/>
+                        <outlet property="subjectButton" destination="3tH-bQ-Yzv" id="shb-Mg-rgc"/>
                         <outlet property="unknownButton" destination="v7w-eo-Opw" id="9Ga-E4-KBA"/>
                         <outlet property="yesButton" destination="kIB-WT-FzY" id="6kB-NY-jfB"/>
                     </connections>
@@ -270,6 +274,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="pZT-tC-NzO"/>
+        <segue reference="3g2-xh-g5d"/>
     </inferredMetricsTieBreakers>
 </document>
