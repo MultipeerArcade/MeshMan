@@ -14,7 +14,6 @@
 		411123B821DAF33700082BE1 /* SubjectElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411123B721DAF33700082BE1 /* SubjectElements.swift */; };
 		411123B921DAF90000082BE1 /* QuestionsNetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842421D1DD0200AB1089 /* QuestionsNetUtil.swift */; };
 		411123BA21DAF91300082BE1 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6A1FF80CCE00C95DD6 /* Event.swift */; };
-		411123BB21DAF92900082BE1 /* Questions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842621D1DEAF00AB1089 /* Questions.swift */; };
 		411123BC21DAF92D00082BE1 /* NetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843621D5280900AB1089 /* NetUtil.swift */; };
 		411123BD21DAF93A00082BE1 /* MCPeerID+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */; };
 		41536AF71FF06DC800DBC164 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536AF61FF06DC800DBC164 /* AppDelegate.swift */; };
@@ -488,7 +487,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				411123BB21DAF92900082BE1 /* Questions.swift in Sources */,
 				411123B421DAEB7D00082BE1 /* Random.swift in Sources */,
 				4170BCB221D923FA00ED3387 /* AnswersElements.swift in Sources */,
 				4170BCAE21D7EFB100ED3387 /* WelcomeElements.swift in Sources */,
