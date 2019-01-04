@@ -7,69 +7,134 @@
 //
 
 import Foundation
+import MultipeerConnectivity
 
 // MARK: - HangmanDelegate
 
-internal class Hangman {
+protocol HangmanDelegate: class {
+    func hangman(_ hangman: Hangman, didRecieveGuess result: Hangman.GuessResult)
+    func hangman(_ hangman: Hangman, didSetGuesser iAmGuesser: Bool)
+}
+
+final class Hangman {
+    
+    // MARK: - Types
 	
-	internal enum Rules {
+	enum Rules {
 		static let numberOfGuesses = 9
 		static let maxCharacters = 100
 		static let minCharacters = 3
 		static let wordSelectionBlurb = NSLocalizedString("The word you choose must be no shorter than %d characters and no longer than %d characters. Any characters other than numbers and letters will be shown to your opponents.\n\nFor Example:\n\nTHE CAT'S MEOW\nwill become\n_ _ _   _ _ _ ' _   _ _ _ _", comment: "Writeup of the rules around choosing a word in hangman")
 	}
+    
+    enum ChoiceValidity {
+        case tooShort, tooLong, good
+    }
+    
+    enum GuessSanitationResult {
+        case sanitized(Character)
+        case tooLong
+        case tooShort
+        case invalidCharacter
+        case alreadyGuessed
+    }
+    
+    enum GuessResult {
+        case correct(String)
+        case wrong(Character)
+        case wordGuessed(String)
+        case noMoreGuesses(Character, String)
+    }
+    
+    // MARK: - Internal Members
 	
-	private let word: String
-	
-	internal private(set) var obfuscatedWord: String
+	private(set) var obfuscatedWord: String
+    
+    private(set) var incorrectLetters = [Character]()
+    
+    internal let numberOfBlanks: Int
+    
+    let netUtil: HangmanNetUtil
+    
+    let turnManager: HangmanTurnManager
+    
+    weak var delegate: HangmanDelegate?
+    
+    // MARK: - Private Members
+    
+    private let word: String
 	
 	private var guessedLetters = [Character]()
+    
+    // MARK: Event Handles
+    
+    private var newGuessRecievedHandle: Event<HangmanNetUtil.NewGuessMessage>.Handle?
+    
+    // MARK: - Initialization
 	
-	internal private(set) var incorrectLetters = [Character]()
-	
-	internal let numberOfBlanks: Int
-	
-	init(word: String) {
+    init(word: String, netUtil: HangmanNetUtil, firstPicker: MCPeerID) {
 		self.word = Hangman.sanitize(word: word)
 		let (displayString, _, numberOfBlanks) = Hangman.obfuscate(word: self.word)
 		self.obfuscatedWord = displayString
 		self.numberOfBlanks = numberOfBlanks
+        self.netUtil = netUtil
+        self.turnManager = HangmanTurnManager(session: netUtil.session, myPeerID: MCManager.shared.peerID, firstPicker: firstPicker)
+        configure(netUtil: netUtil)
 	}
+    
+    private func configure(netUtil: HangmanNetUtil) {
+        newGuessRecievedHandle = netUtil.newGuessRecieved.subscribe({ (_, message) in
+            self.newGuessRecieved(message)
+        })
+    }
+    
+    // MARK: - Network Event Handling
+    
+    private func newGuessRecieved(_ message: HangmanNetUtil.NewGuessMessage) {
+        let result = guess(letter: message.guess)
+        delegate?.hangman(self, didRecieveGuess: result)
+    }
+    
+    // MARK: - UI Event Handling
+    
+    func make(guess letter: Character) -> GuessResult {
+        let guessMessage = HangmanNetUtil.NewGuessMessage(guess: letter, sender: MCManager.shared.peerID)
+        netUtil.send(message: guessMessage)
+        let result = guess(letter: letter)
+        return result
+    }
+    
+    // MARK: - Gameplay
 	
-	internal enum GuessResult {
-		case correct(String), alreadyGuessed(String), wrong(Character), invalid(String), wordGuessed(String), noMoreGuesses(Character, String)
+	private func guess(letter: Character) -> GuessResult {
+        if word.contains(letter) {
+            guessedLetters.append(letter)
+            let (displayString, comparisonString, _) = Hangman.obfuscate(word: word, excluding: guessedLetters)
+            obfuscatedWord = displayString
+            if word == comparisonString {
+                return .wordGuessed(comparisonString)
+            } else {
+                turnComplete()
+                return .correct(displayString)
+            }
+        } else {
+            guessedLetters.append(letter)
+            incorrectLetters.append(letter)
+            if incorrectLetters.count >= Rules.numberOfGuesses {
+                return .noMoreGuesses(letter, word)
+            } else {
+                turnComplete()
+                return .wrong(letter)
+            }
+        }
 	}
-	
-	internal func guess(letter: Character) -> GuessResult {
-		let char = Character("\(letter)".uppercased())
-		guard Hangman.characterIsValid(char) else { return .invalid("\(char)") }
-		if guessedLetters.contains(char) {
-			return .alreadyGuessed("\(char)")
-		} else if word.contains(char) {
-			self.guessedLetters.append(char)
-			let (displayString, comparisonString, _) = Hangman.obfuscate(word: self.word, excluding: guessedLetters)
-			self.obfuscatedWord = displayString
-			if self.word == comparisonString {
-				return .wordGuessed(comparisonString)
-			} else {
-				return .correct(displayString)
-			}
-		} else if self.incorrectLetters.count >= Rules.numberOfGuesses {
-			self.guessedLetters.append(char)
-			self.incorrectLetters.append(char)
-			return .noMoreGuesses(char, self.word)
-		} else {
-			self.guessedLetters.append(char)
-			self.incorrectLetters.append(char)
-			return .wrong(char)
-		}
-	}
+    
+    private func turnComplete() {
+        turnManager.pickNextGuesser()
+        delegate?.hangman(self, didSetGuesser: turnManager.iAmGuesser)
+    }
 	
 	// MARK: - Util
-	
-	internal enum ChoiceValidity {
-		case tooShort, tooLong, good
-	}
 	
 	internal static func checkValidChoice(_ text: String) -> ChoiceValidity {
 		var count = 0
@@ -110,6 +175,16 @@ internal class Hangman {
 		}
 		return (displayString, comparisonString, numberOfBlanks)
 	}
+    
+    func sanitize(guess: String) -> GuessSanitationResult {
+        let trimmed = guess.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        guard trimmed.count > 0 else { return .tooShort }
+        guard trimmed.count == 1 else { return .tooLong }
+        let char = trimmed[trimmed.startIndex]
+        guard Hangman.characterIsValid(char) else { return .invalidCharacter }
+        guard !guessedLetters.contains(char) else { return .alreadyGuessed }
+        return .sanitized(char)
+    }
 	
 	internal static func characterIsValid(_ character: Character) -> Bool {
 		guard let scalar = UnicodeScalar("\(character)") else { return false }

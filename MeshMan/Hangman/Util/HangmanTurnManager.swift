@@ -19,27 +19,17 @@ final class HangmanTurnManager: TurnManager {
 	
 	// MARK: - Turn Management
 	
-	private var currentPicker: MCPeerID! {
-		didSet { self.currentPickerChanged.raise(sender: self, arguments: (self.currentPicker == self.myID, self.currentPicker.displayName)) }
-	}
+	private var currentPicker: MCPeerID!
 	
 	internal var currentPickerName: String {
 		return self.currentPicker.displayName
 	}
 	
-	private var currentGuesser: MCPeerID! {
-		didSet { self.currentGuesserChanged.raise(sender: self, arguments: (self.currentGuesser == self.myID, self.currentGuesser.displayName)) }
-	}
+	private var currentGuesser: MCPeerID!
 	
 	internal var currentGuesserName: String {
 		return self.currentGuesser.displayName
 	}
-	
-	internal typealias RoleChangePayload = (isMe: Bool, name: String)
-	
-	internal let currentPickerChanged = Event<RoleChangePayload>()
-	
-	internal let currentGuesserChanged = Event<RoleChangePayload>()
 	
 	internal func set(picker newPicker: MCPeerID) {
 		self.currentPicker = newPicker
@@ -48,12 +38,16 @@ final class HangmanTurnManager: TurnManager {
 	internal var iAmPicker: Bool {
 		return MCManager.shared.isThisMe(self.currentPicker)
 	}
+    
+    var iAmGuesser: Bool {
+        return MCManager.shared.isThisMe(currentGuesser)
+    }
 	
 	private func pickFirstGuesser() {
 		self.currentGuesser = self.getFirstPeer(otherThan: [self.currentPicker])
 	}
 	
-	private func pickNextGuesser() {
+	func pickNextGuesser() {
 		self.currentGuesser = self.getPeer(after: self.currentGuesser, otherThan: self.currentPicker)
 	}
 	
@@ -69,15 +63,6 @@ final class HangmanTurnManager: TurnManager {
 		} else {
 			return .waiting
 		}
-	}
-	
-	internal func pingEvents() {
-		self.currentPickerChanged.raise(sender: self, arguments: (self.currentPicker == self.myID, self.currentPicker.displayName))
-		self.currentGuesserChanged.raise(sender: self, arguments: (self.currentGuesser == self.myID, self.currentGuesser.displayName))
-	}
-	
-	internal func turnCompleted() {
-		self.pickNextGuesser()
 	}
 	
 }

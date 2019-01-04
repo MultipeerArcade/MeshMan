@@ -154,11 +154,7 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
     }
     
     private func startHangman(with word: String, firstPicker: MCPeerID, netUtil: HangmanNetUtil) {
-        let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as! HangmanViewController
-        let turnManager = HangmanTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: firstPicker)
-        hangmanVC.turnManager = turnManager
-        hangmanVC.setUpHangman(with: word)
-        hangmanVC.hangmanNetUtil = netUtil
+        let hangmanVC = HangmanViewController.newInstance(word: word, netUtil: netUtil, firstPicker: firstPicker)
         self.navigationController?.setViewControllers([hangmanVC], animated: true)
     }
     
