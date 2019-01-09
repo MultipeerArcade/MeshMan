@@ -70,8 +70,8 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
 		self.incorrectLetterCollection.dataSource = self
 		self.subscribeToKeyboardEvents()
         setUp(asGuesser: hangman.turnManager.iAmGuesser)
-        updateWordProgress(with: hangman.obfuscatedWord)
-        numberOfLettersLabel.text = String(format: Strings.numberOfLetters, self.hangman.numberOfBlanks)
+        updateWordProgress(with: hangman.gameModel.obfuscatedWord)
+        numberOfLettersLabel.text = String(format: Strings.numberOfLetters, hangman.gameModel.numberOfBlanks)
     }
 	
 	override func viewDidLayoutSubviews() {
@@ -133,7 +133,7 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
 	// MARK: - Input Processing
     
     private func process(guess: String) {
-        let result = hangman.sanitize(guess: guess)
+        let result = hangman.gameModel.sanitize(guess: guess)
         switch result {
         case .alreadyGuessed:
             showAlreadyGuessedMessage(guess: guess)
@@ -145,7 +145,7 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
         }
     }
     
-    private func process(result: Hangman.GuessResult) {
+    private func process(result: HangmanGameModel.GuessResult) {
         switch result {
         case .wrong(let incorrectGuess):
             updateFor(incorrectCharacter: incorrectGuess)
@@ -239,7 +239,7 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
     
     // MARK: - HangmanDelegate
     
-    func hangman(_ hangman: Hangman, didRecieveGuess result: Hangman.GuessResult) {
+    func hangman(_ hangman: Hangman, didRecieveGuess result: HangmanGameModel.GuessResult) {
         process(result: result)
     }
     

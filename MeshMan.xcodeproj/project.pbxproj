@@ -57,6 +57,7 @@
 		41AD843921D52E1400AB1089 /* MCPeerID+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */; };
 		41AD843B21D55E7800AB1089 /* WaitNetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843A21D55E7800AB1089 /* WaitNetUtil.swift */; };
 		41AD843D21D58E3F00AB1089 /* TurnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843C21D58E3F00AB1089 /* TurnManager.swift */; };
+		41F8C60721E55D65000FB201 /* HangmanGameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F8C60621E55D65000FB201 /* HangmanGameModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +130,7 @@
 		41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MCPeerID+Data.swift"; sourceTree = "<group>"; };
 		41AD843A21D55E7800AB1089 /* WaitNetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitNetUtil.swift; sourceTree = "<group>"; };
 		41AD843C21D58E3F00AB1089 /* TurnManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TurnManager.swift; sourceTree = "<group>"; };
+		41F8C60621E55D65000FB201 /* HangmanGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanGameModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,6 +290,7 @@
 			children = (
 				41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */,
 				41536B421FF5544D00DBC164 /* Hangman.swift */,
+				41F8C60621E55D65000FB201 /* HangmanGameModel.swift */,
 				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
 			);
 			path = Util;
@@ -450,6 +453,7 @@
 				41AD843B21D55E7800AB1089 /* WaitNetUtil.swift in Sources */,
 				41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */,
 				41AD842B21D1E17F00AB1089 /* SubjectViewController.swift in Sources */,
+				41F8C60721E55D65000FB201 /* HangmanGameModel.swift in Sources */,
 				41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */,
 				41AD841F21D1D59100AB1089 /* GuessViewController.swift in Sources */,
 				41AD843921D52E1400AB1089 /* MCPeerID+Data.swift in Sources */,
