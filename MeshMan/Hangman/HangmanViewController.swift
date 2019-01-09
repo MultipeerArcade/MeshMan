@@ -9,8 +9,8 @@
 import UIKit
 import MultipeerConnectivity
 
-class HangmanViewController: UIViewController, UICollectionViewDataSource, UITextFieldDelegate {
-	
+class HangmanViewController: UIViewController, HangmanDelegate, UICollectionViewDataSource, UITextFieldDelegate {
+    
 	// MARK: -
 	
 	private enum Strings {
@@ -38,16 +38,29 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	@IBOutlet private weak var incorrectLetterCollection: UICollectionView!
 	@IBOutlet private weak var guessField: UITextField!
 	@IBOutlet private weak var numberOfLettersLabel: UILabel!
+    
+    // MARK: - Private Members
+    
+    private var hangman: Hangman!
+    
+    private var incorrectGuesses = [Character]()
 	
-	// MARK: - Deinitialization
-	
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-	}
-	
-	// MARK: - Controllers
+	// MARK: Controllers
 	
 	private weak var gallowsController: GallowsController!
+    
+    // MARK: - New Instance
+    
+    static func newInstance(word: String, netUtil: HangmanNetUtil, firstPicker: MCPeerID) -> HangmanViewController {
+        let vc = Storyboards.hangman.instantiateInitialViewController() as! HangmanViewController
+        vc.hangman = Hangman(word: word, netUtil: netUtil, firstPicker: firstPicker)
+        vc.hangman.delegate = vc
+        return vc
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 	
 	// MARK: - ViewController Lifecycle
 	
@@ -56,7 +69,9 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		self.guessField.delegate = self
 		self.incorrectLetterCollection.dataSource = self
 		self.subscribeToKeyboardEvents()
-		self.turnManager.pingEvents()
+        setUp(asGuesser: hangman.turnManager.iAmGuesser)
+        updateWordProgress(with: hangman.gameModel.obfuscatedWord)
+        numberOfLettersLabel.text = String(format: Strings.numberOfLetters, hangman.gameModel.numberOfBlanks)
     }
 	
 	override func viewDidLayoutSubviews() {
@@ -76,46 +91,14 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		}
     }
 	
-	// MARK: - Message Processing
-	
-	internal var hangmanNetUtil: HangmanNetUtil! {
-		didSet {
-			if let netUtil = self.hangmanNetUtil { self.setUp(netUtil: netUtil) }
-		}
-	}
-	
-	private var newMessageRecievedHandle: Event<HangmanNetUtil.NewGuessMessage>.Handle?
-	
-	private func setUp(netUtil: HangmanNetUtil) {
-		self.newMessageRecievedHandle = netUtil.newGuessRecieved.subscribe({ [weak self] in self?.handleNewGuessRecieved($1) })
-	}
-	
-	private func handleNewGuessRecieved(_ message: HangmanNetUtil.NewGuessMessage) {
-		self.processText(input: message.guess, sender: message.sender)
-	}
-	
-	// MARK: - Turn Management
-	
-	internal var turnManager: HangmanTurnManager! {
-		didSet {
-			if let turnManager = self.turnManager { self.setUp(turnManager: turnManager) }
-		}
-	}
-	
-	private var currentGuesserChangedHandle: Event<HangmanTurnManager.RoleChangePayload>.Handle?
-	
-	private func setUp(turnManager: HangmanTurnManager) {
-		self.currentGuesserChangedHandle = turnManager.currentGuesserChanged.subscribe({ [weak self] in self?.setUp(newGuesser: $1) })
-	}
-	
-	private func setUp(newGuesser: HangmanTurnManager.RoleChangePayload) {
-		if newGuesser.isMe {
+    private func setUp(asGuesser iAmGuesser: Bool) {
+		if iAmGuesser {
 			self.navigationItem.title = Strings.yourTurn
 			self.guessField.isHidden = false
 			self.guessField.isEnabled = true
 			self.guessField.becomeFirstResponder()
 		} else {
-			self.navigationItem.title = String(format: Strings.personsTurn, newGuesser.name)
+			self.navigationItem.title = String(format: Strings.personsTurn, hangman.turnManager.currentGuesserName)
 			self.guessField.isHidden = true
 			self.guessField.isEnabled = false
 			self.guessField.resignFirstResponder()
@@ -147,64 +130,35 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		self.scrollView.contentInset = UIEdgeInsets(top: existingInsets.top, left: existingInsets.left, bottom: 0, right: existingInsets.right)
 	}
 	
-	// MARK: - Hangman
-	
-	private var hangman: Hangman!
-	
-	private var incorrectGuesses = [Character]()
-	
-	internal func setUpHangman(with word: String) {
-		self.loadViewIfNeeded()
-		self.hangman = Hangman(word: word)
-		self.updateWordProgress(with: self.hangman.obfuscatedWord)
-		self.numberOfLettersLabel.text = String(format: Strings.numberOfLetters, self.hangman.numberOfBlanks)
-	}
-	
 	// MARK: - Input Processing
-	
-	private func processText(input: String, sender: MCPeerID = MCManager.shared.peerID) {
-		let trimmedInput = input.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-		let local = MCManager.shared.isThisMe(sender) // Sender won't be populated if the word was guessed locally
-		guard trimmedInput.count == 1 else { self.showInputNotOneCharMessage(); return }
-		let char = trimmedInput[trimmedInput.startIndex]
-		let validTurnMade: Bool
-		let result = self.hangman.guess(letter: char)
-		switch result {
-		case .alreadyGuessed(let guess):
-			if local {
-				self.showAlreadyGuessedMessage(guess: guess)
-			}
-			validTurnMade = false
-		case .correct(let updatedWord):
-			self.updateWordProgress(with: updatedWord)
-			validTurnMade = true
-		case .invalid(let guess):
-			if local {
-				self.showInvalidLetterMessage(guess: guess)
-			}
-			validTurnMade = false
-		case .noMoreGuesses(let incorrectGuess, let word):
-			self.updateFor(incorrectCharacter: incorrectGuess)
-			self.showNoMoreGuessesMessage(with: word)
-			self.turnManager.set(picker: sender)
-			validTurnMade = true
-		case .wordGuessed(let word):
-			self.updateWordProgress(with: word)
-			self.showWordGuessedMessage(with: word)
-			self.turnManager.set(picker: sender)
-			validTurnMade = true
-		case .wrong(let incorrectGuess):
-			self.updateFor(incorrectCharacter: incorrectGuess)
-			validTurnMade = true
-		}
-		if local { self.broadcast(guess: char) }
-		if validTurnMade { self.turnManager.turnCompleted() }
-	}
-	
-	private func broadcast(guess: Character) {
-		let message = HangmanNetUtil.NewGuessMessage(guess: String(guess), sender: MCManager.shared.peerID)
-        hangmanNetUtil.send(message: message)
-	}
+    
+    private func process(guess: String) {
+        let result = hangman.gameModel.sanitize(guess: guess)
+        switch result {
+        case .alreadyGuessed:
+            showAlreadyGuessedMessage(guess: guess)
+        case .invalidCharacter, .tooLong, .tooShort:
+            showInvalidLetterMessage(guess: guess)
+        case .sanitized(let char):
+            let guessResult = hangman.make(guess: char)
+            process(result: guessResult)
+        }
+    }
+    
+    private func process(result: HangmanGameModel.GuessResult) {
+        switch result {
+        case .wrong(let incorrectGuess):
+            updateFor(incorrectCharacter: incorrectGuess)
+        case .noMoreGuesses(let incorrectGuess, let word):
+            updateFor(incorrectCharacter: incorrectGuess)
+            showNoMoreGuessesMessage(with: word)
+        case .wordGuessed(let word):
+            updateWordProgress(with: word)
+            showWordGuessedMessage(with: word)
+        case .correct(let updatedWord):
+            updateWordProgress(with: updatedWord)
+        }
+    }
 	
 	private func showInputNotOneCharMessage() {
 		let alertView = UIAlertController(title: Strings.invalidLetterErrorTitle, message: Strings.inputNotOneCharErrorMessage, preferredStyle: .alert)
@@ -233,7 +187,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	private func showNoMoreGuessesMessage(with word: String) {
 		let alertView: UIAlertController
-		switch self.turnManager.myRole {
+		switch hangman.turnManager.myRole {
 		case .guesser, .waiting:
 			alertView = UIAlertController(title: Strings.loseAlertTitle, message: String(format: Strings.guesserLoseAlertMessage, word), preferredStyle: .alert)
 		case .picker:
@@ -246,7 +200,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	private func showWordGuessedMessage(with word: String) {
 		let alertView: UIAlertController
-		switch self.turnManager.myRole {
+		switch hangman.turnManager.myRole {
 		case .guesser, .waiting:
 			alertView = UIAlertController(title: Strings.winAlertTitle, message: String(format: Strings.guesserWinAlertMessage, word), preferredStyle: .alert)
 		case .picker:
@@ -258,7 +212,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	}
 	
 	private func prepareForNextGame() {
-		if self.turnManager.iAmPicker {
+		if hangman.turnManager.iAmPicker {
 			self.showWordSelection()
 		} else {
 			self.showWait()
@@ -266,12 +220,12 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	}
 	
 	private func showWordSelection() {
-		let wordSelectionVC = WordSelectionViewController.newInstance(netUtil: self.hangmanNetUtil)
+		let wordSelectionVC = WordSelectionViewController.newInstance(netUtil: hangman.netUtil)
 		self.navigationController?.setViewControllers([wordSelectionVC], animated: true)
 	}
 	
 	private func showWait() {
-        let waitVC = WaitViewController.newInstance(purpose: .waiting, utilType: .hangman(hangmanNetUtil))
+        let waitVC = WaitViewController.newInstance(purpose: .waiting, utilType: .hangman(hangman.netUtil))
 		self.navigationController?.setViewControllers([waitVC], animated: true)
 	}
 	
@@ -282,6 +236,16 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 		self.incorrectLetterCollection.scrollToItem(at: lastIndex, at: .left, animated: true)
 		self.gallowsController.next()
 	}
+    
+    // MARK: - HangmanDelegate
+    
+    func hangman(_ hangman: Hangman, didRecieveGuess result: HangmanGameModel.GuessResult) {
+        process(result: result)
+    }
+    
+    func hangman(_ hangman: Hangman, didSetGuesser iAmGuesser: Bool) {
+        setUp(asGuesser: iAmGuesser)
+    }
 	
 	// MARK: - UICollectionViewDataSource
 	
@@ -314,7 +278,7 @@ class HangmanViewController: UIViewController, UICollectionViewDataSource, UITex
 	
 	internal func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		guard let text = self.guessField.text else { return true }
-		self.processText(input: text)
+        process(guess: text)
 		self.guessField.text = nil
 		return true
 	}

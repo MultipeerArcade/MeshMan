@@ -6,9 +6,10 @@
 //  Copyright © 2018 Russell Pecka. All rights reserved.
 //
 
+import MultipeerConnectivity
 import UIKit
 
-class GuessViewController: UIViewController, UITextFieldDelegate {
+class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDelegate {
 
     // MARK: - Outlets
     
@@ -17,43 +18,24 @@ class GuessViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - New Instance
 
-    static func newInstance(subject: String, netUtil: QuestionNetUtil, turnManager: QuestionsTurnManager) -> GuessViewController {
+    static func newInstance(subject: String, netUtil: QuestionNetUtil, firstPicker: MCPeerID) -> GuessViewController {
         let vc = Storyboards.questions.instantiateViewController(withIdentifier: "questions") as! GuessViewController
-        vc.questions = Questions(subject: subject)
-        vc.netUtil = netUtil
-        vc.turnManager = turnManager
+        vc.questions = Questions(subject: subject, netUtil: netUtil, firstPicker: firstPicker)
+        vc.questions.delegate = vc
         return vc
     }
     
     // MARK: - Private Members
     
-    private var netUtil: QuestionNetUtil! {
-        didSet {
-            if let netUtil = self.netUtil { self.setUp(netUtil: netUtil) }
-        }
-    }
-    
     private var questions: Questions!
     
     private var guessing = false
-    
-    private var turnManager: QuestionsTurnManager!
     
     private var questionListController: QuestionListViewController!
     
     private var waitingAlert: UIAlertController!
     
     private let feedbackGenerator = UINotificationFeedbackGenerator()
-    
-    // MARK: - Event Handles
-    
-    private var questionRecievedHandle: Event<QuestionNetUtil.QuestionMessage>.Handle?
-    
-    private var answerRecievedHandle: Event<QuestionNetUtil.AnswerMessage>.Handle?
-    
-    private var guessRecievedHandle: Event<QuestionNetUtil.GuessMessage>.Handle?
-    
-    private var guessConfirmationRecievedHandle: Event<QuestionNetUtil.GuessConfirmationMessage>.Handle?
     
     // MARK: - ViewController Lifecycle
     
@@ -71,16 +53,17 @@ class GuessViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func changeToGuess() {
-        if turnManager.iAmAsker {
+        if questions.turnManager.iAmAsker {
             feedbackGenerator.notificationOccurred(.success)
             navigationItem.title = "Final Guess"
             questionField.placeholder = "Guess"
             askButton.setTitle("Guess", for: .normal)
             guessing = true
+            setControls(enabled: true)
         } else {
             setControls(enabled: false)
-            let alert = UIAlertController(title: "Oh boy!", message: "\(turnManager.currentAsker) is deciding on a final guess.", preferredStyle: .alert)
-            navigationItem.title = "\(turnManager.currentAsker)'s Final Guess"
+            let alert = UIAlertController(title: "Oh boy!", message: "\(questions.turnManager.currentAsker) is deciding on a final guess.", preferredStyle: .alert)
+            navigationItem.title = "\(questions.turnManager.currentAsker)'s Final Guess"
             waitingAlert = alert
             present(alert, animated: true)
         }
@@ -88,35 +71,12 @@ class GuessViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: -
     
-    private func addQuestion(number: Int, question: String) {
-        let result = questions.addQuestion(number, question: question)
-        process(result: result)
-        navigationItem.title = "\(turnManager.currentPicker.displayName)'s Turn"
-        setControls(enabled: false)
-    }
-    
-    private func answerQuestion(number: Int, with answer: Questions.Answer) {
-        let result = questions.answerQuestion(number, with: answer)
-        process(result: result)
-        turnManager.pickNextAsker()
-        if turnManager.iAmAsker {
-            navigationItem.title = "Your Turn"
-            feedbackGenerator.notificationOccurred(.success)
-            setControls(enabled: true)
-        } else {
-            navigationItem.title = "\(turnManager.currentAsker.displayName)'s Turn"
-        }
-    }
-    
     private func process(result: Questions.Result) {
         switch result {
         case .insert(let row):
             questionListController.insert(at: row)
-        case .update(let row, done: let done):
+        case .update(let row):
             questionListController.update(at: row)
-            if done {
-                changeToGuess()
-            }
         }
     }
     
@@ -133,8 +93,8 @@ class GuessViewController: UIViewController, UITextFieldDelegate {
             case .invalid:
                 showInvalidQuestionMessage(for: text)
             case .sanitized(question: let question):
-                addQuestion(number: questions.currentQuestion, question: question)
-                broadcast(question: question)
+                let result = questions.ask(question: question)
+                process(result: result)
                 questionField.text = nil
             }
         } else {
@@ -165,7 +125,6 @@ class GuessViewController: UIViewController, UITextFieldDelegate {
         let alert = UIAlertController(title: "Is \"\(guess)\" your final answer?", message: "Your guess will be sent to the leader.", preferredStyle: .alert)
         let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
             self.make(guess: guess)
-            self.questionField.text = nil
         }
         let noAction = UIAlertAction(title: "No", style: .cancel) { _ in
             self.setControls(enabled: true)
@@ -176,20 +135,21 @@ class GuessViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func make(guess: String) {
-        broadcast(guess: guess)
+        questions.make(guess: guess)
+        questionField.text = nil
         showWaitingMessage(guess: guess)
     }
     
     private func showWaitingMessage(guess: String) {
         waitingAlert?.dismiss(animated: true)
         setControls(enabled: false)
-        let alert = UIAlertController(title: "Drumroll, please!", message: "Waiting for \(turnManager.currentPicker.displayName) to decide on \(guess).", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Drumroll, please!", message: "Waiting for \(questions.turnManager.currentPicker.displayName) to decide on \(guess).", preferredStyle: .alert)
         waitingAlert = alert
         present(alert, animated: true)
     }
     
     private func showResultMessage(correct: Bool) {
-        waitingAlert.dismiss(animated: true)
+        waitingAlert?.dismiss(animated: true)
         let title = correct ? "You win!" : "You lose."
         let message = "The word was: \(questions.subject)"
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -201,53 +161,45 @@ class GuessViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func gameOver() {
-        turnManager.gameOver()
-        if turnManager.iAmPicker {
-            let subjectSelection = SubjectViewController.newInstance(netUtil: netUtil)
+        questions.turnManager.gameOver()
+        if questions.turnManager.iAmPicker {
+            let subjectSelection = SubjectViewController.newInstance(netUtil: questions.netUtil)
             navigationController?.setViewControllers([subjectSelection], animated: true)
         } else {
-            let wait = WaitViewController.newInstance(purpose: .waiting, utilType: .questions(netUtil))
+            let wait = WaitViewController.newInstance(purpose: .waiting, utilType: .questions(questions.netUtil))
             navigationController?.setViewControllers([wait], animated: true)
         }
     }
     
-    private func broadcast(question: String) {
-        let message = QuestionNetUtil.QuestionMessage(number: questions.currentQuestion, question: question)
-        netUtil.send(message: message)
+    // MARK: - QuestionsDelegate
+    
+    func questions(_ questions: Questions, didUpdateQuestion result: Questions.Result) {
+        process(result: result)
     }
     
-    private func broadcast(guess: String) {
-        let message = QuestionNetUtil.GuessMessage(guess: guess)
-        netUtil.send(message: message)
-    }
-    
-    // MARK: - Message Processing
-    
-    private func setUp(netUtil: QuestionNetUtil) {
-        questionRecievedHandle = netUtil.questionMessageRecieved.subscribe({ [weak self] in
-            self?.handleQuestionRecieved($1)
-        })
-        answerRecievedHandle = netUtil.answerMessageRecieved.subscribe({ [weak self] in
-            self?.handleAnswerRecieved($1)
-        })
-        guessRecievedHandle = netUtil.guessMessageRecieved.subscribe({ [weak self] in
-            self?.handleGuessRecieved($1)
-        })
-        guessConfirmationRecievedHandle = netUtil.guessConfirmationRecieved.subscribe({ [weak self] in
-            self?.showResultMessage(correct: $1.guessWasCorrect)
-        })
-    }
-    
-    private func handleQuestionRecieved(_ message: QuestionNetUtil.QuestionMessage) {
-        addQuestion(number: message.number, question: message.question)
-    }
-    
-    private func handleAnswerRecieved(_ message: QuestionNetUtil.AnswerMessage) {
-        answerQuestion(number: message.number, with: message.answer)
-    }
-    
-    private func handleGuessRecieved(_ message: QuestionNetUtil.GuessMessage) {
-        showWaitingMessage(guess: message.guess)
+    func questions(_ questions: Questions, didSetGameStage stage: Questions.GameStage) {
+        switch stage{
+        case .answer:
+            navigationItem.title = "\(questions.turnManager.currentPicker.displayName)'s Turn"
+            setControls(enabled: false)
+        case .question:
+            if questions.turnManager.iAmAsker {
+                navigationItem.title = "Your Turn"
+                feedbackGenerator.notificationOccurred(.success)
+                setControls(enabled: true)
+            } else {
+                navigationItem.title = "\(questions.turnManager.currentAsker)'s Turn"
+                setControls(enabled: false)
+            }
+        case .guess:
+            changeToGuess()
+        case .confirm(guess: let guess):
+            if !questions.turnManager.iAmAsker {
+                showWaitingMessage(guess: guess)
+            }
+        case .gameOver(correct: let correct):
+            showResultMessage(correct: correct)
+        }
     }
     
     // MARK: - Navigation

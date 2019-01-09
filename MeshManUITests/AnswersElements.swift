@@ -9,6 +9,18 @@
 import Foundation
 import XCTest
 
+enum Answer: String {
+    case yes = "Yes"
+    case no = "No"
+    case sometimes = "Sometimes"
+    case unknown = "Unkown"
+    
+    case person = "Person"
+    case place = "Place"
+    case thing = "Thing"
+    case idea = "Idea"
+}
+
 struct AnswersElements {
     
     let app: XCUIApplication
@@ -21,7 +33,7 @@ struct AnswersElements {
         return app.alerts["First Question"]
     }
     
-    func pick(answer: Questions.Answer) {
+    func pick(answer: Answer) {
         firstQuestionAlert.buttons[answer.rawValue].tap()
     }
     

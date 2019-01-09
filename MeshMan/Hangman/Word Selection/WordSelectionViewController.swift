@@ -36,7 +36,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 		self.doneButton.titleLabel?.text = VisibleStrings.Generic.done
 		self.subscribeToKeyboardEvents()
 		self.wordField.delegate = self
-		self.rulesLabel.text = String(format: Hangman.Rules.wordSelectionBlurb, Hangman.Rules.minCharacters, Hangman.Rules.maxCharacters)
+		self.rulesLabel.text = String(format: HangmanGameModel.Rules.wordSelectionBlurb, HangmanGameModel.Rules.minCharacters, HangmanGameModel.Rules.maxCharacters)
 		self.wordField.becomeFirstResponder()
     }
 	
@@ -51,7 +51,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	private func processText(input: String) {
-		switch Hangman.checkValidChoice(input) {
+		switch HangmanGameModel.checkValidChoice(input) {
 		case .tooLong:
 			self.showTooLongAlert()
 		case .tooShort:
@@ -70,12 +70,8 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	private func showGame(word: String) {
-		guard let hangmanVC = Storyboards.hangman.instantiateInitialViewController() as? HangmanViewController else { fatalError("Could not properly cast the given controller") }
+        let hangmanVC = HangmanViewController.newInstance(word: word, netUtil: netUtil, firstPicker: MCManager.shared.peerID)
         netUtil.send(message: StartMessage(gameType: .hangman, payload: HangmanNetUtil.StartGamePayload(word: word, picker: MCManager.shared.peerID)))
-		let turnManager = HangmanTurnManager(session: MCManager.shared.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID)
-		hangmanVC.hangmanNetUtil = self.netUtil
-		hangmanVC.turnManager = turnManager
-		hangmanVC.setUpHangman(with: word)
 		self.navigationController?.setViewControllers([hangmanVC], animated: true)
 	}
 	
