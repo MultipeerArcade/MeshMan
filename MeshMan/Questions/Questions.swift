@@ -21,7 +21,7 @@ final class Questions {
     struct Rules {
         let numberOfQuestions: Int
         
-        static let `default` = Rules(numberOfQuestions: 2)
+        static let `default` = Rules(numberOfQuestions: 20)
     }
     
     enum GameStage {
