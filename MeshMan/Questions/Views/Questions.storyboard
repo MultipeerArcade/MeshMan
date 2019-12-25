@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -182,6 +181,7 @@
                                 </subviews>
                             </stackView>
                         </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <accessibility key="accessibilityConfiguration" identifier="questions.answers"/>
                         <constraints>
                             <constraint firstAttribute="top" secondItem="jam-MK-D69" secondAttribute="top" id="12C-Gr-Wuw"/>
@@ -243,6 +243,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="hc2-PF-PkE" firstAttribute="trailing" secondItem="OCx-Ds-w7c" secondAttribute="trailing" constant="16" id="BBn-0N-BD0"/>
                             <constraint firstItem="tSC-Ig-fqO" firstAttribute="height" secondItem="iuo-70-GKt" secondAttribute="height" multiplier="0.5" id="FDz-nF-uaS"/>
@@ -267,6 +268,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="3g2-xh-g5d"/>
+        <segue reference="pZT-tC-NzO"/>
     </inferredMetricsTieBreakers>
 </document>

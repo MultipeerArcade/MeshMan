@@ -12,7 +12,7 @@ class GallowsController: UIViewController {
 	
 	// MARK: - Outlets
 	
-	@IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var imageView: UIImageView!
 	
 	// MARK: -
 	
@@ -25,7 +25,7 @@ class GallowsController: UIViewController {
 	
 	internal func next() {
 		self.imageNumber += 1
-		let image = UIImage(named: "HangMan\(imageNumber)")
+        let image = UIImage(named: "HangMan\(imageNumber)")?.withTintColor(Assets.gallowsColor, renderingMode: .automatic)
 		self.imageView.image = image
 	}
 

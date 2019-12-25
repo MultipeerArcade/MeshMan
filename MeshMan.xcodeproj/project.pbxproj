@@ -15,6 +15,7 @@
 		411123BA21DAF91300082BE1 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6A1FF80CCE00C95DD6 /* Event.swift */; };
 		411123BC21DAF92D00082BE1 /* NetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843621D5280900AB1089 /* NetUtil.swift */; };
 		411123BD21DAF93A00082BE1 /* MCPeerID+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */; };
+		412A7EF823B3BD2200F9C36B /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A7EF723B3BD2200F9C36B /* Assets.swift */; };
 		41536AF71FF06DC800DBC164 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41536AF61FF06DC800DBC164 /* AppDelegate.swift */; };
 		41536AFC1FF06DC800DBC164 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41536AFA1FF06DC800DBC164 /* Main.storyboard */; };
 		41536AFE1FF06DC800DBC164 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41536AFD1FF06DC800DBC164 /* Assets.xcassets */; };
@@ -82,6 +83,7 @@
 		411123B321DAEB7D00082BE1 /* Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
 		411123B521DAED6600082BE1 /* BrowserElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserElements.swift; sourceTree = "<group>"; };
 		411123B721DAF33700082BE1 /* SubjectElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectElements.swift; sourceTree = "<group>"; };
+		412A7EF723B3BD2200F9C36B /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		41536AF31FF06DC800DBC164 /* MeshMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeshMan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41536AF61FF06DC800DBC164 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41536AFB1FF06DC800DBC164 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				41536AFA1FF06DC800DBC164 /* Main.storyboard */,
 				41536B081FF06DF300DBC164 /* WelcomeViewController.swift */,
 				41536B1A1FF437CD00DBC164 /* Storyboards.swift */,
+				412A7EF723B3BD2200F9C36B /* Assets.swift */,
 				41536AFD1FF06DC800DBC164 /* Assets.xcassets */,
 				41536AFF1FF06DC800DBC164 /* LaunchScreen.storyboard */,
 				41536B021FF06DC800DBC164 /* Info.plist */,
@@ -469,6 +472,7 @@
 				41AD843D21D58E3F00AB1089 /* TurnManager.swift in Sources */,
 				41AD842721D1DEAF00AB1089 /* Questions.swift in Sources */,
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
+				412A7EF823B3BD2200F9C36B /* Assets.swift in Sources */,
 				41536B431FF5544D00DBC164 /* Hangman.swift in Sources */,
 				41AA8F701FF98FEF00C95DD6 /* HangmanTurnManager.swift in Sources */,
 				41AD842121D1D97400AB1089 /* QuestionCell.swift in Sources */,
@@ -592,7 +596,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -647,7 +651,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
