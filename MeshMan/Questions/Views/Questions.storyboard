@@ -50,7 +50,7 @@
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UZP-Cw-j8m" userLabel="Spinner Container">
                                                             <rect key="frame" x="0.0" y="0.0" width="90" height="20.5"/>
                                                             <subviews>
-                                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Lr4-Yi-bYR" userLabel="Waiting Indicator">
+                                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Lr4-Yi-bYR" userLabel="Waiting Indicator">
                                                                     <rect key="frame" x="70" y="0.0" width="20" height="20"/>
                                                                 </activityIndicatorView>
                                                             </subviews>
