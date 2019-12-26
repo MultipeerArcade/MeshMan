@@ -12,7 +12,7 @@
             <objects>
                 <viewController id="sv1-9w-pS5" customClass="QuestionListViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cmN-sQ-2to">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="333.5"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="333"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fun-Th-jRe">
@@ -127,7 +127,7 @@
                                 <rect key="frame" x="130.5" y="349.5" width="114" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Subject Button">
-                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 </state>
                                 <connections>
                                     <action selector="subjectButtonPressed" destination="xBT-OR-EkB" eventType="touchUpInside" id="NTn-FA-NhB"/>
@@ -268,6 +268,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="pZT-tC-NzO"/>
+        <segue reference="3g2-xh-g5d"/>
     </inferredMetricsTieBreakers>
 </document>
