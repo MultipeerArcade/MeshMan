@@ -188,7 +188,7 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
                 feedbackGenerator.notificationOccurred(.success)
                 setControls(enabled: true)
             } else {
-                navigationItem.title = "\(questions.turnManager.currentAsker)'s Turn"
+                navigationItem.title = "\(questions.turnManager.currentAsker.displayName)'s Turn"
                 setControls(enabled: false)
             }
         case .guess:
