@@ -13,7 +13,7 @@ enum Answer: String {
     case yes = "Yes"
     case no = "No"
     case sometimes = "Sometimes"
-    case unknown = "Unkown"
+    case unknown = "Unknown"
     
     case person = "Person"
     case place = "Place"
