@@ -66,6 +66,11 @@ final class Hangman {
         let guessMessage = HangmanNetUtil.NewGuessMessage(guess: letter, sender: MCManager.shared.peerID)
         netUtil.send(message: guessMessage)
         let result = gameModel.guess(letter: letter)
+        switch result {
+        case .correct, .wrong:
+            turnComplete()
+        default: break
+        }
         return result
     }
     
