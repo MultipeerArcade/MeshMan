@@ -43,7 +43,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <constraints>
                                             <constraint firstItem="Elk-kZ-tUD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="G86-fo-uqa" secondAttribute="leading" constant="16" id="5sU-Ez-NVR"/>
                                             <constraint firstAttribute="bottom" secondItem="Elk-kZ-tUD" secondAttribute="bottom" constant="16" id="8cI-3L-P4W"/>
