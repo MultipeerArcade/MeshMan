@@ -9,15 +9,13 @@
 import Foundation
 
 
-class HangmanGameState: Codable, Equatable {
+class HangmanGameState: Codable {
     
     enum GameProgress {
         case inProgress
         case noMoreGuesses
         case wordGuessed
     }
-    
-    private let gameID = UUID()
     
     let word: String
     
@@ -68,12 +66,6 @@ class HangmanGameState: Codable, Equatable {
     
     private static func charactersToLetters(_ characters: Set<Character>) -> [String] {
         return characters.map {String($0)}
-    }
-    
-    // MARK: - Equatable
-    
-    static func ==(lhs: HangmanGameState, rhs: HangmanGameState) -> Bool {
-        return lhs.gameID == rhs.gameID
     }
     
 }
