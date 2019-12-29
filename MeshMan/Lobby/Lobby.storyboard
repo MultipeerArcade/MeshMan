@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="CA5-eZ-61H">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Lobby View Controller-->
+        <scene sceneID="ArU-b8-Ar3">
+            <objects>
+                <viewController id="CA5-eZ-61H" customClass="LobbyViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qMM-dz-27B">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose a Game" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B3F-Sl-P48" userLabel="Status Label">
+                                <rect key="frame" x="146.5" y="216" width="121.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SoY-9v-KYY" userLabel="Button Container">
+                                <rect key="frame" x="88" y="438" width="238" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ard-8E-EE8">
+                                        <rect key="frame" x="126" y="0.0" width="92" height="30"/>
+                                        <state key="normal" title="20 Questions"/>
+                                        <connections>
+                                            <action selector="twentyQuestionsButtonPressed" destination="CA5-eZ-61H" eventType="touchUpInside" id="p8L-sV-ci0"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eGs-nC-vcw">
+                                        <rect key="frame" x="20" y="0.0" width="66" height="30"/>
+                                        <state key="normal" title="Hangman"/>
+                                        <connections>
+                                            <action selector="hangmanButtonPressed" destination="CA5-eZ-61H" eventType="touchUpInside" id="2pL-gz-g2Y"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstItem="eGs-nC-vcw" firstAttribute="leading" secondItem="SoY-9v-KYY" secondAttribute="leading" constant="20" symbolic="YES" id="3pg-N6-nF0"/>
+                                    <constraint firstAttribute="bottom" secondItem="eGs-nC-vcw" secondAttribute="bottom" id="FNH-uZ-U8Q"/>
+                                    <constraint firstAttribute="bottom" secondItem="ard-8E-EE8" secondAttribute="bottom" id="NL2-Zc-YfR"/>
+                                    <constraint firstItem="ard-8E-EE8" firstAttribute="top" secondItem="SoY-9v-KYY" secondAttribute="top" id="T3I-TF-CuB"/>
+                                    <constraint firstItem="eGs-nC-vcw" firstAttribute="top" secondItem="SoY-9v-KYY" secondAttribute="top" id="iCQ-5I-CPU"/>
+                                    <constraint firstAttribute="trailing" secondItem="ard-8E-EE8" secondAttribute="trailing" constant="20" symbolic="YES" id="rdH-sr-amW"/>
+                                    <constraint firstItem="ard-8E-EE8" firstAttribute="leading" secondItem="eGs-nC-vcw" secondAttribute="trailing" constant="40" id="tb1-sc-Gaw"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="SoY-9v-KYY" firstAttribute="centerX" secondItem="453-oj-KKV" secondAttribute="centerX" id="CjH-oL-CD5"/>
+                            <constraint firstItem="SoY-9v-KYY" firstAttribute="centerY" secondItem="453-oj-KKV" secondAttribute="centerY" id="Q6w-nq-1c6"/>
+                            <constraint firstItem="B3F-Sl-P48" firstAttribute="centerX" secondItem="453-oj-KKV" secondAttribute="centerX" id="s3f-t0-g75"/>
+                            <constraint firstItem="B3F-Sl-P48" firstAttribute="centerY" secondItem="453-oj-KKV" secondAttribute="centerY" multiplier="0.5" id="sRF-Tw-HHH"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="453-oj-KKV"/>
+                    </view>
+                    <connections>
+                        <outlet property="hangmanButton" destination="eGs-nC-vcw" id="lYV-Kk-ezA"/>
+                        <outlet property="statusLabel" destination="B3F-Sl-P48" id="kvc-wm-f9J"/>
+                        <outlet property="twentyQuestionsButton" destination="ard-8E-EE8" id="UyW-iV-5wP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sWk-N8-qhu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="167" y="-95"/>
+        </scene>
+    </scenes>
+</document>

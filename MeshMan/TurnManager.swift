@@ -65,4 +65,8 @@ class TurnManager {
         return currentPeer
     }
     
+    func getPeerAfterMe(otherThan unwanted: MCPeerID) -> MCPeerID {
+        return getPeer(after: myID, otherThan: unwanted)
+    }
+    
 }

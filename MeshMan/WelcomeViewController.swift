@@ -21,6 +21,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	enum Constants {
 		static let minimumNumberOfPeers = 2
 		static let displayNameKey = "displayName"
+        static let peerIDKey = "peerID"
         static let browserAccessabilityIdentifier = "browser"
 	}
 	
@@ -32,6 +33,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        RootManager.shared.navigationController = navigationController
 		if let savedName = UserDefaults.standard.string(forKey: Constants.displayNameKey) {
 			self.displayNameField.text = savedName
 		}
@@ -45,13 +47,13 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	@IBAction func createButtonPressed() {
         validateName {
-            showGameSelection()
+            self.showBrowser()
         }
 	}
 	
 	@IBAction func joinButtonPressed() {
         validateName {
-            showWait()
+            RootManager.shared.startWaitingForInvite()
         }
 	}
     
@@ -72,9 +74,23 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
     
     private func validateName(success: () -> Void) {
         guard let name = self.displayName else { self.showInvlaidNameError(); return }
-        UserDefaults.standard.set(name, forKey: Constants.displayNameKey)
-        MCManager.setUpIfNeeded(with: name)
+        if let oldName = UserDefaults.standard.string(forKey: Constants.displayNameKey), let oldPeerIDData = UserDefaults.standard.data(forKey: Constants.peerIDKey) {
+            if oldName == name {
+                MCManager.setUp(with: MCPeerID.from(data: oldPeerIDData))
+            } else {
+                save(name: name)
+            }
+        } else {
+            save(name: name)
+        }
         success()
+    }
+    
+    private func save(name: String) {
+        UserDefaults.standard.set(name, forKey: Constants.displayNameKey)
+        let peerID = MCPeerID(displayName: name)
+        UserDefaults.standard.set(peerID.dataRepresentation, forKey: Constants.peerIDKey)
+        MCManager.setUp(with: peerID)
     }
 	
 	private var displayName: String? {
@@ -91,7 +107,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	private func showWait() {
-        let waitVC = WaitViewController.newInstance(purpose: .joining(MCManager.shared.makeAdvertiser()), utilType: .wait(WaitNetUtil()))
+        let waitVC = WaitInviteViewController.newInstance()
 		self.navigationController?.pushViewController(waitVC, animated: true)
 	}
 	
@@ -105,16 +121,6 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		self.present(browserVC, animated: true)
 	}
 	
-	private func showWordSelection() {
-		let wordSelectionVC = WordSelectionViewController.newInstance(netUtil: HangmanNetUtil(session: MCManager.shared.session))
-		self.navigationController?.setViewControllers([wordSelectionVC], animated: true)
-	}
-    
-    private func showSubjectSelection() {
-        let subjectVC = SubjectViewController.newInstance(netUtil: QuestionNetUtil(session: MCManager.shared.session))
-        self.navigationController?.setViewControllers([subjectVC], animated: true)
-    }
-	
 	// MARK: MCBrowserViewControllerDelegate
 	
 	internal func browserViewController(_ browserViewController: MCBrowserViewController, shouldPresentNearbyPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) -> Bool {
@@ -123,12 +129,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	internal func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
 		self.dismiss(animated: true) {
-            switch self.gameType! {
-            case .hangman:
-                self.showWordSelection()
-            case .questions:
-                self.showSubjectSelection()
-            }
+            RootManager.shared.goToLobby(asHost: true)
         }
 	}
 	

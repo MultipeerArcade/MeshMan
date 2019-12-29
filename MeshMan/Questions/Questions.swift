@@ -10,32 +10,38 @@ import Foundation
 import MultipeerConnectivity
 
 protocol QuestionsDelegate: class {
-    func questions(_ questions: Questions, didUpdateQuestion result: Questions.Result)
-    func questions(_ questions: Questions, didSetGameStage stage: Questions.GameStage)
+    func questions(_ questions: Questions, stateUpdatedFromOldState oldState: QuestionsGameState, toNewState newState: QuestionsGameState)
 }
 
-final class Questions {
+final class Questions: DataHandler {
     
     // MARK: - Types
     
-    struct Rules {
-        let numberOfQuestions: Int
-        
-        static let `default` = Rules(numberOfQuestions: 20)
+    enum Rules {
+        static let numberOfQuestions = 20
     }
     
-    enum GameStage {
-        case question
-        case answer
-        case guess
-        case confirm(guess: String)
-        case gameOver(correct: Bool)
+    enum GuessJudgement: String, Codable {
+        case correct
+        case incorrect
     }
     
-    struct Question {
+    struct Question: Codable, Comparable, Equatable {
         let number: Int
         let question: String
-        var answer: Answer?
+        let answer: Answer?
+        
+        func answered(answer: Answer) -> Question {
+            return Question(number: number, question: question, answer: answer)
+        }
+        
+        static func <(lhs: Question, rhs: Question) -> Bool {
+            return lhs.number < rhs.number
+        }
+        
+        static func ==(lhs: Question, rhs: Question) -> Bool {
+            return lhs.number == rhs.number
+        }
     }
     
     enum Answer: String, Codable {
@@ -50,11 +56,6 @@ final class Questions {
         case idea = "Idea"
     }
     
-    enum Result {
-        case insert(Int)
-        case update(Int)
-    }
-    
     enum SanitizationResult {
         case sanitized(String)
         case invalid
@@ -62,142 +63,112 @@ final class Questions {
     
     // MARK: - Internal Members
     
-    private(set) var currentQuestion = 1
+    private(set) var state: QuestionsGameState
     
-    private(set) var questions = [Question]()
+    private let networkHandler: NetworkHandler
     
-    let subject: String
-    
-    private(set) var gameStage: GameStage = .question {
-        didSet {
-            delegate?.questions(self, didSetGameStage: gameStage)
-        }
+    var currentGuesser: MCPeerID {
+        return MCPeerID.from(data: state.guesserData)
     }
     
-    let rules: Rules
+    var currentPicker: MCPeerID {
+        return MCPeerID.from(data: state.pickerData)
+    }
     
-    let netUtil: QuestionNetUtil
+    var iAmGuesser: Bool {
+        return MCManager.shared.isThisMe(currentGuesser)
+    }
     
-    let turnManager: QuestionsTurnManager
+    var iAmPicker: Bool {
+        return MCManager.shared.isThisMe(currentPicker)
+    }
     
     weak var delegate: QuestionsDelegate?
     
-    // MARK: - Private Members
-    
-    // MARK: Event Handles
-    
-    private var questionMessageRecievedHandle: Event<QuestionNetUtil.QuestionMessage>.Handle?
-    
-    private var answerMessageRecievedHandle: Event<QuestionNetUtil.AnswerMessage>.Handle?
-    
-    private var guessMessageRecievedHandle: Event<QuestionNetUtil.GuessMessage>.Handle?
-    
-    private var guessConfirmationRecievedHandle: Event<QuestionNetUtil.GuessConfirmationMessage>.Handle?
-    
     // MARK: - Initialization
     
-    init(subject: String, rules: Rules = Rules.default, netUtil: QuestionNetUtil, firstPicker: MCPeerID) {
-        self.subject = subject
-        self.rules = rules
-        self.netUtil = netUtil
-        self.turnManager = QuestionsTurnManager(session: netUtil.session, myPeerID: MCManager.shared.peerID, firstPicker: firstPicker)
-        configure(netUtil: netUtil)
+    init(state: QuestionsGameState, networkHandler: NetworkHandler) {
+        self.state = state
+        self.networkHandler = networkHandler
     }
     
-    private func configure(netUtil: QuestionNetUtil) {
-        questionMessageRecievedHandle = netUtil.questionMessageRecieved.subscribe({ (_, message) in
-            self.questionMessageRecieved(message)
-        })
-        answerMessageRecievedHandle = netUtil.answerMessageRecieved.subscribe({ (_, message) in
-            self.answerMessageRecieved(message)
-        })
-        guessMessageRecievedHandle = netUtil.guessMessageRecieved.subscribe({ (_, message) in
-            self.gameStage = .confirm(guess: message.guess)
-        })
-        guessConfirmationRecievedHandle = netUtil.guessConfirmationRecieved.subscribe({ (_, message) in
-            self.gameStage = .gameOver(correct: message.guessWasCorrect)
-        })
+    // MARK: - DataHandler
+    
+    func process(data: Data) {
+        let command = try! JSONDecoder().decode(QuestionsCommand.self, from: data)
+        switch command.commandType {
+        case .setState:
+            let newState = try! JSONDecoder().decode(QuestionsGameState.self, from: command.payload)
+            update(from: newState)
+        }
     }
     
-    // MARK: - Network Event Handling
-    
-    private func questionMessageRecieved(_ message: QuestionNetUtil.QuestionMessage) {
-        let result = addQuestion(message.number, question: message.question)
-        delegate?.questions(self, didUpdateQuestion: result)
-    }
-    
-    private func answerMessageRecieved(_ message: QuestionNetUtil.AnswerMessage) {
-        let result = answerQuestion(message.number, with: message.answer)
-        delegate?.questions(self, didUpdateQuestion: result)
+    private func update(from newState: QuestionsGameState) {
+        let oldState = state
+        state = newState
+        DispatchQueue.main.async {
+            self.delegate?.questions(self, stateUpdatedFromOldState: oldState, toNewState: newState)
+        }
     }
     
     // MARK: - UI Event Handling
     
-    func ask(question: String) -> Result {
-        let questionMessage = QuestionNetUtil.QuestionMessage(number: currentQuestion, question: question) // Make a message before the model is updated
-        let result = addQuestion(currentQuestion, question: question)
-        netUtil.send(message: questionMessage)
+    func ask(question: String) -> SanitizationResult {
+        let result = Questions.sanitize(question: question)
+        switch result {
+        case .invalid:
+            break
+        case .sanitized(let sanitizedQuestion):
+            let newState = state.ask(question: sanitizedQuestion)
+            send(newState: newState)
+            update(from: newState)
+        }
         return result
     }
     
-    func answerQuestion(with answer: Answer) -> Result {
-        let answerMessage = QuestionNetUtil.AnswerMessage(number: currentQuestion, answer: answer) // Make a message before the model is updated
-        let result = answerQuestion(currentQuestion, with: answer)
-        netUtil.send(message: answerMessage)
+    func answer(questionAtIndex questionIndex: Int, with answer: Answer) {
+        let nextGuesserData = networkHandler.turnHelper.getPeerAfterMe(otherThan: currentPicker).dataRepresentation
+        let newState = state.answer(questionAtIndex: questionIndex, with: answer, nextGuesserData: nextGuesserData)
+        send(newState: newState)
+        update(from: newState)
+    }
+    
+    func answerLastQuestion(with answer: Answer) {
+        let nextGuesserData = networkHandler.turnHelper.getPeerAfterMe(otherThan: currentPicker).dataRepresentation
+        let newState = state.answer(questionAtIndex: state.questions.endIndex - 1, with: answer, nextGuesserData: nextGuesserData)
+        send(newState: newState)
+        update(from: newState)
+    }
+    
+    func guess(answer: String) -> SanitizationResult {
+        let result = Questions.sanitize(guess: answer)
+        switch result {
+        case .invalid:
+            break
+        case .sanitized(let sanitizedGuess):
+            let newState = state.guess(answer: sanitizedGuess)
+            send(newState: newState)
+            update(from: newState)
+        }
         return result
     }
     
-    func make(guess: String) {
-        let guessMessage = QuestionNetUtil.GuessMessage(guess: guess)
-        netUtil.send(message: guessMessage)
-        gameStage = .confirm(guess: guess)
+    func judgeGuess(judgement: GuessJudgement) {
+        let newState = state.judgeGuess(judgement: judgement)
+        send(newState: newState)
+        update(from: newState)
     }
     
-    func confirm(correct: Bool) {
-        let message = QuestionNetUtil.GuessConfirmationMessage(guessWasCorrect: correct)
-        netUtil.send(message: message)
-        gameStage = .gameOver(correct: false)
+    func send(newState: QuestionsGameState) {
+        let stateData = try! JSONEncoder().encode(newState)
+        let questionsCommand = QuestionsCommand(commandType: .setState, payload: stateData)
+        let questionsCommandData = try! JSONEncoder().encode(questionsCommand)
+        let gameDataCommand = GameDataCommand(payload: questionsCommandData)
+        networkHandler.sendGameCommand(command: gameDataCommand)
     }
     
-    // MARK: - Gameplay
-    
-    private func addQuestion(_ number: Int, question: String) -> Result {
-        defer {
-            startAnswerStage()
-        }
-        let index: Int
-        let q = Question(number: number, question: question, answer: nil)
-        if let previous = questions.firstIndex(where: { $0.number == number - 1 }) {
-            questions.insert(q, at: previous + 1)
-            index = previous + 1
-        } else {
-            index = questions.count
-            questions.append(q)
-        }
-        return .insert(index)
-    }
-    
-    private func answerQuestion(_ number: Int, with answer: Questions.Answer) -> Result {
-        defer {
-            startAskingStage()
-        }
-        for (index, existing) in questions.enumerated() {
-            guard existing.number == number else { continue }
-            let updatedQuestion = Question(number: number, question: existing.question, answer: answer)
-            questions[index] = updatedQuestion
-            currentQuestion = number + 1
-            return .update(index)
-        }
-        fatalError("Can't answer a question that doesnt exist")
-    }
-    
-    private func startAnswerStage() {
-        gameStage = .answer
-    }
-    
-    private func startAskingStage() {
-        turnManager.pickNextAsker()
-        gameStage = (currentQuestion > rules.numberOfQuestions) ? .guess : .question
+    func done() {
+        RootManager.shared.goToLobby(asHost: iAmGuesser)
     }
     
     // MARK: - Input Sanitization
