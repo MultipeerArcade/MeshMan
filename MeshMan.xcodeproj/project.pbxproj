@@ -45,10 +45,8 @@
 		4191EBE623B822BF007B1673 /* RootManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4191EBE523B822BF007B1673 /* RootManager.swift */; };
 		41A1F69F200EC22100865032 /* WordSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A1F69D200EC22100865032 /* WordSelectionViewController.swift */; };
 		41A1F6A0200EC22100865032 /* WordSelection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41A1F69E200EC22100865032 /* WordSelection.storyboard */; };
-		41AA8F691FF809F800C95DD6 /* HangmanNetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */; };
 		41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6A1FF80CCE00C95DD6 /* Event.swift */; };
 		41AA8F6D1FF80CD500C95DD6 /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6C1FF80CD500C95DD6 /* EventTests.swift */; };
-		41AA8F701FF98FEF00C95DD6 /* HangmanTurnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */; };
 		41AD841921D1D4AA00AB1089 /* Questions.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41AD841821D1D4AA00AB1089 /* Questions.storyboard */; };
 		41AD841B21D1D54200AB1089 /* QuestionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD841A21D1D54200AB1089 /* QuestionListViewController.swift */; };
 		41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD841C21D1D57300AB1089 /* AnswerViewController.swift */; };
@@ -70,7 +68,6 @@
 		41C48B8C23B72E3D00733544 /* HangmanCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C48B8B23B72E3D00733544 /* HangmanCommand.swift */; };
 		41C48B8E23B7471500733544 /* GameDataCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C48B8D23B7471500733544 /* GameDataCommand.swift */; };
 		41C48B9323B7E45100733544 /* WaitInvite.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41C48B9223B7E45100733544 /* WaitInvite.storyboard */; };
-		41F8C60721E55D65000FB201 /* HangmanGameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F8C60621E55D65000FB201 /* HangmanGameModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,10 +128,8 @@
 		4191EBE523B822BF007B1673 /* RootManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootManager.swift; sourceTree = "<group>"; };
 		41A1F69D200EC22100865032 /* WordSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordSelectionViewController.swift; sourceTree = "<group>"; };
 		41A1F69E200EC22100865032 /* WordSelection.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WordSelection.storyboard; sourceTree = "<group>"; };
-		41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanNetUtil.swift; sourceTree = "<group>"; };
 		41AA8F6A1FF80CCE00C95DD6 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		41AA8F6C1FF80CD500C95DD6 /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
-		41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanTurnManager.swift; sourceTree = "<group>"; };
 		41AD841821D1D4AA00AB1089 /* Questions.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Questions.storyboard; sourceTree = "<group>"; };
 		41AD841A21D1D54200AB1089 /* QuestionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionListViewController.swift; sourceTree = "<group>"; };
 		41AD841C21D1D57300AB1089 /* AnswerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerViewController.swift; sourceTree = "<group>"; };
@@ -156,7 +151,6 @@
 		41C48B8B23B72E3D00733544 /* HangmanCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanCommand.swift; sourceTree = "<group>"; };
 		41C48B8D23B7471500733544 /* GameDataCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataCommand.swift; sourceTree = "<group>"; };
 		41C48B9223B7E45100733544 /* WaitInvite.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WaitInvite.storyboard; sourceTree = "<group>"; };
-		41F8C60621E55D65000FB201 /* HangmanGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanGameModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -301,8 +295,8 @@
 				41536B261FF5428600DBC164 /* Hangman.storyboard */,
 				41536B281FF5429A00DBC164 /* HangmanViewController.swift */,
 				41536B441FF5B81600DBC164 /* LetterCell.swift */,
+				41536B421FF5544D00DBC164 /* Hangman.swift */,
 				41AD844121D6EDC500AB1089 /* Gallows */,
-				41AD844221D6EDD700AB1089 /* Util */,
 				41AD844321D6EDEB00AB1089 /* Word Selection */,
 				41C48B8823B7236600733544 /* HangmanGameState.swift */,
 			);
@@ -326,17 +320,6 @@
 				41536B2A1FF54A0400DBC164 /* GallowsController.swift */,
 			);
 			path = Gallows;
-			sourceTree = "<group>";
-		};
-		41AD844221D6EDD700AB1089 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				41AA8F6F1FF98FEF00C95DD6 /* HangmanTurnManager.swift */,
-				41536B421FF5544D00DBC164 /* Hangman.swift */,
-				41F8C60621E55D65000FB201 /* HangmanGameModel.swift */,
-				41AA8F681FF809F800C95DD6 /* HangmanNetUtil.swift */,
-			);
-			path = Util;
 			sourceTree = "<group>";
 		};
 		41AD844321D6EDEB00AB1089 /* Word Selection */ = {
@@ -521,14 +504,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				41536B451FF5B81600DBC164 /* LetterCell.swift in Sources */,
-				41AA8F691FF809F800C95DD6 /* HangmanNetUtil.swift in Sources */,
 				41536B1B1FF437CD00DBC164 /* Storyboards.swift in Sources */,
 				41AD843B21D55E7800AB1089 /* WaitNetUtil.swift in Sources */,
 				41536B231FF5369E00DBC164 /* VisibleStrings.swift in Sources */,
 				41AD842B21D1E17F00AB1089 /* SubjectViewController.swift in Sources */,
 				41C48B8923B7236600733544 /* HangmanGameState.swift in Sources */,
 				4191EBDD23B7E4CA007B1673 /* WaitInviteViewController.swift in Sources */,
-				41F8C60721E55D65000FB201 /* HangmanGameModel.swift in Sources */,
 				41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */,
 				41AD841F21D1D59100AB1089 /* GuessViewController.swift in Sources */,
 				41AD843921D52E1400AB1089 /* MCPeerID+Data.swift in Sources */,
@@ -551,7 +532,6 @@
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
 				412A7EF823B3BD2200F9C36B /* Assets.swift in Sources */,
 				41536B431FF5544D00DBC164 /* Hangman.swift in Sources */,
-				41AA8F701FF98FEF00C95DD6 /* HangmanTurnManager.swift in Sources */,
 				41C48B8E23B7471500733544 /* GameDataCommand.swift in Sources */,
 				41C48B8523B7153000733544 /* SetGameCommand.swift in Sources */,
 				41AD842121D1D97400AB1089 /* QuestionCell.swift in Sources */,

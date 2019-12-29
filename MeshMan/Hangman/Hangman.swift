@@ -17,6 +17,13 @@ protocol HangmanDelegate: class {
 
 final class Hangman: DataHandler {
     
+    enum Rules {
+        static let numberOfGuesses = 9
+        static let maxCharacters = 100
+        static let minCharacters = 3
+        static let wordSelectionBlurb = NSLocalizedString("The word you choose must be no shorter than %d characters and no longer than %d characters. Any characters other than numbers and letters will be shown to your opponents.\n\nFor Example:\n\nTHE CAT'S MEOW\nwill become\n_ _ _   _ _ _ ' _   _ _ _ _", comment: "Writeup of the rules around choosing a word in hangman")
+    }
+    
     enum GuessResult {
         case correct
         case wrong
@@ -30,6 +37,10 @@ final class Hangman: DataHandler {
         case tooShort
         case invalidCharacter
         case alreadyGuessed
+    }
+    
+    enum ChoiceValidity {
+        case tooShort, tooLong, good
     }
     
     // MARK: - Internal Members
@@ -113,7 +124,7 @@ final class Hangman: DataHandler {
         guard trimmed.count > 0 else { return .tooShort }
         guard trimmed.count == 1 else { return .tooLong }
         let char = trimmed[trimmed.startIndex]
-        guard HangmanGameModel.characterIsValid(char) else { return .invalidCharacter }
+        guard Hangman.characterIsValid(char) else { return .invalidCharacter }
         guard !state.guessedCharacters.contains(char) else { return .alreadyGuessed }
         return .success(guess: char)
     }
@@ -149,6 +160,16 @@ final class Hangman: DataHandler {
             displayString.append(toAppend)
         }
         return WordObfuscationPayload(obfuscatedWord: displayString, numberOfBlanks: numberOfBlanks)
+    }
+    
+    static func checkValidChoice(_ text: String) -> ChoiceValidity {
+        var count = 0
+        for character in text.uppercased() {
+            if self.characterIsValid(character) { count += 1 }
+        }
+        guard count >= Hangman.Rules.minCharacters else { return .tooShort }
+        guard count <= Hangman.Rules.maxCharacters else { return .tooLong }
+        return .good
     }
     
     static func characterIsValid(_ character: Character) -> Bool {

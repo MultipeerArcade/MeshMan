@@ -41,7 +41,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 		self.doneButton.titleLabel?.text = VisibleStrings.Generic.done
 		self.subscribeToKeyboardEvents()
 		self.wordField.delegate = self
-		self.rulesLabel.text = String(format: HangmanGameModel.Rules.wordSelectionBlurb, HangmanGameModel.Rules.minCharacters, HangmanGameModel.Rules.maxCharacters)
+		self.rulesLabel.text = String(format: Hangman.Rules.wordSelectionBlurb, Hangman.Rules.minCharacters, Hangman.Rules.maxCharacters)
 		self.wordField.becomeFirstResponder()
     }
 	
@@ -56,7 +56,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	private func processText(input: String) {
-		switch HangmanGameModel.checkValidChoice(input) {
+		switch Hangman.checkValidChoice(input) {
 		case .tooLong:
 			self.showTooLongAlert()
 		case .tooShort:

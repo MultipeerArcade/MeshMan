@@ -32,14 +32,11 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
     
     enum UtilType {
         case wait(WaitNetUtil)
-        case hangman(HangmanNetUtil)
         case questions(QuestionNetUtil)
         
         var netUtil: NetUtil {
             switch self {
             case .wait(let netUtil):
-                return netUtil
-            case .hangman(let netUtil):
                 return netUtil
             case .questions(let netUtil):
                 return netUtil
@@ -143,19 +140,12 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
     private func process(startMessage: StartMessage) {
         switch startMessage.gameType {
         case .hangman:
-            guard let data = startMessage.payload else { return }
-            let payload = try! JSONDecoder().decode(HangmanNetUtil.StartGamePayload.self, from: data)
-            startHangman(with: payload.word, firstPicker: payload.picker, netUtil: HangmanNetUtil())
+            break
         case .questions:
             guard let data = startMessage.payload else { return }
             let payload = try! JSONDecoder().decode(QuestionNetUtil.StartGamePayload.self, from: data)
             startQuestions(with: payload.subject, firstPicker: payload.firstPicker, netUtil: QuestionNetUtil())
         }
-    }
-    
-    private func startHangman(with word: String, firstPicker: MCPeerID, netUtil: HangmanNetUtil) {
-//        let hangmanVC = HangmanViewController.newInstance(word: word, netUtil: netUtil, firstPicker: firstPicker)
-//        self.navigationController?.setViewControllers([hangmanVC], animated: true)
     }
     
     private func startQuestions(with subject: String, firstPicker: MCPeerID, netUtil: QuestionNetUtil) {
