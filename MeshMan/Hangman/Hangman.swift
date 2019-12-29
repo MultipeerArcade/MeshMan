@@ -55,8 +55,12 @@ final class Hangman: DataHandler {
         return MCPeerID.from(data: state.guesserData)
     }
     
+    var currentPicker: MCPeerID {
+        return MCPeerID.from(data: state.pickerData)
+    }
+    
     var iAmPicker: Bool {
-        return MCManager.shared.isThisMe(MCPeerID.from(data: state.pickerData))
+        return MCManager.shared.isThisMe(currentPicker)
     }
     
     var iAmGuesser: Bool {
@@ -100,8 +104,7 @@ final class Hangman: DataHandler {
         let sanitationResult = sanitize(guess: letter)
         switch sanitationResult {
         case .success(guess: let guess):
-            let picker = MCPeerID.from(data: state.pickerData)
-            let nextGuesserData = networkHandler.turnHelper.getPeerAfterMe(otherThan: picker).dataRepresentation
+            let nextGuesserData = networkHandler.turnHelper.getPeerAfterMe(otherThan: currentPicker).dataRepresentation
             let newState = state.make(guess: guess, nextGuesserData: nextGuesserData)
             send(newState: newState)
             update(from: newState)
