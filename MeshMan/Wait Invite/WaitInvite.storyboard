@@ -14,7 +14,24 @@
                     <view key="view" contentMode="scaleToFill" id="4WY-gq-co1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Waiting for a game invite..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zAx-jR-qML" userLabel="Waiting Label">
+                                <rect key="frame" x="106" y="442.5" width="202.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="erA-X5-GUk">
+                                <rect key="frame" x="197" y="477.5" width="20" height="20"/>
+                            </activityIndicatorView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="erA-X5-GUk" firstAttribute="centerX" secondItem="FMf-50-lhI" secondAttribute="centerX" id="4Cc-jf-aqh"/>
+                            <constraint firstItem="zAx-jR-qML" firstAttribute="centerX" secondItem="FMf-50-lhI" secondAttribute="centerX" id="FCf-t2-3J9"/>
+                            <constraint firstItem="zAx-jR-qML" firstAttribute="centerY" secondItem="FMf-50-lhI" secondAttribute="centerY" id="PIz-bq-097"/>
+                            <constraint firstItem="erA-X5-GUk" firstAttribute="top" secondItem="zAx-jR-qML" secondAttribute="bottom" constant="14" id="q5h-ah-iny"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="FMf-50-lhI"/>
                     </view>
                 </viewController>

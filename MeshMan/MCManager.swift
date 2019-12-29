@@ -44,6 +44,12 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
 	
     let peerID: MCPeerID
     
+    private(set) var host: MCPeerID
+    
+    var iAmHost: Bool {
+        return isThisMe(host)
+    }
+    
     let turnHelper: TurnManager
     
     private weak var dataHandler: DataHandler? = nil
@@ -62,6 +68,7 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
 	
 	init(with peerID: MCPeerID) {
 		self.peerID = peerID
+        self.host = peerID
         let session = MCSession(peer: self.peerID)
 		self.session = session
         self.turnHelper = TurnManager(session: session, myPeerID: peerID)
@@ -97,8 +104,9 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         if iAmAdvertising {
             stopAdvertising()
+            host = peerID
             DispatchQueue.main.async {
-                RootManager.shared.goToLobby(asHost: false)
+                RootManager.shared.goToLobby()
             }
         }
     }

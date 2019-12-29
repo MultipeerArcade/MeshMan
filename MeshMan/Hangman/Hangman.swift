@@ -133,7 +133,7 @@ final class Hangman: DataHandler {
     }
     
     func done() {
-        RootManager.shared.goToLobby(asHost: MCManager.shared.isThisMe(currentGuesser))
+        RootManager.shared.goToLobby()
     }
     
     // MARK: -

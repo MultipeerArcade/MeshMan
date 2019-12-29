@@ -25,8 +25,8 @@ class RootManager {
         MCManager.shared.startAdvertising()
     }
     
-    func goToLobby(asHost: Bool) {
-        let lobbyVC = LobbyViewController.newInstance(asHost: asHost)
+    func goToLobby() {
+        let lobbyVC = LobbyViewController.newInstance()
         MCManager.shared.statusHandler = lobbyVC
         navigationController.setViewControllers([lobbyVC], animated: true)
     }
