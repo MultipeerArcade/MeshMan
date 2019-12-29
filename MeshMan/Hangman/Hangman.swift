@@ -12,7 +12,7 @@ import MultipeerConnectivity
 // MARK: - HangmanDelegate
 
 protocol HangmanDelegate: class {
-    func hangman(_ hangman: Hangman, stateUpdatedFromOldState oldState: HangmanGameState?, toNewState newState: HangmanGameState, obfuscationResult: Hangman.WordObfuscationPayload)
+    func hangman(_ hangman: Hangman, stateUpdatedFromOldState oldState: HangmanGameState, toNewState newState: HangmanGameState, obfuscationResult: Hangman.WordObfuscationPayload)
     func hangman(_ hangman: Hangman, endedGameWithConclusion conclusion: Hangman.Conclusion)
 }
 

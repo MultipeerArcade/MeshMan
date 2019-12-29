@@ -38,6 +38,8 @@
 		4170BCAE21D7EFB100ED3387 /* WelcomeElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4170BCAD21D7EFB100ED3387 /* WelcomeElements.swift */; };
 		4170BCB021D7F2C600ED3387 /* XCUIElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4170BCAF21D7F2C600ED3387 /* XCUIElement.swift */; };
 		4170BCB221D923FA00ED3387 /* AnswersElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4170BCB121D923FA00ED3387 /* AnswersElements.swift */; };
+		4187889223B86FE300421527 /* QuestionsGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4187889123B86FE300421527 /* QuestionsGameState.swift */; };
+		4187889723B8736A00421527 /* QuestionsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4187889623B8736A00421527 /* QuestionsCommand.swift */; };
 		4191EBDD23B7E4CA007B1673 /* WaitInviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4191EBDC23B7E4CA007B1673 /* WaitInviteViewController.swift */; };
 		4191EBE023B7E82A007B1673 /* LobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4191EBDF23B7E82A007B1673 /* LobbyViewController.swift */; };
 		4191EBE223B7E835007B1673 /* Lobby.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4191EBE123B7E835007B1673 /* Lobby.storyboard */; };
@@ -52,11 +54,9 @@
 		41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD841C21D1D57300AB1089 /* AnswerViewController.swift */; };
 		41AD841F21D1D59100AB1089 /* GuessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD841E21D1D59100AB1089 /* GuessViewController.swift */; };
 		41AD842121D1D97400AB1089 /* QuestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842021D1D97400AB1089 /* QuestionCell.swift */; };
-		41AD842521D1DD0200AB1089 /* QuestionsNetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842421D1DD0200AB1089 /* QuestionsNetUtil.swift */; };
 		41AD842721D1DEAF00AB1089 /* Questions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842621D1DEAF00AB1089 /* Questions.swift */; };
 		41AD842921D1E16400AB1089 /* Subject.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41AD842821D1E16400AB1089 /* Subject.storyboard */; };
 		41AD842B21D1E17F00AB1089 /* SubjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD842A21D1E17F00AB1089 /* SubjectViewController.swift */; };
-		41AD843121D3EE0700AB1089 /* QuestionsTurnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */; };
 		41AD843721D5280900AB1089 /* NetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843621D5280900AB1089 /* NetUtil.swift */; };
 		41AD843921D52E1400AB1089 /* MCPeerID+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */; };
 		41AD843B21D55E7800AB1089 /* WaitNetUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AD843A21D55E7800AB1089 /* WaitNetUtil.swift */; };
@@ -121,6 +121,8 @@
 		4170BCAD21D7EFB100ED3387 /* WelcomeElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeElements.swift; sourceTree = "<group>"; };
 		4170BCAF21D7F2C600ED3387 /* XCUIElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCUIElement.swift; sourceTree = "<group>"; };
 		4170BCB121D923FA00ED3387 /* AnswersElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswersElements.swift; sourceTree = "<group>"; };
+		4187889123B86FE300421527 /* QuestionsGameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsGameState.swift; sourceTree = "<group>"; };
+		4187889623B8736A00421527 /* QuestionsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsCommand.swift; sourceTree = "<group>"; };
 		4191EBDC23B7E4CA007B1673 /* WaitInviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitInviteViewController.swift; sourceTree = "<group>"; };
 		4191EBDF23B7E82A007B1673 /* LobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyViewController.swift; sourceTree = "<group>"; };
 		4191EBE123B7E835007B1673 /* Lobby.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Lobby.storyboard; sourceTree = "<group>"; };
@@ -135,11 +137,9 @@
 		41AD841C21D1D57300AB1089 /* AnswerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerViewController.swift; sourceTree = "<group>"; };
 		41AD841E21D1D59100AB1089 /* GuessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuessViewController.swift; sourceTree = "<group>"; };
 		41AD842021D1D97400AB1089 /* QuestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionCell.swift; sourceTree = "<group>"; };
-		41AD842421D1DD0200AB1089 /* QuestionsNetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsNetUtil.swift; sourceTree = "<group>"; };
 		41AD842621D1DEAF00AB1089 /* Questions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Questions.swift; sourceTree = "<group>"; };
 		41AD842821D1E16400AB1089 /* Subject.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Subject.storyboard; sourceTree = "<group>"; };
 		41AD842A21D1E17F00AB1089 /* SubjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectViewController.swift; sourceTree = "<group>"; };
-		41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsTurnManager.swift; sourceTree = "<group>"; };
 		41AD843621D5280900AB1089 /* NetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetUtil.swift; sourceTree = "<group>"; };
 		41AD843821D52E1400AB1089 /* MCPeerID+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MCPeerID+Data.swift"; sourceTree = "<group>"; };
 		41AD843A21D55E7800AB1089 /* WaitNetUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitNetUtil.swift; sourceTree = "<group>"; };
@@ -254,6 +254,14 @@
 			path = MeshManUITests;
 			sourceTree = "<group>";
 		};
+		4187889523B8734B00421527 /* Questions Commands */ = {
+			isa = PBXGroup;
+			children = (
+				4187889623B8736A00421527 /* QuestionsCommand.swift */,
+			);
+			path = "Questions Commands";
+			sourceTree = "<group>";
+		};
 		4191EBDE23B7E81A007B1673 /* Lobby */ = {
 			isa = PBXGroup;
 			children = (
@@ -280,10 +288,10 @@
 		41AD843E21D6ED4600AB1089 /* Questions */ = {
 			isa = PBXGroup;
 			children = (
+				4187889523B8734B00421527 /* Questions Commands */,
 				41AD842221D1DC8D00AB1089 /* Views */,
-				41AD842421D1DD0200AB1089 /* QuestionsNetUtil.swift */,
 				41AD842621D1DEAF00AB1089 /* Questions.swift */,
-				41AD843021D3EE0700AB1089 /* QuestionsTurnManager.swift */,
+				4187889123B86FE300421527 /* QuestionsGameState.swift */,
 			);
 			path = Questions;
 			sourceTree = "<group>";
@@ -516,22 +524,22 @@
 				41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */,
 				41536B291FF5429A00DBC164 /* HangmanViewController.swift in Sources */,
 				41AD843721D5280900AB1089 /* NetUtil.swift in Sources */,
-				41AD842521D1DD0200AB1089 /* QuestionsNetUtil.swift in Sources */,
 				41536B251FF538C500DBC164 /* MCManager.swift in Sources */,
 				41C48B8C23B72E3D00733544 /* HangmanCommand.swift in Sources */,
 				41A1F69F200EC22100865032 /* WordSelectionViewController.swift in Sources */,
 				4191EBE023B7E82A007B1673 /* LobbyViewController.swift in Sources */,
-				41AD843121D3EE0700AB1089 /* QuestionsTurnManager.swift in Sources */,
 				41536AF71FF06DC800DBC164 /* AppDelegate.swift in Sources */,
 				41536B091FF06DF300DBC164 /* WelcomeViewController.swift in Sources */,
 				4191EBE423B80477007B1673 /* SetStatusCommand.swift in Sources */,
 				41C48B8223B713E100733544 /* BaseCommand.swift in Sources */,
 				41AD843D21D58E3F00AB1089 /* TurnManager.swift in Sources */,
+				4187889723B8736A00421527 /* QuestionsCommand.swift in Sources */,
 				41AD842721D1DEAF00AB1089 /* Questions.swift in Sources */,
 				41C48B8723B717A200733544 /* Game.swift in Sources */,
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
 				412A7EF823B3BD2200F9C36B /* Assets.swift in Sources */,
 				41536B431FF5544D00DBC164 /* Hangman.swift in Sources */,
+				4187889223B86FE300421527 /* QuestionsGameState.swift in Sources */,
 				41C48B8E23B7471500733544 /* GameDataCommand.swift in Sources */,
 				41C48B8523B7153000733544 /* SetGameCommand.swift in Sources */,
 				41AD842121D1D97400AB1089 /* QuestionCell.swift in Sources */,

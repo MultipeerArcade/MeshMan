@@ -42,9 +42,9 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
     
     // MARK: - New Instance
     
-    static func newInstance(subject: String, netUtil: QuestionNetUtil, turnManager: QuestionsTurnManager) -> AnswerViewController {
+    static func newInstance(questions: Questions) -> AnswerViewController {
         let answerVC = Storyboards.questions.instantiateViewController(withIdentifier: "answer") as! AnswerViewController
-        answerVC.questions = Questions(subject: subject, netUtil: netUtil, firstPicker: MCManager.shared.peerID)
+        answerVC.questions = questions
         answerVC.questions.delegate = answerVC
         return answerVC
     }
@@ -56,7 +56,7 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
         subjectButton.setTitle(Strings.subjectLabelHiddenText, for: .normal)
         setControls(enabled: false)
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-            self.showFirstQuestion(subject: self.questions.subject)
+            self.showFirstQuestion(subject: self.questions.state.subject)
         }
     }
     
@@ -73,7 +73,7 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
         startSubjectTimer() {
             self.hideSubject()
         }
-        subjectButton.setTitle(questions.subject, for: .normal)
+        subjectButton.setTitle(questions.state.subject, for: .normal)
     }
     
     private func hideSubject() {
@@ -93,20 +93,10 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
     
     // MARK: -
     
-    private func process(result: Questions.Result) {
-        switch result {
-        case .insert(let row):
-            questionListController.insert(at: row)
-        case .update(let row):
-            questionListController.update(at: row)
-        }
-    }
-    
     private func showFirstQuestion(subject: String) {
         let question = "What is it?"
-        let result = questions.ask(question: question)
-        process(result: result)
-        let alert = UIAlertController(title: "First Question", message: "What is \(questions.subject)?", preferredStyle: .alert)
+        questions.ask(question: question)
+        let alert = UIAlertController(title: "First Question", message: "What is \(questions.state.subject)?", preferredStyle: .alert)
         let personAction = UIAlertAction(title: "Person", style: .default) { (_) in
             self.give(answer: .person)
         }
@@ -128,7 +118,7 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
     
     private func waitForGuess() {
         setControls(enabled: false)
-        let alert = UIAlertController(title: "Get ready!", message: "\(questions.turnManager.currentAsker.displayName) is preparing a guess.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Get ready!", message: "\(questions.currentGuesser.displayName) is preparing a guess.", preferredStyle: .alert)
         waitAlert = alert
         present(alert, animated: true)
     }
@@ -139,25 +129,14 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
         feedbackGenerator.notificationOccurred(.success)
         let alert = UIAlertController(title: guess, message: "Is this what you were thinking of?", preferredStyle: .alert)
         let yesAction = UIAlertAction(title: "Yes", style: .default) { (_) in
-            self.questions.confirm(correct: true)
+            self.questions.judgeGuess(judgement: .correct)
         }
         let noAction = UIAlertAction(title: "No", style: .destructive) { (_) in
-            self.questions.confirm(correct: false)
+            self.questions.judgeGuess(judgement: .incorrect)
         }
         alert.addAction(yesAction)
         alert.addAction(noAction)
         present(alert, animated: true)
-    }
-    
-    private func gameOver(correct: Bool) {
-        questions.turnManager.gameOver()
-        if questions.turnManager.iAmPicker {
-            let subjectSelection = SubjectViewController.newInstance(netUtil: questions.netUtil)
-            navigationController?.setViewControllers([subjectSelection], animated: true)
-        } else {
-            let wait = WaitViewController.newInstance(purpose: .waiting, utilType: .questions(questions.netUtil))
-            navigationController?.setViewControllers([wait], animated: true)
-        }
     }
     
     // MARK: - Input Handling
@@ -183,33 +162,29 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
     }
     
     private func give(answer: Questions.Answer) {
-        let result = questions.answerQuestion(with: answer)
-        process(result: result)
+        questions.answerLastQuestion(with: answer)
     }
     
     // MARK: - QuestionsDelegate
     
-    func questions(_ questions: Questions, didUpdateQuestion result: Questions.Result) {
-        process(result: result)
-    }
-    
-    func questions(_ questions: Questions, didSetGameStage stage: Questions.GameStage) {
-        switch stage {
-        case .answer:
+    func questions(_ questions: Questions, stateUpdatedFromOldState oldState: QuestionsGameState, toNewState newState: QuestionsGameState) {
+        questionListController.updateState(from: oldState, to: newState)
+        switch newState.gameProgress {
+        case .waitingForAnswer:
             navigationItem.title = "Your Turn"
             feedbackGenerator.notificationOccurred(.success)
             setControls(enabled: true)
-        case .question:
-            navigationItem.title = "\(questions.turnManager.currentAsker.displayName)'s Turn"
+        case .waitingForQuestion:
+            navigationItem.title = "\(questions.currentGuesser.displayName)'s Turn"
             setControls(enabled: false)
-        case .guess:
+        case .waitingForGuess:
             waitForGuess()
-        case .confirm(guess: let guess):
+        case .waitingForGuessJudgement:
             navigationItem.title = "Your Turn"
             feedbackGenerator.notificationOccurred(.success)
-            showGuess(guess)
-        case .gameOver(let correct):
-            gameOver(correct: correct)
+            showGuess(questions.state.guess ?? "error")
+        case .wordGuessedCorrectly, .wordGuessedIncorrectly:
+            questions.done()
         }
     }
     

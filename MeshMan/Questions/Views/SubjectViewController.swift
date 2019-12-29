@@ -10,6 +10,11 @@ import UIKit
 
 class SubjectViewController: UIViewController, UITextFieldDelegate {
     
+    enum Result {
+        case choseSubject(String)
+        case cancelled
+    }
+    
     // MARK: - Outlets
     
     @IBOutlet private weak var subjectField: UITextField!
@@ -17,13 +22,13 @@ class SubjectViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Private Members
     
-    private var netUtil: QuestionNetUtil!
+    private var completion: ((Result) -> Void)!
     
     // MARK: - New Instance
     
-    static func newInstance(netUtil: QuestionNetUtil) -> SubjectViewController {
+    static func newInstance(completion: @escaping (Result) -> Void) -> SubjectViewController {
         guard let subjectVC = Storyboards.subjectSelection.instantiateInitialViewController() as? SubjectViewController else { fatalError("Could not cast the resulting storyboard correctly") }
-        subjectVC.netUtil = netUtil
+        subjectVC.completion = completion
         return subjectVC
     }
     
@@ -48,7 +53,9 @@ class SubjectViewController: UIViewController, UITextFieldDelegate {
         case .invalid:
             showInvalidSubjectMessage(for: input)
         case .sanitized(let subject):
-            showGame(subject: subject)
+            self.dismiss(animated: true) {
+                self.completion(.choseSubject(subject))
+            }
         }
     }
     
@@ -57,14 +64,6 @@ class SubjectViewController: UIViewController, UITextFieldDelegate {
         let okayAction = UIAlertAction(title: "Okay", style: .default)
         alert.addAction(okayAction)
         present(alert, animated: true)
-    }
-    
-    // MARK: - Showing the Game
-    
-    private func showGame(subject: String) {
-        let answersVC = AnswerViewController.newInstance(subject: subject, netUtil: netUtil, turnManager: QuestionsTurnManager(session: netUtil.session, myPeerID: MCManager.shared.peerID, firstPicker: MCManager.shared.peerID))
-        netUtil.send(message: StartMessage(gameType: .questions, payload: QuestionNetUtil.StartGamePayload(subject: subject, firstPicker: MCManager.shared.peerID)))
-        navigationController?.setViewControllers([answersVC], animated: true)
     }
     
     // MARK: - UITextFieldDelegate

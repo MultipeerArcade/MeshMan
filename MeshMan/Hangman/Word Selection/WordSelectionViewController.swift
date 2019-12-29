@@ -45,11 +45,6 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 		self.wordField.becomeFirstResponder()
     }
 	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-//        netUtil.send(message: WaitMessage(message: "Waiting for \(MCManager.shared.peerID.displayName) to choose a word..."))
-	}
-	
 	@IBAction func doneButtonPressed() {
 		guard let text = self.wordField.text else { return }
 		self.processText(input: text)
@@ -74,12 +69,6 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	
 	private func showTooShortAlert() {
 		// show alert and then become first responder
-	}
-	
-	private func showGame(word: String) {
-//        let hangmanVC = HangmanViewController.newInstance(word: word, netUtil: netUtil, firstPicker: MCManager.shared.peerID)
-//        netUtil.send(message: StartMessage(gameType: .hangman, payload: HangmanNetUtil.StartGamePayload(word: word, picker: MCManager.shared.peerID)))
-//		self.navigationController?.setViewControllers([hangmanVC], animated: true)
 	}
 	
 	// MARK: - Keyboard

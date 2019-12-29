@@ -156,7 +156,17 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
                 RootManager.shared.navigationController.setViewControllers([hangmanVC], animated: true)
             }
         case .twentyQuestions:
-            break
+            let gameState = try! JSONDecoder().decode(QuestionsGameState.self, from: setGameCommand.payload)
+            let questions = makeQuestions(state: gameState)
+            DispatchQueue.main.async {
+                if questions.iAmPicker {
+                    let answerVC = AnswerViewController.newInstance(questions: questions)
+                    RootManager.shared.navigationController.setViewControllers([answerVC], animated: true)
+                } else {
+                    let questionsVC = GuessViewController.newInstance(questions: questions)
+                    RootManager.shared.navigationController.setViewControllers([questionsVC], animated: true)
+                }
+            }
         }
     }
     
@@ -173,6 +183,12 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         let hangman = Hangman(state: state, networkHandler: self)
         dataHandler = hangman
         return hangman
+    }
+    
+    func makeQuestions(state: QuestionsGameState) -> Questions {
+        let questions = Questions(state: state, networkHandler: self)
+        dataHandler = questions
+        return questions
     }
     
     // MARK: -

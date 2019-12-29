@@ -211,7 +211,7 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
     
     // MARK: - HangmanDelegate
     
-    func hangman(_ hangman: Hangman, stateUpdatedFromOldState oldState: HangmanGameState?, toNewState newState: HangmanGameState, obfuscationResult: Hangman.WordObfuscationPayload) {
+    func hangman(_ hangman: Hangman, stateUpdatedFromOldState oldState: HangmanGameState, toNewState newState: HangmanGameState, obfuscationResult: Hangman.WordObfuscationPayload) {
         updateFor(newIncorrectCharacters: newState.incorrectCharacters)
         setUp(asGuesser: hangman.iAmGuesser)
         updateWordProgress(with: obfuscationResult.obfuscatedWord)

@@ -57,7 +57,19 @@ class LobbyViewController: UIViewController, StatusHandler {
     }
     
     @IBAction func twentyQuestionsButtonPressed() {
-        
+        let subjectSelectionVC = SubjectViewController.newInstance { (result) in
+            switch result {
+            case .cancelled:
+                break
+            case .choseSubject(let subject):
+                let state = QuestionsGameState(subject: subject, asking: true, pickerData: MCManager.shared.peerID.dataRepresentation, guesserData: MCManager.shared.turnHelper.getFirstPeer(otherThan: [MCManager.shared.peerID]).dataRepresentation)
+                let questions = MCManager.shared.makeQuestions(state: state)
+                let answerVC = AnswerViewController.newInstance(questions: questions)
+                RootManager.shared.navigationController.setViewControllers([answerVC], animated: true)
+                MCManager.shared.setGame(game: .twentyQuestions, payload: state)
+            }
+        }
+        present(subjectSelectionVC, animated: true)
     }
     
     // MARK: - StatusHandler

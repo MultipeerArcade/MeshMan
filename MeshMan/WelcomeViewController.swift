@@ -121,16 +121,6 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 		self.present(browserVC, animated: true)
 	}
 	
-	private func showWordSelection() {
-//		let wordSelectionVC = WordSelectionViewController.newInstance(netUtil: HangmanNetUtil(session: MCManager.shared.session))
-//		self.navigationController?.setViewControllers([wordSelectionVC], animated: true)
-	}
-    
-    private func showSubjectSelection() {
-        let subjectVC = SubjectViewController.newInstance(netUtil: QuestionNetUtil(session: MCManager.shared.session))
-        self.navigationController?.setViewControllers([subjectVC], animated: true)
-    }
-	
 	// MARK: MCBrowserViewControllerDelegate
 	
 	internal func browserViewController(_ browserViewController: MCBrowserViewController, shouldPresentNearbyPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) -> Bool {
