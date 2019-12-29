@@ -95,7 +95,7 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
     
     private func showFirstQuestion(subject: String) {
         let question = "What is it?"
-        questions.ask(question: question)
+        _ = questions.ask(question: question)
         let alert = UIAlertController(title: "First Question", message: "What is \(questions.state.subject)?", preferredStyle: .alert)
         let personAction = UIAlertAction(title: "Person", style: .default) { (_) in
             self.give(answer: .person)

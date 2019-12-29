@@ -78,20 +78,14 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
     
     private func process(textInput text: String) {
         if !guessing {
-            switch Questions.sanitize(question: text) {
+            switch questions.ask(question: text) {
             case .invalid:
                 showInvalidQuestionMessage(for: text)
-            case .sanitized(question: let question):
-                questions.ask(question: question)
+            case .sanitized:
                 questionField.text = nil
             }
         } else {
-            switch Questions.sanitize(guess: text) {
-            case .invalid:
-                showInvalidGuessMessage(for: text)
-            case .sanitized(let guess):
-                confirmAndMake(guess: guess)
-            }
+            confirmAndMake(guess: text)
         }
     }
     
@@ -123,8 +117,12 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
     }
     
     private func make(guess: String) {
-        questions.guess(answer: guess)
-        questionField.text = nil
+        switch questions.guess(answer: guess) {
+        case .invalid:
+            showInvalidGuessMessage(for: guess)
+        case .sanitized:
+            questionField.text = nil
+        }
     }
     
     private func showWaitingMessage(guess: String) {

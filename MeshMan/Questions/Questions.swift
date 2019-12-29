@@ -113,10 +113,17 @@ final class Questions: DataHandler {
     
     // MARK: - UI Event Handling
     
-    func ask(question: String) {
-        let newState = state.ask(question: question)
-        send(newState: newState)
-        update(from: newState)
+    func ask(question: String) -> SanitizationResult {
+        let result = Questions.sanitize(question: question)
+        switch result {
+        case .invalid:
+            break
+        case .sanitized(let sanitizedQuestion):
+            let newState = state.ask(question: sanitizedQuestion)
+            send(newState: newState)
+            update(from: newState)
+        }
+        return result
     }
     
     func answer(questionAtIndex questionIndex: Int, with answer: Answer) {
@@ -133,10 +140,17 @@ final class Questions: DataHandler {
         update(from: newState)
     }
     
-    func guess(answer: String) {
-        let newState = state.guess(answer: answer)
-        send(newState: newState)
-        update(from: newState)
+    func guess(answer: String) -> SanitizationResult {
+        let result = Questions.sanitize(guess: answer)
+        switch result {
+        case .invalid:
+            break
+        case .sanitized(let sanitizedGuess):
+            let newState = state.guess(answer: sanitizedGuess)
+            send(newState: newState)
+            update(from: newState)
+        }
+        return result
     }
     
     func judgeGuess(judgement: GuessJudgement) {
