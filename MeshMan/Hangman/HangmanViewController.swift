@@ -216,6 +216,15 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
         setUp(asGuesser: hangman.iAmGuesser)
         updateWordProgress(with: obfuscationResult.obfuscatedWord)
     }
+    
+    func hangman(_ hangman: Hangman, endedGameWithConclusion conclusion: Hangman.Conclusion) {
+        switch conclusion {
+        case .wordGuessed:
+            showWordGuessedMessage(with: hangman.state.word)
+        case .noMoreGuesses:
+            showNoMoreGuessesMessage(with: hangman.state.word)
+        }
+    }
 	
 	// MARK: - UICollectionViewDataSource
 	

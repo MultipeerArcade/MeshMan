@@ -11,6 +11,12 @@ import Foundation
 
 class HangmanGameState: Codable, Equatable {
     
+    enum GameProgress {
+        case inProgress
+        case noMoreGuesses
+        case wordGuessed
+    }
+    
     private let gameID = UUID()
     
     let word: String
@@ -27,6 +33,16 @@ class HangmanGameState: Codable, Equatable {
     private let incorrectLetters: [String]
     
     private(set) lazy var incorrectCharacters: Set<Character> = Set(incorrectLetters.map({Character($0)}))
+    
+    private(set) lazy var gameProgress: GameProgress = {
+        if incorrectLetters.count >= Hangman.Rules.numberOfGuesses {
+            return .noMoreGuesses
+        } else if targetLetters.subtracting(guessedCharacters).isEmpty {
+            return .wordGuessed
+        } else {
+            return .inProgress
+        }
+    }()
     
     let pickerData: Data
     

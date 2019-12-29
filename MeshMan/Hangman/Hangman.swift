@@ -13,12 +13,13 @@ import MultipeerConnectivity
 
 protocol HangmanDelegate: class {
     func hangman(_ hangman: Hangman, stateUpdatedFromOldState oldState: HangmanGameState?, toNewState newState: HangmanGameState, obfuscationResult: Hangman.WordObfuscationPayload)
+    func hangman(_ hangman: Hangman, endedGameWithConclusion conclusion: Hangman.Conclusion)
 }
 
 final class Hangman: DataHandler {
     
     enum Rules {
-        static let numberOfGuesses = 9
+        static let numberOfGuesses = 10
         static let maxCharacters = 100
         static let minCharacters = 3
         static let wordSelectionBlurb = NSLocalizedString("The word you choose must be no shorter than %d characters and no longer than %d characters. Any characters other than numbers and letters will be shown to your opponents.\n\nFor Example:\n\nTHE CAT'S MEOW\nwill become\n_ _ _   _ _ _ ' _   _ _ _ _", comment: "Writeup of the rules around choosing a word in hangman")
@@ -41,6 +42,11 @@ final class Hangman: DataHandler {
     
     enum ChoiceValidity {
         case tooShort, tooLong, good
+    }
+    
+    enum Conclusion {
+        case wordGuessed
+        case noMoreGuesses
     }
     
     // MARK: - Internal Members
@@ -91,6 +97,14 @@ final class Hangman: DataHandler {
         let obfuscationResult = Hangman.obfuscate(word: newState.word, excluding: newState.guessedCharacters)
         DispatchQueue.main.async {
             self.delegate?.hangman(self, stateUpdatedFromOldState: oldState, toNewState: newState, obfuscationResult: obfuscationResult)
+            switch newState.gameProgress {
+            case .inProgress:
+                break
+            case .noMoreGuesses:
+                self.delegate?.hangman(self, endedGameWithConclusion: .noMoreGuesses)
+            case .wordGuessed:
+                self.delegate?.hangman(self, endedGameWithConclusion: .wordGuessed)
+            }
         }
     }
     
@@ -130,7 +144,7 @@ final class Hangman: DataHandler {
     }
     
     func done() {
-        
+        RootManager.shared.goToLobby(asHost: MCManager.shared.isThisMe(currentGuesser))
     }
     
     // MARK: -
