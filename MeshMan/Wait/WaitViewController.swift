@@ -154,8 +154,8 @@ class WaitViewController: UIViewController, MCNearbyServiceAdvertiserDelegate {
     }
     
     private func startHangman(with word: String, firstPicker: MCPeerID, netUtil: HangmanNetUtil) {
-        let hangmanVC = HangmanViewController.newInstance(word: word, netUtil: netUtil, firstPicker: firstPicker)
-        self.navigationController?.setViewControllers([hangmanVC], animated: true)
+//        let hangmanVC = HangmanViewController.newInstance(word: word, netUtil: netUtil, firstPicker: firstPicker)
+//        self.navigationController?.setViewControllers([hangmanVC], animated: true)
     }
     
     private func startQuestions(with subject: String, firstPicker: MCPeerID, netUtil: QuestionNetUtil) {

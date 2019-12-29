@@ -9,6 +9,11 @@
 import UIKit
 
 class WordSelectionViewController: UIViewController, UITextFieldDelegate {
+    
+    enum Result {
+        case choseWord(String)
+        case cancelled
+    }
 	
 	// MARK: - Outlets
 
@@ -19,13 +24,13 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	
 	// MARK: - Properties
 	
-	internal var netUtil: HangmanNetUtil!
+    private var completion: ((Result) -> Void)!
 	
 	// MARK: - New Instance
 	
-	internal static func newInstance(netUtil: HangmanNetUtil) -> WordSelectionViewController {
+    internal static func newInstance(completion: @escaping (Result) -> Void) -> WordSelectionViewController {
 		guard let wordSelectionVC = Storyboards.wordSelection.instantiateInitialViewController() as? WordSelectionViewController else { fatalError("Could not cast the resulting storyboard correctly") }
-		wordSelectionVC.netUtil = netUtil
+        wordSelectionVC.completion = completion
 		return wordSelectionVC
 	}
 	
@@ -42,7 +47,7 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-        netUtil.send(message: WaitMessage(message: "Waiting for \(MCManager.shared.peerID.displayName) to choose a word..."))
+//        netUtil.send(message: WaitMessage(message: "Waiting for \(MCManager.shared.peerID.displayName) to choose a word..."))
 	}
 	
 	@IBAction func doneButtonPressed() {
@@ -57,7 +62,9 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 		case .tooShort:
 			self.showTooShortAlert()
 		case .good:
-			self.showGame(word: input)
+            dismiss(animated: true) {
+                self.completion(.choseWord(input))
+            }
 		}
 	}
 	
@@ -70,9 +77,9 @@ class WordSelectionViewController: UIViewController, UITextFieldDelegate {
 	}
 	
 	private func showGame(word: String) {
-        let hangmanVC = HangmanViewController.newInstance(word: word, netUtil: netUtil, firstPicker: MCManager.shared.peerID)
-        netUtil.send(message: StartMessage(gameType: .hangman, payload: HangmanNetUtil.StartGamePayload(word: word, picker: MCManager.shared.peerID)))
-		self.navigationController?.setViewControllers([hangmanVC], animated: true)
+//        let hangmanVC = HangmanViewController.newInstance(word: word, netUtil: netUtil, firstPicker: MCManager.shared.peerID)
+//        netUtil.send(message: StartMessage(gameType: .hangman, payload: HangmanNetUtil.StartGamePayload(word: word, picker: MCManager.shared.peerID)))
+//		self.navigationController?.setViewControllers([hangmanVC], animated: true)
 	}
 	
 	// MARK: - Keyboard

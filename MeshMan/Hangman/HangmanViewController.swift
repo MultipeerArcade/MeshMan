@@ -51,9 +51,9 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
     
     // MARK: - New Instance
     
-    static func newInstance(word: String, netUtil: HangmanNetUtil, firstPicker: MCPeerID) -> HangmanViewController {
+    static func newInstance(hangman: Hangman) -> HangmanViewController {
         let vc = Storyboards.hangman.instantiateInitialViewController() as! HangmanViewController
-        vc.hangman = Hangman(word: word, netUtil: netUtil, firstPicker: firstPicker)
+        vc.hangman = hangman
         vc.hangman.delegate = vc
         return vc
     }
@@ -69,9 +69,10 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
 		self.guessField.delegate = self
 		self.incorrectLetterCollection.dataSource = self
 		self.subscribeToKeyboardEvents()
-        setUp(asGuesser: hangman.turnManager.iAmGuesser)
-        updateWordProgress(with: hangman.gameModel.obfuscatedWord)
-        numberOfLettersLabel.text = String(format: Strings.numberOfLetters, hangman.gameModel.numberOfBlanks)
+        setUp(asGuesser: hangman.iAmGuesser)
+        let obfuscationResult = hangman.getWordObfuscationPayload()
+        updateWordProgress(with: obfuscationResult.obfuscatedWord)
+        numberOfLettersLabel.text = String(format: Strings.numberOfLetters, obfuscationResult.numberOfBlanks)
     }
 	
 	override func viewDidLayoutSubviews() {
@@ -98,7 +99,7 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
 			self.guessField.isEnabled = true
 			self.guessField.becomeFirstResponder()
 		} else {
-			self.navigationItem.title = String(format: Strings.personsTurn, hangman.turnManager.currentGuesserName)
+            self.navigationItem.title = String(format: Strings.personsTurn, hangman.currentGuesser.displayName)
 			self.guessField.isHidden = true
 			self.guessField.isEnabled = false
 			self.guessField.resignFirstResponder()
@@ -133,30 +134,14 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
 	// MARK: - Input Processing
     
     private func process(guess: String) {
-        let result = hangman.gameModel.sanitize(guess: guess)
-        switch result {
+        let sanitationResult = hangman.make(guess: guess)
+        switch sanitationResult {
         case .alreadyGuessed:
             showAlreadyGuessedMessage(guess: guess)
         case .invalidCharacter, .tooLong, .tooShort:
             showInvalidLetterMessage(guess: guess)
-        case .sanitized(let char):
-            let guessResult = hangman.make(guess: char)
-            process(result: guessResult)
-        }
-    }
-    
-    private func process(result: HangmanGameModel.GuessResult) {
-        switch result {
-        case .wrong(let incorrectGuess):
-            updateFor(incorrectCharacter: incorrectGuess)
-        case .noMoreGuesses(let incorrectGuess, let word):
-            updateFor(incorrectCharacter: incorrectGuess)
-            showNoMoreGuessesMessage(with: word)
-        case .wordGuessed(let word):
-            updateWordProgress(with: word)
-            showWordGuessedMessage(with: word)
-        case .correct(let updatedWord):
-            updateWordProgress(with: updatedWord)
+        case .success:
+            break
         }
     }
 	
@@ -187,76 +172,61 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
 	
 	private func showNoMoreGuessesMessage(with word: String) {
 		let alertView: UIAlertController
-		switch hangman.turnManager.myRole {
-		case .guesser, .waiting:
+        switch hangman.iAmPicker {
+		case false:
 			alertView = UIAlertController(title: Strings.loseAlertTitle, message: String(format: Strings.guesserLoseAlertMessage, word), preferredStyle: .alert)
-		case .picker:
+		case true:
 			alertView = UIAlertController(title: Strings.winAlertTitle, message: String(format: Strings.pickerWinAlertMessage, word), preferredStyle: .alert)
 		}
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in self.prepareForNextGame() }
+        let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in self.hangman.done() }
 		alertView.addAction(okay)
 		self.present(alertView, animated: true)
 	}
 	
 	private func showWordGuessedMessage(with word: String) {
 		let alertView: UIAlertController
-		switch hangman.turnManager.myRole {
-		case .guesser, .waiting:
+        switch hangman.iAmPicker {
+		case false:
 			alertView = UIAlertController(title: Strings.winAlertTitle, message: String(format: Strings.guesserWinAlertMessage, word), preferredStyle: .alert)
-		case .picker:
+		case true:
 			alertView = UIAlertController(title: Strings.loseAlertTitle, message: String(format: Strings.pickerLoseAlertMessage, word), preferredStyle: .alert)
 		}
-		let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in self.prepareForNextGame() }
+        let okay = UIAlertAction(title: VisibleStrings.Generic.okay, style: .default) { (_) in self.hangman.done() }
 		alertView.addAction(okay)
 		self.present(alertView, animated: true)
 	}
 	
-	private func prepareForNextGame() {
-		if hangman.turnManager.iAmPicker {
-			self.showWordSelection()
-		} else {
-			self.showWait()
-		}
-	}
-	
-	private func showWordSelection() {
-		let wordSelectionVC = WordSelectionViewController.newInstance(netUtil: hangman.netUtil)
-		self.navigationController?.setViewControllers([wordSelectionVC], animated: true)
-	}
-	
-	private func showWait() {
-        let waitVC = WaitViewController.newInstance(purpose: .waiting, utilType: .hangman(hangman.netUtil))
-		self.navigationController?.setViewControllers([waitVC], animated: true)
-	}
-	
-	private func updateFor(incorrectCharacter: Character) {
-		self.incorrectGuesses.append(incorrectCharacter)
+	private func updateFor(newIncorrectCharacters: Set<Character>) {
+        guard newIncorrectCharacters.count > 0 else { return }
+        let newChars = newIncorrectCharacters.filter { !incorrectGuesses.contains($0)}
+        let insertionIndicies = newChars.map { (newChar) -> IndexPath in
+            incorrectGuesses.append(newChar)
+            self.gallowsController.next()
+            return IndexPath(row: incorrectGuesses.count - 1, section: 0)
+        }
 		let lastIndex = IndexPath(row: self.incorrectGuesses.count - 1, section: 0)
-		self.incorrectLetterCollection.insertItems(at: [lastIndex])
+		self.incorrectLetterCollection.insertItems(at: insertionIndicies)
 		self.incorrectLetterCollection.scrollToItem(at: lastIndex, at: .left, animated: true)
-		self.gallowsController.next()
 	}
     
     // MARK: - HangmanDelegate
     
-    func hangman(_ hangman: Hangman, didRecieveGuess result: HangmanGameModel.GuessResult) {
-        process(result: result)
-    }
-    
-    func hangman(_ hangman: Hangman, didSetGuesser iAmGuesser: Bool) {
-        setUp(asGuesser: iAmGuesser)
+    func hangman(_ hangman: Hangman, stateUpdatedFromOldState oldState: HangmanGameState?, toNewState newState: HangmanGameState, obfuscationResult: Hangman.WordObfuscationPayload) {
+        updateFor(newIncorrectCharacters: newState.incorrectCharacters)
+        setUp(asGuesser: hangman.iAmGuesser)
+        updateWordProgress(with: obfuscationResult.obfuscatedWord)
     }
 	
 	// MARK: - UICollectionViewDataSource
 	
 	internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return self.incorrectGuesses.count
+        return incorrectGuesses.count
 	}
 	
 	internal func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LetterCell.reuseIdentifier, for: indexPath)
 		if let letterCell = cell as? LetterCell {
-			letterCell.letterLabel.text = String(self.incorrectGuesses[indexPath.row])
+            letterCell.letterLabel.text = String(incorrectGuesses[indexPath.row])
 		}
 		return cell
 	}
