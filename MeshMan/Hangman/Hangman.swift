@@ -13,7 +13,6 @@ import MultipeerConnectivity
 
 protocol HangmanDelegate: class {
     func hangman(_ hangman: Hangman, stateUpdatedFromOldState oldState: HangmanGameState, toNewState newState: HangmanGameState, obfuscationResult: Hangman.WordObfuscationPayload)
-    func hangman(_ hangman: Hangman, endedGameWithConclusion conclusion: Hangman.Conclusion)
 }
 
 final class Hangman: DataHandler {
@@ -42,11 +41,6 @@ final class Hangman: DataHandler {
     
     enum ChoiceValidity {
         case tooShort, tooLong, good
-    }
-    
-    enum Conclusion {
-        case wordGuessed
-        case noMoreGuesses
     }
     
     // MARK: - Internal Members
@@ -97,14 +91,6 @@ final class Hangman: DataHandler {
         let obfuscationResult = Hangman.obfuscate(word: newState.word, excluding: newState.guessedCharacters)
         DispatchQueue.main.async {
             self.delegate?.hangman(self, stateUpdatedFromOldState: oldState, toNewState: newState, obfuscationResult: obfuscationResult)
-            switch newState.gameProgress {
-            case .inProgress:
-                break
-            case .noMoreGuesses:
-                self.delegate?.hangman(self, endedGameWithConclusion: .noMoreGuesses)
-            case .wordGuessed:
-                self.delegate?.hangman(self, endedGameWithConclusion: .wordGuessed)
-            }
         }
     }
     

@@ -215,14 +215,13 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
         updateFor(newIncorrectCharacters: newState.incorrectCharacters)
         setUp(asGuesser: hangman.iAmGuesser)
         updateWordProgress(with: obfuscationResult.obfuscatedWord)
-    }
-    
-    func hangman(_ hangman: Hangman, endedGameWithConclusion conclusion: Hangman.Conclusion) {
-        switch conclusion {
-        case .wordGuessed:
-            showWordGuessedMessage(with: hangman.state.word)
+        switch newState.gameProgress {
+        case .inProgress:
+            break
         case .noMoreGuesses:
-            showNoMoreGuessesMessage(with: hangman.state.word)
+            showNoMoreGuessesMessage(with: newState.word)
+        case .wordGuessed:
+            showWordGuessedMessage(with: newState.word)
         }
     }
 	
