@@ -129,7 +129,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	internal func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
 		self.dismiss(animated: true) {
-            RootManager.shared.goToLobby(asHost: true)
+            RootManager.shared.goToLobby()
         }
 	}
 	

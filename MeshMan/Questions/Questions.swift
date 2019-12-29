@@ -168,7 +168,7 @@ final class Questions: DataHandler {
     }
     
     func done() {
-        RootManager.shared.goToLobby(asHost: iAmGuesser)
+        RootManager.shared.goToLobby()
     }
     
     // MARK: - Input Sanitization

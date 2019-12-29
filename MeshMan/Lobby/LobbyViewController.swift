@@ -6,23 +6,21 @@
 //  Copyright © 2019 Russell Pecka. All rights reserved.
 //
 
+import MultipeerConnectivity
 import UIKit
 
 class LobbyViewController: UIViewController, StatusHandler {
     
     private enum Strings {
-        static let waiting = NSLocalizedString("Waiting...", comment: "Text that shows when a user is in the lobby waiting for a game to start")
+        static let waiting = NSLocalizedString("Waiting for %@ to start a game...", comment: "Text that shows when a user is in the lobby waiting for a game to start")
     }
     
     @IBOutlet private weak var statusLabel: UILabel!
     @IBOutlet private weak var twentyQuestionsButton: UIButton!
     @IBOutlet private weak var hangmanButton: UIButton!
     
-    private var iAmHost: Bool!
-    
-    static func newInstance(asHost: Bool) -> LobbyViewController {
+    static func newInstance() -> LobbyViewController {
         let vc = UIStoryboard(name: "Lobby", bundle: nil).instantiateInitialViewController() as! LobbyViewController
-        vc.iAmHost = asHost
         return vc
     }
 
@@ -33,8 +31,9 @@ class LobbyViewController: UIViewController, StatusHandler {
     }
     
     private func configure() {
+        let iAmHost = MCManager.shared.iAmHost
         if !iAmHost {
-            statusLabel.text = Strings.waiting
+            statusLabel.text = String(format: Strings.waiting, MCManager.shared.host.displayName)
         }
         hangmanButton.isEnabled = iAmHost
         twentyQuestionsButton.isEnabled = iAmHost
