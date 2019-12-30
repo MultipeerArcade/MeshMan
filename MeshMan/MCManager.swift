@@ -92,7 +92,16 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         self.turnHelper = TurnManager(session: session, myPeerID: peerID)
         super.init()
         session.delegate = self
+        setUpBackgroundMonitoring()
 	}
+    
+    private func setUpBackgroundMonitoring() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleBackgrounding(notification:)), name: UIApplication.willResignActiveNotification, object: nil)
+    }
+    
+    @objc private func handleBackgrounding(notification: NSNotification) {
+        session.disconnect()
+    }
 	
 	private func makeBrowser() -> MCNearbyServiceBrowser {
 		return MCNearbyServiceBrowser(peer: self.peerID, serviceType: MCManager.serviceType)
