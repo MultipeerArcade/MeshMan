@@ -26,7 +26,7 @@
         <!--Welcome View Controller-->
         <scene sceneID="4Kh-bi-mA6">
             <objects>
-                <viewController id="ibs-hz-3D8" customClass="WelcomeViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="welcome" id="ibs-hz-3D8" customClass="WelcomeViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="arY-8I-eWX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

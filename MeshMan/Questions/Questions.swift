@@ -85,6 +85,11 @@ final class Questions: DataHandler {
     
     weak var delegate: QuestionsDelegate?
     
+    var gameInfo: (Game, Data) {
+        let stateData = try! JSONEncoder().encode(state)
+        return (.twentyQuestions, stateData)
+    }
+    
     // MARK: - Initialization
     
     init(state: QuestionsGameState, networkHandler: NetworkHandler) {
@@ -102,6 +107,12 @@ final class Questions: DataHandler {
             update(from: newState)
         }
     }
+    
+    func breakReconnectTie(for peer: MCPeerID) -> ReconnectRole {
+        return .drop
+    }
+    
+    // MARK: -
     
     private func update(from newState: QuestionsGameState) {
         let oldState = state

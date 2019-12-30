@@ -25,6 +25,10 @@ class TurnManager {
         return peers.sorted(by: { $0.hashValue <= $1.hashValue })
     }
     
+    var firstPeer: MCPeerID {
+        return sortedAllPeers.first!
+    }
+    
     // MARK: - Initialization
     
     init(session: MCSession, myPeerID: MCPeerID) {

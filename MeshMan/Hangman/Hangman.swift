@@ -67,6 +67,11 @@ final class Hangman: DataHandler {
         return MCManager.shared.isThisMe(currentGuesser)
     }
     
+    var gameInfo: (Game, Data) {
+        let stateData = try! JSONEncoder().encode(state)
+        return (.hangman, stateData)
+    }
+    
     // MARK: - Initialization
     
     init(state: HangmanGameState, networkHandler: NetworkHandler) {
@@ -88,6 +93,16 @@ final class Hangman: DataHandler {
             update(from: newState)
         }
     }
+    
+    func breakReconnectTie(for peer: MCPeerID) -> ReconnectRole {
+        if peer == currentPicker {
+            return .drop
+        } else {
+            return .search
+        }
+    }
+    
+    // MARK: -
     
     private func update(from newState: HangmanGameState) {
         let oldState = state

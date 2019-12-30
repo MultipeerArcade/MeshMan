@@ -14,7 +14,7 @@ class QuestionsGameState: Codable {
         case waitingForQuestion
         case waitingForAnswer
         case waitingForGuess
-        case waitingForGuessJudgement
+        case waitingForGuessJudgement(String)
         case wordGuessedCorrectly
         case wordGuessedIncorrectly
     }
@@ -30,7 +30,7 @@ class QuestionsGameState: Codable {
     let judgement: Questions.GuessJudgement?
     
     private(set) lazy var gameProgress: GameProgress = {
-        if guess != nil {
+        if let guess = guess {
             if let judgement = judgement {
                 switch judgement {
                 case .correct:
@@ -39,7 +39,7 @@ class QuestionsGameState: Codable {
                     return .wordGuessedIncorrectly
                 }
             } else {
-                return .waitingForGuessJudgement
+                return .waitingForGuessJudgement(guess)
             }
         } else if !asking {
             return .waitingForAnswer

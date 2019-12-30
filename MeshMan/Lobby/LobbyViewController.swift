@@ -49,7 +49,8 @@ class LobbyViewController: UIViewController, StatusHandler {
                 let hangman = MCManager.shared.makeHangman(state: state)
                 let hangmanVC = HangmanViewController.newInstance(hangman: hangman)
                 RootManager.shared.navigationController.setViewControllers([hangmanVC], animated: true)
-                MCManager.shared.setGame(game: .hangman, payload: state)
+                let stateData = try! JSONEncoder().encode(state)
+                MCManager.shared.setGame(game: .hangman, payloadData: stateData)
             }
         }
         present(wordSelectionVC, animated: true)
@@ -65,7 +66,8 @@ class LobbyViewController: UIViewController, StatusHandler {
                 let questions = MCManager.shared.makeQuestions(state: state)
                 let answerVC = AnswerViewController.newInstance(questions: questions)
                 RootManager.shared.navigationController.setViewControllers([answerVC], animated: true)
-                MCManager.shared.setGame(game: .twentyQuestions, payload: state)
+                let stateData = try! JSONEncoder().encode(state)
+                MCManager.shared.setGame(game: .twentyQuestions, payloadData: stateData)
             }
         }
         present(subjectSelectionVC, animated: true)
