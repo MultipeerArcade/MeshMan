@@ -26,7 +26,7 @@ class RootManager: NSObject, MCBrowserViewControllerDelegate {
     
     func startWaitingForInvite() {
         let waitVC = WaitInviteViewController.newInstance()
-        navigationController.setViewControllers([waitVC], animated: true)
+        navigationController.pushViewController(waitVC, animated: true)
         MCManager.shared.startAdvertising()
     }
     
