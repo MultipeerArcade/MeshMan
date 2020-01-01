@@ -10,7 +10,9 @@ import Foundation
 import MultipeerConnectivity
 
 protocol DataHandler: class {
+    var gameInfo: (Game, Data) { get }
     func process(data: Data)
+    func handleLostPeers(_ lostPeers: [MCPeerID])
 }
 
 protocol StatusHandler: class {
@@ -34,6 +36,11 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         static let connectionErrorTitle = NSLocalizedString("Connection Error", comment: "The title of the alert that shows when the user fails to connect to a peer")
         static let connectionErrorBody = NSLocalizedString("The connection could not be established. Please try again.", comment: "The message to show on the alert that is shown when the user fails to connect to a peer")
         static let waiting = NSLocalizedString("Waiting for the game to start...", comment: "Text to show when the user is waiting for the leader to start the game")
+    }
+    
+    enum Constants {
+        static let minimumNumberOfPeers = 2
+        static let browserAccessabilityIdentifier = "browser"
     }
 	
 	static let serviceType = "hangman-mesh"
@@ -61,6 +68,12 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     private var iAmAdvertising: Bool {
         return advertiser != nil
     }
+    
+    private var disconnectTimer: Timer!
+    
+    private var handlingDisconnects = false
+    
+    private var lostPeers = [MCPeerID]()
 	
 	static func setUp(with peerID: MCPeerID) {
 		self.shared = MCManager(with: peerID)
@@ -74,11 +87,29 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         self.turnHelper = TurnManager(session: session, myPeerID: peerID)
         super.init()
         session.delegate = self
+        setUpTerminationMonitoring()
 	}
+    
+    private func setUpTerminationMonitoring() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleBackgrounding(notification:)), name: UIApplication.willTerminateNotification, object: nil)
+    }
+    
+    @objc private func handleBackgrounding(notification: NSNotification) {
+        session.disconnect()
+    }
 	
-	func makeBrowser() -> MCNearbyServiceBrowser {
+	private func makeBrowser() -> MCNearbyServiceBrowser {
 		return MCNearbyServiceBrowser(peer: self.peerID, serviceType: MCManager.serviceType)
 	}
+    
+    func makeBrowserVC() -> MCBrowserViewController {
+        let browser = makeBrowser()
+        let browserVC = MCBrowserViewController.init(browser: browser, session: MCManager.shared.session)
+        browserVC.loadViewIfNeeded()
+        browserVC.view.accessibilityIdentifier = Constants.browserAccessabilityIdentifier
+        browserVC.minimumNumberOfPeers = Constants.minimumNumberOfPeers
+        return browserVC
+    }
 	
 	private func makeAdvertiser() -> MCNearbyServiceAdvertiser {
 		return MCNearbyServiceAdvertiser(peer: self.peerID, discoveryInfo: nil, serviceType: MCManager.serviceType)
@@ -99,15 +130,67 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         advertiser = nil
     }
     
+    // MARK: - Handling Disconnections
+    
+    private func chooseNewHost() {
+        host = turnHelper.firstPeer
+    }
+    
+    private func startDisconnectTimerIfNeeded() {
+        guard !handlingDisconnects else { return }
+        handlingDisconnects = true
+        guard disconnectTimer == nil else { return }
+        DispatchQueue.main.async {
+            self.disconnectTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { [weak self] _ in
+                self?.notifyPeerDisconnects()
+                self?.disconnectTimer.invalidate()
+                self?.disconnectTimer = nil
+            }
+        }
+    }
+    
+    private func notifyPeerDisconnects() {
+        dataHandler?.handleLostPeers(lostPeers)
+    }
+    
+    private func sendHostMessage(to peer: MCPeerID) {
+        let command = SetHostCommand(hostData: host.dataRepresentation)
+        let commandData = try! JSONEncoder().encode(command)
+        send(data: commandData, toPeers: [peer])
+    }
+    
+    func doneHandlingDisconnections() {
+        lostPeers = []
+        handlingDisconnects = false
+    }
+    
     // MARK: - MCSessionDelegate
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        if iAmAdvertising {
-            stopAdvertising()
-            host = peerID
-            DispatchQueue.main.async {
-                RootManager.shared.goToLobby()
+        switch state {
+        case .connected:
+            if iAmAdvertising {
+                stopAdvertising()
+                host = peerID
+                DispatchQueue.main.async {
+                    RootManager.shared.goToLobby()
+                }
+            } else if iAmHost {
+                sendHostMessage(to: peerID)
+                if let (game, payload) = dataHandler?.gameInfo {
+                    setGame(game: game, payloadData: payload, specificPeer: peerID)
+                }
             }
+        case .notConnected:
+            if peerID == host {
+                chooseNewHost()
+            }
+            if iAmHost {
+                lostPeers.append(peerID)
+                startDisconnectTimerIfNeeded()
+            }
+        case .connecting:
+            break
         }
     }
     
@@ -123,6 +206,9 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         case .status:
             let statusCommand = try! JSONDecoder().decode(SetStatusCommand.self, from: data)
             statusHandler?.process(status: statusCommand.message)
+        case .setHost:
+            let setHostCommand = try! JSONDecoder().decode(SetHostCommand.self, from: data)
+            host = MCPeerID.from(data: setHostCommand.hostPeerIDData)
         }
     }
     
@@ -178,11 +264,16 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         }
     }
     
-    func setGame<PayloadType: Encodable>(game: Game, payload: PayloadType) {
-        let payloadData = try! JSONEncoder().encode(payload)
-        let command = SetGameCommand.init(game: game, payload: payloadData)
+    func setGame(game: Game, payloadData: Data, specificPeer: MCPeerID? = nil) {
+        let command = SetGameCommand(game: game, payload: payloadData)
         let commandData = try! JSONEncoder().encode(command)
-        try! session.send(commandData, toPeers: session.connectedPeers, with: .reliable)
+        let recipients: [MCPeerID]
+        if let peer = specificPeer {
+            recipients = [peer]
+        } else {
+            recipients = session.connectedPeers
+        }
+        send(data: commandData, toPeers: recipients)
     }
     
     // MARK: -
@@ -214,7 +305,14 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     
     func sendGameCommand(command: GameDataCommand) {
         let gameDataCommandData = try! JSONEncoder().encode(command)
-        try! session.send(gameDataCommandData, toPeers: session.connectedPeers, with: .reliable)
+        send(data: gameDataCommandData, toPeers: session.connectedPeers)
+    }
+    
+    // MARK: - Sending Data
+    
+    private func send(data: Data, toPeers recipients: [MCPeerID]) {
+        guard !recipients.isEmpty else { return }
+        try! session.send(data, toPeers: recipients, with: .reliable)
     }
 	
 }

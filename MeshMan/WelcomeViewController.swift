@@ -19,15 +19,18 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	enum Constants {
-		static let minimumNumberOfPeers = 2
 		static let displayNameKey = "displayName"
         static let peerIDKey = "peerID"
-        static let browserAccessabilityIdentifier = "browser"
 	}
 	
 	// MARK: - Outlets
 	
 	@IBOutlet weak var displayNameField: UITextField!
+    
+    static func newInstance() -> WelcomeViewController {
+        let welcomeVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "welcome") as! WelcomeViewController
+        return welcomeVC
+    }
 	
 	// MARK: - ViewController Lifecycle
 
@@ -112,11 +115,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	}
 	
 	private func showBrowser() {
-		let browser = MCManager.shared.makeBrowser()
-		let browserVC = MCBrowserViewController.init(browser: browser, session: MCManager.shared.session)
-        browserVC.loadViewIfNeeded()
-        browserVC.view.accessibilityIdentifier = Constants.browserAccessabilityIdentifier
-		browserVC.minimumNumberOfPeers = Constants.minimumNumberOfPeers
+        let browserVC = MCManager.shared.makeBrowserVC()
 		browserVC.delegate = self
 		self.present(browserVC, animated: true)
 	}

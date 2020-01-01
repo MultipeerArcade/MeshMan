@@ -40,6 +40,7 @@
 		4170BCB221D923FA00ED3387 /* AnswersElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4170BCB121D923FA00ED3387 /* AnswersElements.swift */; };
 		4187889223B86FE300421527 /* QuestionsGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4187889123B86FE300421527 /* QuestionsGameState.swift */; };
 		4187889723B8736A00421527 /* QuestionsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4187889623B8736A00421527 /* QuestionsCommand.swift */; };
+		4187889923B9706000421527 /* SetHostCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4187889823B9706000421527 /* SetHostCommand.swift */; };
 		4191EBDD23B7E4CA007B1673 /* WaitInviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4191EBDC23B7E4CA007B1673 /* WaitInviteViewController.swift */; };
 		4191EBE023B7E82A007B1673 /* LobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4191EBDF23B7E82A007B1673 /* LobbyViewController.swift */; };
 		4191EBE223B7E835007B1673 /* Lobby.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4191EBE123B7E835007B1673 /* Lobby.storyboard */; };
@@ -123,6 +124,7 @@
 		4170BCB121D923FA00ED3387 /* AnswersElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswersElements.swift; sourceTree = "<group>"; };
 		4187889123B86FE300421527 /* QuestionsGameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsGameState.swift; sourceTree = "<group>"; };
 		4187889623B8736A00421527 /* QuestionsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsCommand.swift; sourceTree = "<group>"; };
+		4187889823B9706000421527 /* SetHostCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetHostCommand.swift; sourceTree = "<group>"; };
 		4191EBDC23B7E4CA007B1673 /* WaitInviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitInviteViewController.swift; sourceTree = "<group>"; };
 		4191EBDF23B7E82A007B1673 /* LobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyViewController.swift; sourceTree = "<group>"; };
 		4191EBE123B7E835007B1673 /* Lobby.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Lobby.storyboard; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 				41C48B8423B7153000733544 /* SetGameCommand.swift */,
 				41C48B8D23B7471500733544 /* GameDataCommand.swift */,
 				4191EBE323B80477007B1673 /* SetStatusCommand.swift */,
+				4187889823B9706000421527 /* SetHostCommand.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -539,6 +542,7 @@
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
 				412A7EF823B3BD2200F9C36B /* Assets.swift in Sources */,
 				41536B431FF5544D00DBC164 /* Hangman.swift in Sources */,
+				4187889923B9706000421527 /* SetHostCommand.swift in Sources */,
 				4187889223B86FE300421527 /* QuestionsGameState.swift in Sources */,
 				41C48B8E23B7471500733544 /* GameDataCommand.swift in Sources */,
 				41C48B8523B7153000733544 /* SetGameCommand.swift in Sources */,

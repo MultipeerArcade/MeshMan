@@ -67,6 +67,11 @@ final class Hangman: DataHandler {
         return MCManager.shared.isThisMe(currentGuesser)
     }
     
+    var gameInfo: (Game, Data) {
+        let stateData = try! JSONEncoder().encode(state)
+        return (.hangman, stateData)
+    }
+    
     // MARK: - Initialization
     
     init(state: HangmanGameState, networkHandler: NetworkHandler) {
@@ -74,8 +79,14 @@ final class Hangman: DataHandler {
         self.networkHandler = networkHandler
     }
     
+    // MARK: -
+    
     func getWordObfuscationPayload() -> WordObfuscationPayload {
         return Hangman.obfuscate(word: state.word, excluding: state.guessedCharacters)
+    }
+    
+    private func nextGuesser() -> MCPeerID {
+        return networkHandler.turnHelper.getPeerAfterMe(otherThan: currentPicker)
     }
     
     // MARK: - DataHandler
@@ -88,6 +99,43 @@ final class Hangman: DataHandler {
             update(from: newState)
         }
     }
+    
+    func handleLostPeers(_ lostPeers: [MCPeerID]) {
+        if iAmPicker && MCManager.shared.session.connectedPeers.isEmpty {
+            allGuessersDisconnected()
+        } else {
+            nonEssentialPlayersDisconnected()
+        }
+    }
+    
+    // MARK: - Handling Disconnections
+    
+    private func allGuessersDisconnected() {
+        RootManager.shared.handleReconnectForArbitraryPeer { [weak self] foundNewPeer in
+            guard foundNewPeer else {
+                RootManager.shared.goToLobby()
+                return
+            }
+            self?.fixUpGuesserIfNeeded()
+        }
+    }
+    
+    private func nonEssentialPlayersDisconnected() {
+        RootManager.shared.handleReconnectForArbitraryPeer { [weak self] _ in
+            self?.fixUpGuesserIfNeeded()  // We dont care if we got them back, just fix up if needed
+        }
+    }
+    
+    private func fixUpGuesserIfNeeded() {
+        if !MCManager.shared.turnHelper.allPeers.contains(self.currentGuesser) {
+            let nextGuesserData = nextGuesser().dataRepresentation
+            let newState = state.withGuesser(newGuesserData: nextGuesserData)
+            send(newState: newState)
+            update(from: newState)
+        }
+    }
+    
+    // MARK: -
     
     private func update(from newState: HangmanGameState) {
         let oldState = state
@@ -104,7 +152,7 @@ final class Hangman: DataHandler {
         let sanitationResult = sanitize(guess: letter)
         switch sanitationResult {
         case .success(guess: let guess):
-            let nextGuesserData = networkHandler.turnHelper.getPeerAfterMe(otherThan: currentPicker).dataRepresentation
+            let nextGuesserData = nextGuesser().dataRepresentation
             let newState = state.make(guess: guess, nextGuesserData: nextGuesserData)
             send(newState: newState)
             update(from: newState)

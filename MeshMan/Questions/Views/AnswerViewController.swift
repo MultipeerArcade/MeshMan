@@ -54,9 +54,11 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         subjectButton.setTitle(Strings.subjectLabelHiddenText, for: .normal)
-        setControls(enabled: false)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-            self.showFirstQuestion(subject: self.questions.state.subject)
+        configure(for: questions.state)
+        if questions.state.questions.isEmpty {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                self.showFirstQuestion(subject: self.questions.state.subject)
+            }
         }
     }
     
@@ -169,7 +171,13 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
     
     func questions(_ questions: Questions, stateUpdatedFromOldState oldState: QuestionsGameState, toNewState newState: QuestionsGameState) {
         questionListController.updateState(from: oldState, to: newState)
-        switch newState.gameProgress {
+        configure(for: newState)
+    }
+    
+    // MARK: -
+    
+    private func configure(for state: QuestionsGameState) {
+        switch state.gameProgress {
         case .waitingForAnswer:
             navigationItem.title = "Your Turn"
             feedbackGenerator.notificationOccurred(.success)
@@ -179,10 +187,10 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
             setControls(enabled: false)
         case .waitingForGuess:
             waitForGuess()
-        case .waitingForGuessJudgement:
+        case .waitingForGuessJudgement(let guess):
             navigationItem.title = "Your Turn"
             feedbackGenerator.notificationOccurred(.success)
-            showGuess(questions.state.guess ?? "error")
+            showGuess(guess)
         case .wordGuessedCorrectly, .wordGuessedIncorrectly:
             questions.done()
         }

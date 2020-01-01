@@ -22,4 +22,5 @@ enum CommandType: String, Codable {
     case setGame
     case gameData
     case status
+    case setHost
 }

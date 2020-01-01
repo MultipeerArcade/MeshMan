@@ -70,6 +70,7 @@ class HangmanViewController: UIViewController, HangmanDelegate, UICollectionView
 		self.incorrectLetterCollection.dataSource = self
 		self.subscribeToKeyboardEvents()
         setUp(asGuesser: hangman.iAmGuesser)
+        updateFor(newIncorrectCharacters: hangman.state.incorrectCharacters)
         let obfuscationResult = hangman.getWordObfuscationPayload()
         updateWordProgress(with: obfuscationResult.obfuscatedWord)
         numberOfLettersLabel.text = String(format: Strings.numberOfLetters, obfuscationResult.numberOfBlanks)

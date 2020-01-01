@@ -85,11 +85,22 @@ final class Questions: DataHandler {
     
     weak var delegate: QuestionsDelegate?
     
+    var gameInfo: (Game, Data) {
+        let stateData = try! JSONEncoder().encode(state)
+        return (.twentyQuestions, stateData)
+    }
+    
     // MARK: - Initialization
     
     init(state: QuestionsGameState, networkHandler: NetworkHandler) {
         self.state = state
         self.networkHandler = networkHandler
+    }
+    
+    // MARK: -
+    
+    func nextGuesser() -> MCPeerID {
+        return networkHandler.turnHelper.getPeerAfterMe(otherThan: currentPicker)
     }
     
     // MARK: - DataHandler
@@ -102,6 +113,53 @@ final class Questions: DataHandler {
             update(from: newState)
         }
     }
+    
+    func handleLostPeers(_ lostPeers: [MCPeerID]) {
+        if lostPeers.contains(currentPicker) {
+            pickerDisconnected()
+        } else if iAmPicker && MCManager.shared.session.connectedPeers.isEmpty {
+            allGuessersDisconnected()
+        } else {
+            nonEssentialPlayersDisconnected()
+        }
+    }
+    
+    // MARK: - Handling Disconnections
+    
+    private func pickerDisconnected() {
+        RootManager.shared.handleReconnect(for: [currentPicker], completion: { allPeersReconnected in
+            if !allPeersReconnected {
+                RootManager.shared.goToLobby()
+            }
+        })
+    }
+    
+    private func allGuessersDisconnected() {
+        RootManager.shared.handleReconnectForArbitraryPeer { [weak self] foundNewPeer in
+            guard foundNewPeer else {
+                RootManager.shared.goToLobby()
+                return
+            }
+            self?.fixUpGuesserIfNeeded()
+        }
+    }
+    
+    private func nonEssentialPlayersDisconnected() {
+        RootManager.shared.handleReconnectForArbitraryPeer { [weak self] _ in
+            self?.fixUpGuesserIfNeeded()  // We dont care if we got them back, just fix up the guesser if needed
+        }
+    }
+    
+    private func fixUpGuesserIfNeeded() {
+        if !MCManager.shared.turnHelper.allPeers.contains(self.currentGuesser) {
+            let nextGuesserData = nextGuesser().dataRepresentation
+            let newState = state.withGuesser(nextGuesserData)
+            send(newState: newState)
+            update(from: newState)
+        }
+    }
+    
+    // MARK: -
     
     private func update(from newState: QuestionsGameState) {
         let oldState = state
@@ -127,14 +185,14 @@ final class Questions: DataHandler {
     }
     
     func answer(questionAtIndex questionIndex: Int, with answer: Answer) {
-        let nextGuesserData = networkHandler.turnHelper.getPeerAfterMe(otherThan: currentPicker).dataRepresentation
+        let nextGuesserData = nextGuesser().dataRepresentation
         let newState = state.answer(questionAtIndex: questionIndex, with: answer, nextGuesserData: nextGuesserData)
         send(newState: newState)
         update(from: newState)
     }
     
     func answerLastQuestion(with answer: Answer) {
-        let nextGuesserData = networkHandler.turnHelper.getPeerAfterMe(otherThan: currentPicker).dataRepresentation
+        let nextGuesserData = nextGuesser().dataRepresentation
         let newState = state.answer(questionAtIndex: state.questions.endIndex - 1, with: answer, nextGuesserData: nextGuesserData)
         send(newState: newState)
         update(from: newState)

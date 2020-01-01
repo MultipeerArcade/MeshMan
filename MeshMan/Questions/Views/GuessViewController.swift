@@ -41,7 +41,8 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setControls(enabled: false)
+        
+        configure(for: questions.state)
     }
     
     // MARK: - UI Control
@@ -149,7 +150,13 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
     
     func questions(_ questions: Questions, stateUpdatedFromOldState oldState: QuestionsGameState, toNewState newState: QuestionsGameState) {
         questionListController.updateState(from: oldState, to: newState)
-        switch newState.gameProgress {
+        configure(for: newState)
+    }
+    
+    // MARK: -
+    
+    private func configure(for state: QuestionsGameState) {
+        switch state.gameProgress {
         case .waitingForAnswer:
             navigationItem.title = "\(questions.currentPicker.displayName)'s Turn"
             setControls(enabled: false)
@@ -164,8 +171,8 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
             }
         case .waitingForGuess:
             changeToGuess()
-        case .waitingForGuessJudgement:
-            showWaitingMessage(guess: questions.state.guess ?? "error")
+        case .waitingForGuessJudgement(let guess):
+            showWaitingMessage(guess: guess)
         case .wordGuessedCorrectly:
             showResultMessage(correct: true)
         case .wordGuessedIncorrectly:
