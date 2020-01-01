@@ -9,15 +9,10 @@
 import Foundation
 import MultipeerConnectivity
 
-enum ReconnectRole {
-    case drop
-    case search
-}
-
 protocol DataHandler: class {
     var gameInfo: (Game, Data) { get }
     func process(data: Data)
-    func breakReconnectTie(for peer: MCPeerID) -> ReconnectRole
+    func handleLostPeers(_ lostPeers: [MCPeerID])
 }
 
 protocol StatusHandler: class {
@@ -58,8 +53,6 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     
     private(set) var host: MCPeerID
     
-    private var expectedPeerCount: Int = 0
-    
     var iAmHost: Bool {
         return isThisMe(host)
     }
@@ -78,7 +71,9 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     
     private var disconnectTimer: Timer!
     
-    var handlingDisconnects = false
+    private var handlingDisconnects = false
+    
+    private var lostPeers = [MCPeerID]()
 	
 	static func setUp(with peerID: MCPeerID) {
 		self.shared = MCManager(with: peerID)
@@ -135,54 +130,38 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         advertiser = nil
     }
     
+    // MARK: - Handling Disconnections
+    
     private func chooseNewHost() {
         host = turnHelper.firstPeer
     }
     
-    private func startDisconnectTimerIfNeeded(forLostPeer peerID: MCPeerID) {
+    private func startDisconnectTimerIfNeeded() {
         guard !handlingDisconnects else { return }
         handlingDisconnects = true
         guard disconnectTimer == nil else { return }
         DispatchQueue.main.async {
             self.disconnectTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { [weak self] _ in
-                self?.performPeerCount(forLostPeer: peerID)
+                self?.notifyPeerDisconnects()
+                self?.disconnectTimer.invalidate()
+                self?.disconnectTimer = nil
             }
         }
     }
     
-    private func performPeerCount(forLostPeer peerID: MCPeerID) {
-        let connectedPeerCount = session.connectedPeers.count
-        if connectedPeerCount == 0 {
-            if expectedPeerCount <= 1 {
-                if let role = dataHandler?.breakReconnectTie(for: peerID) {
-                    switch role {
-                    case .drop:
-                        handlingDisconnects = false
-                        RootManager.shared.handleLostConnection()
-                    case .search:
-                        RootManager.shared.handleReconnect(for: peerID)
-                    }
-                }
-            } else {
-                handlingDisconnects = false
-                RootManager.shared.handleLostConnection()
-            }
-            abandonPeer(peerID)
-        } else if iAmHost {
-            RootManager.shared.handleReconnect(for: peerID)
-        }
-        disconnectTimer.invalidate()
-        disconnectTimer = nil
-    }
-    
-    func abandonPeer(_ peer: MCPeerID) {
-        expectedPeerCount -= 1
+    private func notifyPeerDisconnects() {
+        dataHandler?.handleLostPeers(lostPeers)
     }
     
     private func sendHostMessage(to peer: MCPeerID) {
         let command = SetHostCommand(hostData: host.dataRepresentation)
         let commandData = try! JSONEncoder().encode(command)
-        try! session.send(commandData, toPeers: [peer], with: .reliable)
+        send(data: commandData, toPeers: [peer])
+    }
+    
+    func doneHandlingDisconnections() {
+        lostPeers = []
+        handlingDisconnects = false
     }
     
     // MARK: - MCSessionDelegate
@@ -190,7 +169,6 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         switch state {
         case .connected:
-            expectedPeerCount += 1
             if iAmAdvertising {
                 stopAdvertising()
                 host = peerID
@@ -207,7 +185,10 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
             if peerID == host {
                 chooseNewHost()
             }
-            startDisconnectTimerIfNeeded(forLostPeer: peerID)
+            if iAmHost {
+                lostPeers.append(peerID)
+                startDisconnectTimerIfNeeded()
+            }
         case .connecting:
             break
         }
@@ -292,7 +273,7 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         } else {
             recipients = session.connectedPeers
         }
-        try! session.send(commandData, toPeers: recipients, with: .reliable)
+        send(data: commandData, toPeers: recipients)
     }
     
     // MARK: -
@@ -324,7 +305,14 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     
     func sendGameCommand(command: GameDataCommand) {
         let gameDataCommandData = try! JSONEncoder().encode(command)
-        try! session.send(gameDataCommandData, toPeers: session.connectedPeers, with: .reliable)
+        send(data: gameDataCommandData, toPeers: session.connectedPeers)
+    }
+    
+    // MARK: - Sending Data
+    
+    private func send(data: Data, toPeers recipients: [MCPeerID]) {
+        guard !recipients.isEmpty else { return }
+        try! session.send(data, toPeers: recipients, with: .reliable)
     }
 	
 }

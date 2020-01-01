@@ -19,10 +19,14 @@ class TurnManager {
     
     // MARK: - Private Members
     
-    private var sortedAllPeers: [MCPeerID] {
+    var allPeers: [MCPeerID] {
         var peers = self.session.connectedPeers
         peers.append(self.myID)
-        return peers.sorted(by: { $0.hashValue <= $1.hashValue })
+        return peers
+    }
+    
+    private var sortedAllPeers: [MCPeerID] {
+        return allPeers.sorted(by: { $0.hashValue <= $1.hashValue })
     }
     
     var firstPeer: MCPeerID {
@@ -51,7 +55,6 @@ class TurnManager {
     
     func getPeer(after afterPeer: MCPeerID) -> MCPeerID {
         let sortedPeers = self.sortedAllPeers
-        guard sortedPeers.count > 1 else { fatalError() }
         guard let index = sortedPeers.index(of: afterPeer) else { fatalError() }
         let nextIndex = sortedPeers.index(after: index)
         if nextIndex < sortedPeers.endIndex {
@@ -62,6 +65,9 @@ class TurnManager {
     }
     
     func getPeer(after afterPeer: MCPeerID, otherThan unwanted: MCPeerID) -> MCPeerID {
+        guard !(sortedAllPeers.contains(unwanted) && sortedAllPeers.count == 1) else {
+            fatalError()
+        }
         var currentPeer = afterPeer
         repeat {
             currentPeer = self.getPeer(after: currentPeer)

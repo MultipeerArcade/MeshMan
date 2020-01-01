@@ -68,4 +68,10 @@ class HangmanGameState: Codable {
         return characters.map {String($0)}
     }
     
+    // MARK: - New State Helpers
+    
+    func withGuesser(newGuesserData: Data) -> HangmanGameState {
+        return .init(word: word, guessedLetters: guessedLetters, incorrectLetters: incorrectLetters, pickerIDData: pickerData, guesserIDData: newGuesserData)
+    }
+    
 }

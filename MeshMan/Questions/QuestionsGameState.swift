@@ -85,4 +85,10 @@ class QuestionsGameState: Codable {
         return QuestionsGameState(subject: subject, questions: questions, asking: false, guess: guess, judgement: judgement, pickerData: pickerData, guesserData: guesserData)
     }
     
+    // MARK: - State Update Helpers
+    
+    func withGuesser(_ newGuesserData: Data) -> QuestionsGameState {
+        return QuestionsGameState(subject: subject, questions: questions, asking: asking, guess: guess, judgement: judgement, pickerData: pickerData, guesserData: newGuesserData)
+    }
+    
 }
