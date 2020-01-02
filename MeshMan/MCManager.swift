@@ -69,6 +69,8 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
         return advertiser != nil
     }
     
+    private var disconnecting = false
+    
     private var disconnectTimer: Timer!
     
     private var handlingDisconnects = false
@@ -132,6 +134,11 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     
     // MARK: - Handling Disconnections
     
+    func disconnect() {
+        disconnecting = true
+        MCManager.shared.session.disconnect()
+    }
+    
     private func chooseNewHost() {
         host = turnHelper.firstPeer
     }
@@ -182,6 +189,10 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
                 }
             }
         case .notConnected:
+            guard !disconnecting else {
+                disconnecting = !session.connectedPeers.isEmpty
+                return
+            }
             if peerID == host {
                 chooseNewHost()
             }
@@ -247,7 +258,8 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
             let hangman = makeHangman(state: gameState)
             DispatchQueue.main.async {
                 let hangmanVC = HangmanViewController.newInstance(hangman: hangman)
-                RootManager.shared.navigationController.setViewControllers([hangmanVC], animated: true)
+               
+                RootManager.shared.setGameController(to: hangmanVC)
             }
         case .twentyQuestions:
             let gameState = try! JSONDecoder().decode(QuestionsGameState.self, from: setGameCommand.payload)
@@ -258,7 +270,7 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
                     RootManager.shared.navigationController.setViewControllers([answerVC], animated: true)
                 } else {
                     let questionsVC = GuessViewController.newInstance(questions: questions)
-                    RootManager.shared.navigationController.setViewControllers([questionsVC], animated: true)
+                    RootManager.shared.setGameController(to: questionsVC)
                 }
             }
         }

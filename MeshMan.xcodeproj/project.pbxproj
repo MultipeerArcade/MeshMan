@@ -46,6 +46,8 @@
 		4191EBE223B7E835007B1673 /* Lobby.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4191EBE123B7E835007B1673 /* Lobby.storyboard */; };
 		4191EBE423B80477007B1673 /* SetStatusCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4191EBE323B80477007B1673 /* SetStatusCommand.swift */; };
 		4191EBE623B822BF007B1673 /* RootManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4191EBE523B822BF007B1673 /* RootManager.swift */; };
+		41A17AAD23BE5514008DF0C8 /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41A17AAC23BE5514008DF0C8 /* Menu.storyboard */; };
+		41A17AAF23BE5526008DF0C8 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A17AAE23BE5526008DF0C8 /* MenuViewController.swift */; };
 		41A1F69F200EC22100865032 /* WordSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A1F69D200EC22100865032 /* WordSelectionViewController.swift */; };
 		41A1F6A0200EC22100865032 /* WordSelection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41A1F69E200EC22100865032 /* WordSelection.storyboard */; };
 		41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA8F6A1FF80CCE00C95DD6 /* Event.swift */; };
@@ -130,6 +132,8 @@
 		4191EBE123B7E835007B1673 /* Lobby.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Lobby.storyboard; sourceTree = "<group>"; };
 		4191EBE323B80477007B1673 /* SetStatusCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetStatusCommand.swift; sourceTree = "<group>"; };
 		4191EBE523B822BF007B1673 /* RootManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootManager.swift; sourceTree = "<group>"; };
+		41A17AAC23BE5514008DF0C8 /* Menu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Menu.storyboard; sourceTree = "<group>"; };
+		41A17AAE23BE5526008DF0C8 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		41A1F69D200EC22100865032 /* WordSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordSelectionViewController.swift; sourceTree = "<group>"; };
 		41A1F69E200EC22100865032 /* WordSelection.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WordSelection.storyboard; sourceTree = "<group>"; };
 		41AA8F6A1FF80CCE00C95DD6 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
@@ -207,6 +211,7 @@
 				4191EBE523B822BF007B1673 /* RootManager.swift */,
 				41C48B8323B7151900733544 /* Commands */,
 				41536B221FF5369E00DBC164 /* VisibleStrings.swift */,
+				41A17AAB23BE54FB008DF0C8 /* Menu */,
 				41AD843F21D6ED5D00AB1089 /* Hangman */,
 				41AD843E21D6ED4600AB1089 /* Questions */,
 				41AD844021D6ED8A00AB1089 /* Wait */,
@@ -271,6 +276,15 @@
 				4191EBE123B7E835007B1673 /* Lobby.storyboard */,
 			);
 			path = Lobby;
+			sourceTree = "<group>";
+		};
+		41A17AAB23BE54FB008DF0C8 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				41A17AAC23BE5514008DF0C8 /* Menu.storyboard */,
+				41A17AAE23BE5526008DF0C8 /* MenuViewController.swift */,
+			);
+			path = Menu;
 			sourceTree = "<group>";
 		};
 		41AD842221D1DC8D00AB1089 /* Views */ = {
@@ -482,6 +496,7 @@
 				41536B011FF06DC800DBC164 /* LaunchScreen.storyboard in Resources */,
 				41536AFE1FF06DC800DBC164 /* Assets.xcassets in Resources */,
 				41536B271FF5428600DBC164 /* Hangman.storyboard in Resources */,
+				41A17AAD23BE5514008DF0C8 /* Menu.storyboard in Resources */,
 				41536AFC1FF06DC800DBC164 /* Main.storyboard in Resources */,
 				41C48B9323B7E45100733544 /* WaitInvite.storyboard in Resources */,
 				41AD842921D1E16400AB1089 /* Subject.storyboard in Resources */,
@@ -540,6 +555,7 @@
 				41AD842721D1DEAF00AB1089 /* Questions.swift in Sources */,
 				41C48B8723B717A200733544 /* Game.swift in Sources */,
 				41536B191FF4363800DBC164 /* WaitViewController.swift in Sources */,
+				41A17AAF23BE5526008DF0C8 /* MenuViewController.swift in Sources */,
 				412A7EF823B3BD2200F9C36B /* Assets.swift in Sources */,
 				41536B431FF5544D00DBC164 /* Hangman.swift in Sources */,
 				4187889923B9706000421527 /* SetHostCommand.swift in Sources */,

@@ -16,6 +16,8 @@ class RootManager: NSObject, MCBrowserViewControllerDelegate {
     
     var navigationController: UINavigationController!
     
+    private lazy var menuButton: UIBarButtonItem = UIBarButtonItem(title: "Menu", style: .plain, target: self, action: #selector(showMenu))
+    
     private var peersToReconnect: [MCPeerID] = []
     private var reconnectCompletion: ((Bool) -> Void)?
     
@@ -32,17 +34,26 @@ class RootManager: NSObject, MCBrowserViewControllerDelegate {
     
     func goToLobby() {
         let lobbyVC = LobbyViewController.newInstance()
+        showMenuButton(on: lobbyVC)
         MCManager.shared.statusHandler = lobbyVC
         navigationController.setViewControllers([lobbyVC], animated: true)
     }
     
-    func handleLostConnection() {
-        let alertController = UIAlertController(title: "Connection Lost", message: "You have lost your connection to the game.", preferredStyle: .alert)
-        alertController.addAction(.init(title: VisibleStrings.Generic.okay, style: .default, handler: { _ in
-            self.goToWelcome()
-        }))
-        navigationController.present(alertController, animated: true, completion: nil)
+    func setGameController(to gameController: UIViewController) {
+        showMenuButton(on: gameController)
+        navigationController.setViewControllers([gameController], animated: true)
     }
+    
+    @objc func showMenu() {
+        let (menuNav, _) = MenuViewController.newInstance()
+        navigationController.present(menuNav, animated: true, completion: nil)
+    }
+    
+    private func showMenuButton(on viewController: UIViewController) {
+        viewController.navigationItem.setRightBarButton(menuButton, animated: false)
+    }
+    
+    // MARK: - Managing Disconnections
     
     func handleReconnect(for peers: [MCPeerID], completion: @escaping (Bool) -> Void) {
         let alertController = UIAlertController(title: "Lost Required Player", message: "The connection to a required player has been lost", preferredStyle: .alert)
