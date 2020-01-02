@@ -247,7 +247,8 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
             let hangman = makeHangman(state: gameState)
             DispatchQueue.main.async {
                 let hangmanVC = HangmanViewController.newInstance(hangman: hangman)
-                RootManager.shared.navigationController.setViewControllers([hangmanVC], animated: true)
+               
+                RootManager.shared.setGameController(to: hangmanVC)
             }
         case .twentyQuestions:
             let gameState = try! JSONDecoder().decode(QuestionsGameState.self, from: setGameCommand.payload)
@@ -258,7 +259,7 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
                     RootManager.shared.navigationController.setViewControllers([answerVC], animated: true)
                 } else {
                     let questionsVC = GuessViewController.newInstance(questions: questions)
-                    RootManager.shared.navigationController.setViewControllers([questionsVC], animated: true)
+                    RootManager.shared.setGameController(to: questionsVC)
                 }
             }
         }

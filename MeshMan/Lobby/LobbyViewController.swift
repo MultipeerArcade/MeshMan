@@ -48,7 +48,8 @@ class LobbyViewController: UIViewController, StatusHandler {
                 let state = HangmanGameState(word: word, pickerIDData: MCManager.shared.peerID.dataRepresentation, guesserIDData: MCManager.shared.turnHelper.getFirstPeer(otherThan: [MCManager.shared.peerID]).dataRepresentation)
                 let hangman = MCManager.shared.makeHangman(state: state)
                 let hangmanVC = HangmanViewController.newInstance(hangman: hangman)
-                RootManager.shared.navigationController.setViewControllers([hangmanVC], animated: true)
+                
+                RootManager.shared.setGameController(to: hangmanVC)
                 let stateData = try! JSONEncoder().encode(state)
                 MCManager.shared.setGame(game: .hangman, payloadData: stateData)
             }
@@ -65,7 +66,7 @@ class LobbyViewController: UIViewController, StatusHandler {
                 let state = QuestionsGameState(subject: subject, asking: true, pickerData: MCManager.shared.peerID.dataRepresentation, guesserData: MCManager.shared.turnHelper.getFirstPeer(otherThan: [MCManager.shared.peerID]).dataRepresentation)
                 let questions = MCManager.shared.makeQuestions(state: state)
                 let answerVC = AnswerViewController.newInstance(questions: questions)
-                RootManager.shared.navigationController.setViewControllers([answerVC], animated: true)
+                RootManager.shared.setGameController(to: answerVC)
                 let stateData = try! JSONEncoder().encode(state)
                 MCManager.shared.setGame(game: .twentyQuestions, payloadData: stateData)
             }

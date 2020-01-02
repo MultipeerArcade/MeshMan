@@ -36,6 +36,18 @@ class RootManager: NSObject, MCBrowserViewControllerDelegate {
         navigationController.setViewControllers([lobbyVC], animated: true)
     }
     
+    func setGameController(to gameController: UIViewController) {
+        navigationController.setViewControllers([gameController], animated: true)
+        gameController.navigationItem.setRightBarButton(UIBarButtonItem(title: "Menu", style: .plain, target: self, action: #selector(showMenu)), animated: true)
+    }
+    
+    @objc func showMenu() {
+        let (menuNav, _) = MenuViewController.newInstance()
+        navigationController.present(menuNav, animated: true, completion: nil)
+    }
+    
+    // MARK: - Managing Disconnections
+    
     func handleLostConnection() {
         let alertController = UIAlertController(title: "Connection Lost", message: "You have lost your connection to the game.", preferredStyle: .alert)
         alertController.addAction(.init(title: VisibleStrings.Generic.okay, style: .default, handler: { _ in

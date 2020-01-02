@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qZE-cU-h2S">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Menu-->
+        <scene sceneID="yXt-SQ-wDX">
+            <objects>
+                <viewController title="Menu" id="toZ-3w-qYL" customClass="MenuViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Paq-rl-HnR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="jZ3-57-lha" userLabel="Host Stack">
+                                <rect key="frame" x="155.5" y="102" width="103.5" height="55"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Host" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UXa-23-PuL">
+                                        <rect key="frame" x="0.0" y="0.0" width="103.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bob" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gbb-sh-zeN" userLabel="Host Label">
+                                        <rect key="frame" x="36.5" y="34.5" width="30.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xSi-dd-XHi" userLabel="Add Players Button">
+                                <rect key="frame" x="166.5" y="307" width="81" height="30"/>
+                                <state key="normal" title="Add Players"/>
+                                <connections>
+                                    <action selector="addPlayersButtonPressed" destination="toZ-3w-qYL" eventType="touchUpInside" id="nZk-3Y-b56"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EYA-m8-9fW" userLabel="Leave Game Button">
+                                <rect key="frame" x="164.5" y="537" width="85" height="30"/>
+                                <state key="normal" title="Leave Game">
+                                    <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="leaveGameButtonPressed" destination="toZ-3w-qYL" eventType="touchUpInside" id="2eE-af-a4b"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="jZ3-57-lha" firstAttribute="centerX" secondItem="Paq-rl-HnR" secondAttribute="centerX" id="AW4-q5-YEx"/>
+                            <constraint firstItem="xSi-dd-XHi" firstAttribute="centerX" secondItem="Paq-rl-HnR" secondAttribute="centerX" id="PMW-Tt-UgK"/>
+                            <constraint firstItem="xSi-dd-XHi" firstAttribute="top" secondItem="jZ3-57-lha" secondAttribute="bottom" constant="150" id="R9Z-0w-xiJ"/>
+                            <constraint firstItem="jZ3-57-lha" firstAttribute="top" secondItem="Fli-2D-ULe" secondAttribute="top" constant="14" id="dYh-Q8-AWl"/>
+                            <constraint firstItem="EYA-m8-9fW" firstAttribute="centerX" secondItem="Paq-rl-HnR" secondAttribute="centerX" id="lm0-8i-MBO"/>
+                            <constraint firstItem="EYA-m8-9fW" firstAttribute="top" secondItem="xSi-dd-XHi" secondAttribute="bottom" constant="200" id="seO-bZ-9K2"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Fli-2D-ULe"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="nGZ-xB-i2L"/>
+                    <connections>
+                        <outlet property="currentHostLabel" destination="gbb-sh-zeN" id="v05-rJ-Kwb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="q2q-xZ-V5i" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="979.71014492753636" y="118.52678571428571"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="5Na-Gp-qn6">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oMw-Bj-gIz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="qZE-cU-h2S" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="R1T-TS-Eul">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="toZ-3w-qYL" kind="relationship" relationship="rootViewController" id="aKG-Sk-dL8"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="69.565217391304358" y="118.52678571428571"/>
+        </scene>
+    </scenes>
+</document>
