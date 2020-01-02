@@ -16,6 +16,8 @@ class RootManager: NSObject, MCBrowserViewControllerDelegate {
     
     var navigationController: UINavigationController!
     
+    private lazy var menuButton: UIBarButtonItem = UIBarButtonItem(title: "Menu", style: .plain, target: self, action: #selector(showMenu))
+    
     private var peersToReconnect: [MCPeerID] = []
     private var reconnectCompletion: ((Bool) -> Void)?
     
@@ -32,18 +34,23 @@ class RootManager: NSObject, MCBrowserViewControllerDelegate {
     
     func goToLobby() {
         let lobbyVC = LobbyViewController.newInstance()
+        showMenuButton(on: lobbyVC)
         MCManager.shared.statusHandler = lobbyVC
         navigationController.setViewControllers([lobbyVC], animated: true)
     }
     
     func setGameController(to gameController: UIViewController) {
+        showMenuButton(on: gameController)
         navigationController.setViewControllers([gameController], animated: true)
-        gameController.navigationItem.setRightBarButton(UIBarButtonItem(title: "Menu", style: .plain, target: self, action: #selector(showMenu)), animated: true)
     }
     
     @objc func showMenu() {
         let (menuNav, _) = MenuViewController.newInstance()
         navigationController.present(menuNav, animated: true, completion: nil)
+    }
+    
+    private func showMenuButton(on viewController: UIViewController) {
+        viewController.navigationItem.setRightBarButton(menuButton, animated: false)
     }
     
     // MARK: - Managing Disconnections
