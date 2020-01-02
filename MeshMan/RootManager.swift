@@ -48,14 +48,6 @@ class RootManager: NSObject, MCBrowserViewControllerDelegate {
     
     // MARK: - Managing Disconnections
     
-    func handleLostConnection() {
-        let alertController = UIAlertController(title: "Connection Lost", message: "You have lost your connection to the game.", preferredStyle: .alert)
-        alertController.addAction(.init(title: VisibleStrings.Generic.okay, style: .default, handler: { _ in
-            self.goToWelcome()
-        }))
-        navigationController.present(alertController, animated: true, completion: nil)
-    }
-    
     func handleReconnect(for peers: [MCPeerID], completion: @escaping (Bool) -> Void) {
         let alertController = UIAlertController(title: "Lost Required Player", message: "The connection to a required player has been lost", preferredStyle: .alert)
         alertController.addAction(.init(title: "Reconnect", style: .default, handler: { _ in

@@ -30,6 +30,9 @@ class MenuViewController: UIViewController {
     }
     
     @IBAction private func leaveGameButtonPressed() {
+        MCManager.shared.disconnect()
+        dismiss(animated: true, completion: nil)
+        RootManager.shared.goToWelcome()
     }
     
 }
