@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dTR-Pe-101">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Invite Collection View Controller-->
+        <scene sceneID="mwJ-6r-PL6">
+            <objects>
+                <collectionViewController id="dTR-Pe-101" customClass="InviteCollectionViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="vFP-4x-Jeb">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="mKX-Rl-UPK">
+                            <size key="itemSize" width="150" height="100"/>
+                            <size key="headerReferenceSize" width="50" height="40"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="20" minY="8" maxX="20" maxY="8"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="playerCell" id="aKP-8q-5Jz" userLabel="Player Cell" customClass="PlayerCollectionViewCell" customModule="MeshMan" customModuleProvider="target">
+                                <rect key="frame" x="20" y="48" width="150" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="jXY-vb-fTF">
+                                    <rect key="frame" x="0.0" y="0.0" width="150" height="100"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="b5S-0R-eXI">
+                                            <rect key="frame" x="0.0" y="16" width="150" height="68"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9W7-EQ-njy" userLabel="Name Label">
+                                                    <rect key="frame" x="52.5" y="0.0" width="45" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w1b-i0-kTJ" userLabel="Status Label">
+                                                    <rect key="frame" x="57" y="34" width="36.5" height="0.0"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="hia-Z3-hIt">
+                                                    <rect key="frame" x="65" y="34" width="20" height="34"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="b5S-0R-eXI" firstAttribute="top" secondItem="jXY-vb-fTF" secondAttribute="top" constant="16" id="HOD-Ac-h3B"/>
+                                        <constraint firstAttribute="trailing" secondItem="b5S-0R-eXI" secondAttribute="trailing" id="M20-3y-Zz4"/>
+                                        <constraint firstAttribute="bottom" secondItem="b5S-0R-eXI" secondAttribute="bottom" constant="16" id="bc1-oz-Pr0"/>
+                                        <constraint firstItem="b5S-0R-eXI" firstAttribute="leading" secondItem="jXY-vb-fTF" secondAttribute="leading" id="fVN-Su-ZEg"/>
+                                    </constraints>
+                                </collectionViewCellContentView>
+                                <size key="customSize" width="150" height="100"/>
+                                <connections>
+                                    <outlet property="activityIndicator" destination="hia-Z3-hIt" id="Leb-5M-qlq"/>
+                                    <outlet property="nameLabel" destination="9W7-EQ-njy" id="KCk-b1-32J"/>
+                                    <outlet property="statusLabel" destination="w1b-i0-kTJ" id="nOs-nU-azt"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="inviteHeader" id="jIb-0t-Jkj" customClass="InviteHeaderView" customModule="MeshMan" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qm1-kp-FHH">
+                                    <rect key="frame" x="8" y="10" width="398" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="Qm1-kp-FHH" firstAttribute="centerY" secondItem="jIb-0t-Jkj" secondAttribute="centerY" id="2Bu-qH-yiQ"/>
+                                <constraint firstAttribute="trailingMargin" secondItem="Qm1-kp-FHH" secondAttribute="trailing" id="Prd-3j-oe9"/>
+                                <constraint firstItem="Qm1-kp-FHH" firstAttribute="leading" secondItem="jIb-0t-Jkj" secondAttribute="leadingMargin" id="vj0-Vo-a6v"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="titleLabel" destination="Qm1-kp-FHH" id="C33-WR-pgp"/>
+                            </connections>
+                        </collectionReusableView>
+                        <connections>
+                            <outlet property="dataSource" destination="dTR-Pe-101" id="PH5-y9-izn"/>
+                            <outlet property="delegate" destination="dTR-Pe-101" id="mHY-h3-hjI"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="smF-O8-L9Z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="127.53623188405798" y="135.9375"/>
+        </scene>
+    </scenes>
+</document>

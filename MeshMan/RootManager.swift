@@ -10,7 +10,7 @@ import Foundation
 import MultipeerConnectivity
 import UIKit
 
-class RootManager: NSObject, MCBrowserViewControllerDelegate {
+class RootManager: InviteViewControllerDelegate {
     
     static let shared = RootManager()
     
@@ -83,17 +83,17 @@ class RootManager: NSObject, MCBrowserViewControllerDelegate {
     
     private func showReconnectBrowser() {
         let browserVC = MCManager.shared.makeBrowserVC()
-        browserVC.delegate = self
-        navigationController.present(browserVC, animated: true, completion: nil)
+        let navController = browserVC.wrappedInNavigationController(delegate: self)
+        navigationController.present(navController, animated: true, completion: nil)
     }
     
-    // MARK: - MCBrowserViewControllerDelegate
+    // MARK: - InviteViewControllerDelegate
     
-    func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
+    func inviteViewControllerDidFinish(_ inviteVC: InviteCollectionViewController) {
         handleBrowserViewControllerDone()
     }
     
-    func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {
+    func inviteViewControllerDidCancel(_ inviteVC: InviteCollectionViewController) {
         handleBrowserViewControllerDone()
     }
     
