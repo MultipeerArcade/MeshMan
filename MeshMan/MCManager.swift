@@ -104,13 +104,16 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
 		return MCNearbyServiceBrowser(peer: self.peerID, serviceType: MCManager.serviceType)
 	}
     
-    func makeBrowserVC() -> MCBrowserViewController {
+    func makeBrowserVC() -> InviteCollectionViewController {
         let browser = makeBrowser()
-        let browserVC = MCBrowserViewController.init(browser: browser, session: MCManager.shared.session)
-        browserVC.loadViewIfNeeded()
-        browserVC.view.accessibilityIdentifier = Constants.browserAccessabilityIdentifier
-        browserVC.minimumNumberOfPeers = Constants.minimumNumberOfPeers
-        return browserVC
+//        let browserVC = MCBrowserViewController.init(browser: browser, session: MCManager.shared.session)
+//        browserVC.loadViewIfNeeded()
+//        browserVC.view.accessibilityIdentifier = Constants.browserAccessabilityIdentifier
+//        browserVC.minimumNumberOfPeers = Constants.minimumNumberOfPeers
+//        return browserVC
+        
+        let inviteVC = InviteCollectionViewController.newInstance(with: browser)
+        return inviteVC
     }
 	
 	private func makeAdvertiser() -> MCNearbyServiceAdvertiser {

@@ -71,6 +71,9 @@
 		41C48B8C23B72E3D00733544 /* HangmanCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C48B8B23B72E3D00733544 /* HangmanCommand.swift */; };
 		41C48B8E23B7471500733544 /* GameDataCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C48B8D23B7471500733544 /* GameDataCommand.swift */; };
 		41C48B9323B7E45100733544 /* WaitInvite.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41C48B9223B7E45100733544 /* WaitInvite.storyboard */; };
+		41E2255F23C25A27009F9CE4 /* Invite.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41E2255E23C25A27009F9CE4 /* Invite.storyboard */; };
+		41E2256323C25B7A009F9CE4 /* InviteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E2256223C25B7A009F9CE4 /* InviteCollectionViewController.swift */; };
+		41E2256523C25BCA009F9CE4 /* PlayerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E2256423C25BCA009F9CE4 /* PlayerCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,6 +160,9 @@
 		41C48B8B23B72E3D00733544 /* HangmanCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangmanCommand.swift; sourceTree = "<group>"; };
 		41C48B8D23B7471500733544 /* GameDataCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataCommand.swift; sourceTree = "<group>"; };
 		41C48B9223B7E45100733544 /* WaitInvite.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WaitInvite.storyboard; sourceTree = "<group>"; };
+		41E2255E23C25A27009F9CE4 /* Invite.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Invite.storyboard; sourceTree = "<group>"; };
+		41E2256223C25B7A009F9CE4 /* InviteCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteCollectionViewController.swift; sourceTree = "<group>"; };
+		41E2256423C25BCA009F9CE4 /* PlayerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +215,7 @@
 			children = (
 				41536B241FF538C500DBC164 /* MCManager.swift */,
 				4191EBE523B822BF007B1673 /* RootManager.swift */,
+				41E2255D23C25A14009F9CE4 /* Invite */,
 				41C48B8323B7151900733544 /* Commands */,
 				41536B221FF5369E00DBC164 /* VisibleStrings.swift */,
 				41A17AAB23BE54FB008DF0C8 /* Menu */,
@@ -384,6 +391,16 @@
 			path = "Wait Invite";
 			sourceTree = "<group>";
 		};
+		41E2255D23C25A14009F9CE4 /* Invite */ = {
+			isa = PBXGroup;
+			children = (
+				41E2255E23C25A27009F9CE4 /* Invite.storyboard */,
+				41E2256223C25B7A009F9CE4 /* InviteCollectionViewController.swift */,
+				41E2256423C25BCA009F9CE4 /* PlayerCollectionViewCell.swift */,
+			);
+			path = Invite;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -504,6 +521,7 @@
 				41536B2D1FF54D8200DBC164 /* Gallows.storyboard in Resources */,
 				41A1F6A0200EC22100865032 /* WordSelection.storyboard in Resources */,
 				41AD841921D1D4AA00AB1089 /* Questions.storyboard in Resources */,
+				41E2255F23C25A27009F9CE4 /* Invite.storyboard in Resources */,
 				41536B171FF435B800DBC164 /* Wait.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -538,7 +556,9 @@
 				4191EBDD23B7E4CA007B1673 /* WaitInviteViewController.swift in Sources */,
 				41AD841D21D1D57300AB1089 /* AnswerViewController.swift in Sources */,
 				41AD841F21D1D59100AB1089 /* GuessViewController.swift in Sources */,
+				41E2256323C25B7A009F9CE4 /* InviteCollectionViewController.swift in Sources */,
 				41AD843921D52E1400AB1089 /* MCPeerID+Data.swift in Sources */,
+				41E2256523C25BCA009F9CE4 /* PlayerCollectionViewCell.swift in Sources */,
 				41AA8F6B1FF80CCF00C95DD6 /* Event.swift in Sources */,
 				41536B291FF5429A00DBC164 /* HangmanViewController.swift in Sources */,
 				41AD843721D5280900AB1089 /* NetUtil.swift in Sources */,

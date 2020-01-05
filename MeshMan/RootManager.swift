@@ -83,7 +83,7 @@ class RootManager: NSObject, MCBrowserViewControllerDelegate {
     
     private func showReconnectBrowser() {
         let browserVC = MCManager.shared.makeBrowserVC()
-        browserVC.delegate = self
+//        browserVC.delegate = self
         navigationController.present(browserVC, animated: true, completion: nil)
     }
     

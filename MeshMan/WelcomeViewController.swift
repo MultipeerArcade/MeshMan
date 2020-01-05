@@ -116,7 +116,7 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	private func showBrowser() {
         let browserVC = MCManager.shared.makeBrowserVC()
-		browserVC.delegate = self
+//		browserVC.delegate = self
 		self.present(browserVC, animated: true)
 	}
 	
