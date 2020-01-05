@@ -79,7 +79,10 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
     func wrappedInNavigationController(delegate: InviteViewControllerDelegate?) -> UINavigationController {
         configuresNavBar = true
         self.delegate = delegate
-        return UINavigationController(rootViewController: self)
+        title = "Invite Nearby Players"
+        let nav = UINavigationController(rootViewController: self)
+        nav.modalPresentationStyle = .fullScreen
+        return nav
     }
     
     // MARK: - MCNearbyServiceBrowserDelegate
