@@ -112,12 +112,6 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     
     func makeBrowserVC() -> InviteCollectionViewController {
         let browser = makeBrowser()
-//        let browserVC = MCBrowserViewController.init(browser: browser, session: MCManager.shared.session)
-//        browserVC.loadViewIfNeeded()
-//        browserVC.view.accessibilityIdentifier = Constants.browserAccessabilityIdentifier
-//        browserVC.minimumNumberOfPeers = Constants.minimumNumberOfPeers
-//        return browserVC
-        
         let inviteVC = InviteCollectionViewController.newInstance(with: browser, session: session)
         return inviteVC
     }

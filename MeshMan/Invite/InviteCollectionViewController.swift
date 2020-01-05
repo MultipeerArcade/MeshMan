@@ -16,6 +16,11 @@ enum InviteStage {
     case declined
 }
 
+protocol InviteViewControllerDelegate: class {
+    func inviteViewControllerDidFinish(_ inviteVC: InviteCollectionViewController)
+    func inviteViewControllerDidCancel(_ inviteVC: InviteCollectionViewController)
+}
+
 class InviteCollectionViewController: UICollectionViewController, MCNearbyServiceBrowserDelegate, ConnectionStateDelegate {
     
     private enum Constants {
@@ -37,6 +42,10 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
     
     private var session: MCSession!
     
+    private var configuresNavBar: Bool = false
+    
+    private weak var delegate: InviteViewControllerDelegate?
+    
     private var connectedPeers = [(MCPeerID, stage: InviteStage)]()
     
     private var discoveredPeers = [MCPeerID]()
@@ -46,10 +55,13 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Do any additional setup after loading the view.
+        switch configuresNavBar {
+        case false:
+            break
+        case true:
+            navigationItem.setRightBarButton(.init(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed)), animated: true)
+            navigationItem.setLeftBarButton(.init(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed)), animated: true)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +72,14 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         browser.stopBrowsingForPeers()
+    }
+    
+    // MARK: -
+    
+    func wrappedInNavigationController(delegate: InviteViewControllerDelegate?) -> UINavigationController {
+        configuresNavBar = true
+        self.delegate = delegate
+        return UINavigationController(rootViewController: self)
     }
     
     // MARK: - MCNearbyServiceBrowserDelegate
@@ -195,6 +215,16 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
         guard let index = discoveredPeers.firstIndex(of: peerID) else { return }
         discoveredPeers.remove(at: index)
         collectionView.deleteItems(at: [.init(row: index, section: Constants.discoveredPeersSeciton)])
+    }
+    
+    // MARK: - Navigation Bar Actions
+    
+    @objc private func doneButtonPressed() {
+        delegate?.inviteViewControllerDidFinish(self)
+    }
+    
+    @objc private func cancelButtonPressed() {
+        delegate?.inviteViewControllerDidCancel(self)
     }
 
 }

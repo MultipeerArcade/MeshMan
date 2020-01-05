@@ -9,7 +9,7 @@
 import UIKit
 import MultipeerConnectivity
 
-class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
+class WelcomeViewController: UIViewController, InviteViewControllerDelegate {
 	
 	// MARK: -
 	
@@ -116,24 +116,20 @@ class WelcomeViewController: UIViewController, MCBrowserViewControllerDelegate {
 	
 	private func showBrowser() {
         let browserVC = MCManager.shared.makeBrowserVC()
-//		browserVC.delegate = self
-		self.present(browserVC, animated: true)
+        let navController = browserVC.wrappedInNavigationController(delegate: self)
+		self.present(navController, animated: true)
 	}
 	
-	// MARK: MCBrowserViewControllerDelegate
-	
-	internal func browserViewController(_ browserViewController: MCBrowserViewController, shouldPresentNearbyPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) -> Bool {
-		return true
-	}
-	
-	internal func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
-		self.dismiss(animated: true) {
+	// MARK: InviteViewControllerDelegate
+    
+    func inviteViewControllerDidFinish(_ inviteVC: InviteCollectionViewController) {
+        self.dismiss(animated: true) {
             RootManager.shared.goToLobby()
         }
-	}
-	
-	internal func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {
-		self.dismiss(animated: true)
-	}
+    }
+    
+    func inviteViewControllerDidCancel(_ inviteVC: InviteCollectionViewController) {
+        self.dismiss(animated: true)
+    }
 	
 }
