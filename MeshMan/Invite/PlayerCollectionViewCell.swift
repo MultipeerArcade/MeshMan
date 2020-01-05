@@ -14,7 +14,7 @@ class PlayerCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet private weak var nameLabel: UILabel!
     
-    func configure(with name: String, color: UIColor) {
+    func configure(with name: String, color: UIColor, connecting: Bool = false) {
         self.layer.cornerRadius = 10
         self.layer.masksToBounds = true
         self.nameLabel.text = name

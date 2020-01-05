@@ -24,6 +24,10 @@ protocol NetworkHandler: class {
     func sendGameCommand(command: GameDataCommand)
 }
 
+protocol ConnectionStateDelegate: class {
+    func connectionState(forPeer peerID: MCPeerID, didChange state: MCSessionState)
+}
+
 class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, NetworkHandler {
     
     private enum Strings {
@@ -76,6 +80,8 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     private var handlingDisconnects = false
     
     private var lostPeers = [MCPeerID]()
+    
+    weak var connectionStateDelegate: ConnectionStateDelegate? = nil
 	
 	static func setUp(with peerID: MCPeerID) {
 		self.shared = MCManager(with: peerID)
@@ -112,7 +118,7 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
 //        browserVC.minimumNumberOfPeers = Constants.minimumNumberOfPeers
 //        return browserVC
         
-        let inviteVC = InviteCollectionViewController.newInstance(with: browser)
+        let inviteVC = InviteCollectionViewController.newInstance(with: browser, session: session)
         return inviteVC
     }
 	
@@ -177,6 +183,9 @@ class MCManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate,
     // MARK: - MCSessionDelegate
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+        DispatchQueue.main.async { [weak self] in
+            self?.connectionStateDelegate?.connectionState(forPeer: peerID, didChange: state)
+        }
         switch state {
         case .connected:
             if iAmAdvertising {
