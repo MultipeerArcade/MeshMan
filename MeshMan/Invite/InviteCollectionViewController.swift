@@ -101,7 +101,6 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
         return Constants.sectionCount
     }
 
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case Constants.connectedPeersSection:
@@ -128,6 +127,22 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
         }
     
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: InviteHeaderView.reuseIndetifier, for: indexPath)
+        if let header = view as? InviteHeaderView {
+            switch indexPath.section {
+            case Constants.connectedPeersSection:
+                header.configure(withTitle: "Invited Players")
+            case Constants.discoveredPeersSeciton:
+                header.configure(withTitle: "Discovered Players")
+            default:
+                header.configure(withTitle: "Error")
+            }
+        }
+        
+        return view
     }
 
     // MARK: UICollectionViewDelegate

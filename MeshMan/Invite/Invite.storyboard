@@ -17,13 +17,13 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="mKX-Rl-UPK">
                             <size key="itemSize" width="150" height="100"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="headerReferenceSize" width="50" height="40"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="20"/>
+                            <inset key="sectionInset" minX="20" minY="8" maxX="20" maxY="8"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="playerCell" id="aKP-8q-5Jz" userLabel="Player Cell" customClass="PlayerCollectionViewCell" customModule="MeshMan" customModuleProvider="target">
-                                <rect key="frame" x="20" y="20" width="150" height="100"/>
+                                <rect key="frame" x="20" y="48" width="150" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="jXY-vb-fTF">
                                     <rect key="frame" x="0.0" y="0.0" width="150" height="100"/>
@@ -65,6 +65,26 @@
                                 </connections>
                             </collectionViewCell>
                         </cells>
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="inviteHeader" id="jIb-0t-Jkj" customClass="InviteHeaderView" customModule="MeshMan" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qm1-kp-FHH">
+                                    <rect key="frame" x="8" y="10" width="398" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="Qm1-kp-FHH" firstAttribute="centerY" secondItem="jIb-0t-Jkj" secondAttribute="centerY" id="2Bu-qH-yiQ"/>
+                                <constraint firstAttribute="trailingMargin" secondItem="Qm1-kp-FHH" secondAttribute="trailing" id="Prd-3j-oe9"/>
+                                <constraint firstItem="Qm1-kp-FHH" firstAttribute="leading" secondItem="jIb-0t-Jkj" secondAttribute="leadingMargin" id="vj0-Vo-a6v"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="titleLabel" destination="Qm1-kp-FHH" id="C33-WR-pgp"/>
+                            </connections>
+                        </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="dTR-Pe-101" id="PH5-y9-izn"/>
                             <outlet property="delegate" destination="dTR-Pe-101" id="mHY-h3-hjI"/>
