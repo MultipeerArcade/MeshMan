@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dTR-Pe-101">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,21 +29,39 @@
                                     <rect key="frame" x="0.0" y="0.0" width="150" height="100"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9W7-EQ-njy" userLabel="Name Label">
-                                            <rect key="frame" x="52.5" y="39.5" width="45" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="b5S-0R-eXI">
+                                            <rect key="frame" x="0.0" y="16" width="150" height="68"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9W7-EQ-njy" userLabel="Name Label">
+                                                    <rect key="frame" x="52.5" y="0.0" width="45" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w1b-i0-kTJ" userLabel="Status Label">
+                                                    <rect key="frame" x="57" y="34" width="36.5" height="0.0"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="hia-Z3-hIt">
+                                                    <rect key="frame" x="65" y="34" width="20" height="34"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="9W7-EQ-njy" firstAttribute="centerY" secondItem="jXY-vb-fTF" secondAttribute="centerY" id="6sq-2l-1Iv"/>
-                                        <constraint firstItem="9W7-EQ-njy" firstAttribute="centerX" secondItem="jXY-vb-fTF" secondAttribute="centerX" id="Y5c-17-qNk"/>
+                                        <constraint firstItem="b5S-0R-eXI" firstAttribute="top" secondItem="jXY-vb-fTF" secondAttribute="top" constant="16" id="HOD-Ac-h3B"/>
+                                        <constraint firstAttribute="trailing" secondItem="b5S-0R-eXI" secondAttribute="trailing" id="M20-3y-Zz4"/>
+                                        <constraint firstAttribute="bottom" secondItem="b5S-0R-eXI" secondAttribute="bottom" constant="16" id="bc1-oz-Pr0"/>
+                                        <constraint firstItem="b5S-0R-eXI" firstAttribute="leading" secondItem="jXY-vb-fTF" secondAttribute="leading" id="fVN-Su-ZEg"/>
                                     </constraints>
                                 </collectionViewCellContentView>
                                 <size key="customSize" width="150" height="100"/>
                                 <connections>
+                                    <outlet property="activityIndicator" destination="hia-Z3-hIt" id="Leb-5M-qlq"/>
                                     <outlet property="nameLabel" destination="9W7-EQ-njy" id="KCk-b1-32J"/>
+                                    <outlet property="statusLabel" destination="w1b-i0-kTJ" id="nOs-nU-azt"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

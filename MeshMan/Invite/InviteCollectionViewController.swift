@@ -9,6 +9,13 @@
 import MultipeerConnectivity
 import UIKit
 
+enum InviteStage {
+    case invited
+    case connecting
+    case accepted
+    case declined
+}
+
 class InviteCollectionViewController: UICollectionViewController, MCNearbyServiceBrowserDelegate, ConnectionStateDelegate {
     
     private enum Constants {
@@ -30,7 +37,7 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
     
     private var session: MCSession!
     
-    private var connectedPeers = [(MCPeerID, connectionInProgress: Bool)]()
+    private var connectedPeers = [(MCPeerID, stage: InviteStage)]()
     
     private var discoveredPeers = [MCPeerID]()
     
@@ -58,14 +65,11 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
     // MARK: - MCNearbyServiceBrowserDelegate
     
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        discoveredPeers.append(peerID)
-        collectionView.insertItems(at: [.init(row: discoveredPeers.count - 1, section: Constants.discoveredPeersSeciton)])
+        discover(peerID: peerID)
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        guard let index = discoveredPeers.firstIndex(of: peerID) else { return }
-        discoveredPeers.remove(at: index)
-        collectionView.deleteItems(at: [.init(row: index, section: Constants.discoveredPeersSeciton)])
+        undiscover(peerID: peerID)
     }
 
     // MARK: UICollectionViewDataSource
@@ -88,14 +92,13 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlayerCollectionViewCell.reuseIdentifier, for: indexPath)
-    
         if let cell = cell as? PlayerCollectionViewCell {
             switch indexPath.section {
             case Constants.connectedPeersSection:
-                let (peer, connecting) = connectedPeers[indexPath.row]
-                cell.configure(with: peer.displayName, color: .systemBlue, connecting: connecting)
+                let (peer, stage) = connectedPeers[indexPath.row]
+                cell.configure(with: peer.displayName, color: .systemBlue, stage: stage)
             case Constants.discoveredPeersSeciton:
-                cell.configure(with: discoveredPeers[indexPath.row].displayName, color: UIColor.systemBlue)
+                cell.configure(with: discoveredPeers[indexPath.row].displayName, color: UIColor.systemBlue, stage: nil)
             default:
                 return cell
             }
@@ -107,7 +110,16 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
     // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        browser.invitePeer(discoveredPeers[indexPath.row], to: session, withContext: nil, timeout: 30)
+        switch indexPath.section {
+        case Constants.discoveredPeersSeciton:
+            let peerID = discoveredPeers[indexPath.row]
+            browser.invitePeer(peerID, to: session, withContext: nil, timeout: 30)
+            undiscover(peerID: peerID)
+            connectedPeers.append((peerID, .invited))
+            collectionView.insertItems(at: [.init(row: connectedPeers.endIndex - 1, section: Constants.connectedPeersSection)])
+        default:
+            break
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
@@ -131,14 +143,21 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
     private func updateConnectionProgress(peerID: MCPeerID, atIndex peerIndex: Int, using state: MCSessionState) {
         switch state {
         case .connected:
-            connectedPeers[peerIndex] = (peerID, false)
+            connectedPeers[peerIndex] = (peerID, .accepted)
             collectionView.reloadItems(at: [.init(row: peerIndex, section: Constants.connectedPeersSection)])
         case .connecting:
-            connectedPeers[peerIndex] = (peerID, true)
+            connectedPeers[peerIndex] = (peerID, .connecting)
             collectionView.reloadItems(at: [.init(row: peerIndex, section: Constants.connectedPeersSection)])
         case .notConnected:
-            connectedPeers.remove(at: peerIndex)
-            collectionView.deleteItems(at: [.init(row: peerIndex, section: Constants.connectedPeersSection)])
+            let (_, oldStage) = connectedPeers[peerIndex]
+            switch oldStage {
+            case .accepted, .connecting, .declined:
+                connectedPeers.remove(at: peerIndex)
+                collectionView.deleteItems(at: [.init(row: peerIndex, section: Constants.connectedPeersSection)])
+            case .invited:
+                connectedPeers[peerIndex] = (peerID, .declined)
+                collectionView.reloadItems(at: [.init(row: peerIndex, section: Constants.connectedPeersSection)])
+            }
         }
     }
     
@@ -146,14 +165,36 @@ class InviteCollectionViewController: UICollectionViewController, MCNearbyServic
         let row = connectedPeers.count
         switch state {
         case .connected:
-            connectedPeers.append((peerID, false))
+            connectedPeers.append((peerID, .accepted))
             collectionView.insertItems(at: [.init(row: row, section: Constants.connectedPeersSection)])
         case .connecting:
-            connectedPeers.append((peerID, true))
+            connectedPeers.append((peerID, .connecting))
             collectionView.insertItems(at: [.init(row: row, section: Constants.connectedPeersSection)])
         case .notConnected:
-            break
+            connectedPeers.append((peerID, .declined))
+            collectionView.insertItems(at: [.init(row: row, section: Constants.connectedPeersSection)])
         }
+    }
+    
+    private func removeConnectionProgress(forPeer peerID: MCPeerID) {
+        if let index = connectedPeers.firstIndex(where: { (peer, stage) -> Bool in
+            return peerID == peer
+        }) {
+            connectedPeers.remove(at: index)
+            collectionView.deleteItems(at: [.init(row: index, section: Constants.connectedPeersSection)])
+        }
+    }
+    
+    private func discover(peerID: MCPeerID) {
+        removeConnectionProgress(forPeer: peerID)
+        discoveredPeers.append(peerID)
+        collectionView.insertItems(at: [.init(row: discoveredPeers.count - 1, section: Constants.discoveredPeersSeciton)])
+    }
+    
+    private func undiscover(peerID: MCPeerID) {
+        guard let index = discoveredPeers.firstIndex(of: peerID) else { return }
+        discoveredPeers.remove(at: index)
+        collectionView.deleteItems(at: [.init(row: index, section: Constants.discoveredPeersSeciton)])
     }
 
 }
