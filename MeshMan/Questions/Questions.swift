@@ -48,6 +48,7 @@ final class Questions: DataHandler {
         case yes = "Yes"
         case no = "No"
         case sometimes = "Sometimes"
+        case sortOf = "Sort Of"
         case unknown = "Unknown"
         
         case person = "Person"
