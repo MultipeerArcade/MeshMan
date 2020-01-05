@@ -12,7 +12,7 @@
             <objects>
                 <viewController id="sv1-9w-pS5" customClass="QuestionListViewController" customModule="MeshMan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cmN-sQ-2to">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="333"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="333.5"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fun-Th-jRe">
@@ -133,14 +133,14 @@
                                     <action selector="subjectButtonPressed" destination="xBT-OR-EkB" eventType="touchUpInside" id="NTn-FA-NhB"/>
                                 </connections>
                             </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="PBd-nL-ReM">
-                                <rect key="frame" x="0.0" y="390.5" width="375" height="276.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="PBd-nL-ReM">
+                                <rect key="frame" x="8" y="390.5" width="359" height="276.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="apY-nI-ARr">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="138.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="359" height="86"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kIB-WT-FzY">
-                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="138.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="179.5" height="86"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                                 <state key="normal" title="Yes"/>
                                                 <connections>
@@ -148,7 +148,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZT-3C-W9F">
-                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="138.5"/>
+                                                <rect key="frame" x="179.5" y="0.0" width="179.5" height="86"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                                 <state key="normal" title="No"/>
                                                 <connections>
@@ -157,19 +157,27 @@
                                             </button>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="g8v-iv-Xe8">
-                                        <rect key="frame" x="0.0" y="138.5" width="375" height="138"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="g8v-iv-Xe8">
+                                        <rect key="frame" x="0.0" y="86" width="359" height="190.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AEb-10-G6P">
-                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="138"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="359" height="63.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                 <state key="normal" title="Sometimes"/>
                                                 <connections>
                                                     <action selector="sometimesButtonPressed" destination="xBT-OR-EkB" eventType="touchUpInside" id="uHY-FQ-Mli"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eRo-es-8ym" userLabel="Sort Of Button">
+                                                <rect key="frame" x="0.0" y="63.5" width="359" height="63.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                <state key="normal" title="Sort Of"/>
+                                                <connections>
+                                                    <action selector="sortOfButtonPressed" destination="xBT-OR-EkB" eventType="touchUpInside" id="9SA-vg-JXC"/>
+                                                </connections>
+                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v7w-eo-Opw">
-                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="138"/>
+                                                <rect key="frame" x="0.0" y="127" width="359" height="63.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                 <state key="normal" title="Unknown"/>
                                                 <connections>
@@ -190,8 +198,8 @@
                             <constraint firstItem="uux-ez-xK2" firstAttribute="bottom" secondItem="PBd-nL-ReM" secondAttribute="bottom" id="7oJ-7E-H6R"/>
                             <constraint firstAttribute="trailing" secondItem="jam-MK-D69" secondAttribute="trailing" id="Rwg-hZ-EAL"/>
                             <constraint firstItem="jam-MK-D69" firstAttribute="leading" secondItem="TUc-4n-Qn1" secondAttribute="leading" id="msm-PB-BTJ"/>
-                            <constraint firstItem="PBd-nL-ReM" firstAttribute="leading" secondItem="uux-ez-xK2" secondAttribute="leading" id="pcI-EN-1cG"/>
-                            <constraint firstItem="uux-ez-xK2" firstAttribute="trailing" secondItem="PBd-nL-ReM" secondAttribute="trailing" id="uYy-u8-LIL"/>
+                            <constraint firstItem="PBd-nL-ReM" firstAttribute="leading" secondItem="uux-ez-xK2" secondAttribute="leading" constant="8" id="pcI-EN-1cG"/>
+                            <constraint firstItem="uux-ez-xK2" firstAttribute="trailing" secondItem="PBd-nL-ReM" secondAttribute="trailing" constant="8" id="uYy-u8-LIL"/>
                             <constraint firstItem="jam-MK-D69" firstAttribute="height" secondItem="TUc-4n-Qn1" secondAttribute="height" multiplier="0.5" id="yPd-4E-wfz"/>
                             <constraint firstItem="3tH-bQ-Yzv" firstAttribute="centerX" secondItem="uux-ez-xK2" secondAttribute="centerX" id="zWo-kp-y1A"/>
                         </constraints>
@@ -200,6 +208,7 @@
                     <connections>
                         <outlet property="noButton" destination="hZT-3C-W9F" id="eca-eY-UpF"/>
                         <outlet property="sometimesButton" destination="AEb-10-G6P" id="Mt3-mm-OGu"/>
+                        <outlet property="sortOfButton" destination="eRo-es-8ym" id="qDZ-lS-DfQ"/>
                         <outlet property="subjectButton" destination="3tH-bQ-Yzv" id="shb-Mg-rgc"/>
                         <outlet property="unknownButton" destination="v7w-eo-Opw" id="9Ga-E4-KBA"/>
                         <outlet property="yesButton" destination="kIB-WT-FzY" id="6kB-NY-jfB"/>

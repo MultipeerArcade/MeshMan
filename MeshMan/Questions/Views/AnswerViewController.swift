@@ -26,6 +26,7 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var sometimesButton: UIButton!
+    @IBOutlet private weak var sortOfButton: UIButton!
     @IBOutlet private weak var unknownButton: UIButton!
     
     // MARL: - Private Members
@@ -68,6 +69,7 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
         yesButton.isEnabled = enabled
         noButton.isEnabled = enabled
         sometimesButton.isEnabled = enabled
+        sortOfButton.isEnabled = enabled
         unknownButton.isEnabled = enabled
     }
     
@@ -153,6 +155,10 @@ class AnswerViewController: UIViewController, QuestionsDelegate {
     
     @IBAction private func sometimesButtonPressed() {
         give(answer: .sometimes)
+    }
+    
+    @IBAction func sortOfButtonPressed() {
+        give(answer: .sortOf)
     }
     
     @IBAction private func unknownButtonPressed() {
