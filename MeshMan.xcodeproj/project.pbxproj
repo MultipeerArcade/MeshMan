@@ -75,6 +75,7 @@
 		41E2256323C25B7A009F9CE4 /* InviteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E2256223C25B7A009F9CE4 /* InviteCollectionViewController.swift */; };
 		41E2256523C25BCA009F9CE4 /* PlayerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E2256423C25BCA009F9CE4 /* PlayerCollectionViewCell.swift */; };
 		41E2256723C2A388009F9CE4 /* InviteHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E2256623C2A388009F9CE4 /* InviteHeaderView.swift */; };
+		41E2256923C2B69F009F9CE4 /* AskButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E2256823C2B69F009F9CE4 /* AskButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -165,6 +166,7 @@
 		41E2256223C25B7A009F9CE4 /* InviteCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteCollectionViewController.swift; sourceTree = "<group>"; };
 		41E2256423C25BCA009F9CE4 /* PlayerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCollectionViewCell.swift; sourceTree = "<group>"; };
 		41E2256623C2A388009F9CE4 /* InviteHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteHeaderView.swift; sourceTree = "<group>"; };
+		41E2256823C2B69F009F9CE4 /* AskButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +308,7 @@
 				41AD841A21D1D54200AB1089 /* QuestionListViewController.swift */,
 				41AD842821D1E16400AB1089 /* Subject.storyboard */,
 				41AD842A21D1E17F00AB1089 /* SubjectViewController.swift */,
+				41E2256823C2B69F009F9CE4 /* AskButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -570,6 +573,7 @@
 				41A1F69F200EC22100865032 /* WordSelectionViewController.swift in Sources */,
 				4191EBE023B7E82A007B1673 /* LobbyViewController.swift in Sources */,
 				41536AF71FF06DC800DBC164 /* AppDelegate.swift in Sources */,
+				41E2256923C2B69F009F9CE4 /* AskButton.swift in Sources */,
 				41E2256723C2A388009F9CE4 /* InviteHeaderView.swift in Sources */,
 				41536B091FF06DF300DBC164 /* WelcomeViewController.swift in Sources */,
 				4191EBE423B80477007B1673 /* SetStatusCommand.swift in Sources */,
