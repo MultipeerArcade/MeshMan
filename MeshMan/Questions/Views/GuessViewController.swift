@@ -37,17 +37,25 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
     
     private let feedbackGenerator = UINotificationFeedbackGenerator()
     
+    private var guessTimer: Timer!
+    
+    private var showingForceGuessMenu = false
+    
     // MARK: - ViewController Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configure(for: questions.state)
+        NotificationCenter.default.addObserver(forName: UIMenuController.willHideMenuNotification, object: nil, queue: OperationQueue.main) { [weak self] _ in
+            self?.showingForceGuessMenu = false
+        }
     }
     
     // MARK: - UI Control
     
     private func setControls(enabled: Bool) {
+        UIMenuController.shared.hideMenu()
         questionField.isEnabled = enabled
         askButton.isEnabled = enabled
         _ = enabled ? questionField.becomeFirstResponder() : questionField.resignFirstResponder()
@@ -63,7 +71,7 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
             setControls(enabled: true)
         } else {
             setControls(enabled: false)
-            let alert = UIAlertController(title: "Oh boy!", message: "\(questions.currentGuesser) is deciding on a final guess.", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Oh boy!", message: "\(questions.currentGuesser.displayName) is deciding on a final guess.", preferredStyle: .alert)
             navigationItem.title = "\(questions.currentGuesser)'s Final Guess"
             waitingAlert = alert
             present(alert, animated: true)
@@ -72,7 +80,20 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
     
     // MARK: - Input Processing
     
+    @IBAction func askButtonTouched() {
+        guard !guessing, questionField.text != nil, questionField.text != "" else { return }  // No need to potentially show a menu if we are already in guess mode
+        guessTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { [weak self] _ in
+            guard let `self` = self else { return }
+            self.guessTimer.invalidate()
+            self.guessTimer = nil
+            self.showForceGuessMenu()
+        })
+    }
+    
     @IBAction private func askButtonPressed() {
+        guard !showingForceGuessMenu else { return }
+        guessTimer?.invalidate()
+        guessTimer = nil
         guard let text = questionField.text else { return }
         process(textInput: text)
     }
@@ -102,6 +123,19 @@ class GuessViewController: UIViewController, QuestionsDelegate, UITextFieldDeleg
         let okayAction = UIAlertAction(title: "Okay", style: .default)
         alert.addAction(okayAction)
         present(alert, animated: true)
+    }
+    
+    private func showForceGuessMenu() {
+        showingForceGuessMenu = true
+        askButton.becomeFirstResponder()
+        UIMenuController.shared.menuItems = [.init(title: "Force Guess", action: #selector(forceGuess))]
+        UIMenuController.shared.showMenu(from: view, rect: askButton.frame)
+    }
+    
+    @objc private func forceGuess() {
+        showingForceGuessMenu = false
+        guard let text = questionField.text else { return }
+        confirmAndMake(guess: text)
     }
     
     private func confirmAndMake(guess: String) {

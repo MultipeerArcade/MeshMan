@@ -240,7 +240,7 @@
                                     <outlet property="delegate" destination="eh0-LW-BkO" id="wt5-uM-LEn"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCx-Ds-w7c">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCx-Ds-w7c" customClass="AskButton" customModule="MeshMan" customModuleProvider="target">
                                 <rect key="frame" x="309" y="341.5" width="50" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="Ib2-pv-z1l"/>
@@ -249,6 +249,7 @@
                                 <state key="normal" title="Ask"/>
                                 <connections>
                                     <action selector="askButtonPressed" destination="eh0-LW-BkO" eventType="touchUpInside" id="aZ0-YL-W5p"/>
+                                    <action selector="askButtonTouched" destination="eh0-LW-BkO" eventType="touchDown" id="pKT-nh-MWZ"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -277,6 +278,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="3g2-xh-g5d"/>
+        <segue reference="pZT-tC-NzO"/>
     </inferredMetricsTieBreakers>
 </document>
